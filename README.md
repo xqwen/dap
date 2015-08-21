@@ -1,1 +1,1 @@
-# dap
+# DAP - Deterministic Approximation of Posteriors
