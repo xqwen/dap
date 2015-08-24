@@ -7,9 +7,9 @@ The directory contains simulated data and code to compare the performance of MCM
 
 ### Data files
 
-The file `` simulated_data.smbas.tgz`` contains 1,500 simulated data sets using the genotypes from the GEUVADIS (1000Genome) project. The data sets are all formulated in the sbams format and ready to be processed by the DAP and the MCMC algorithm implemented in the C++ program ``sbams_sslr``.
+The downloadable file [simulated_data.smbas.tgz](http://www-personal.umich.edu/~xwen/dap/data/simulated_data.smbas.tgz) contains 1,500 simulated data sets using the genotypes from the GEUVADIS (1000Genome) project. The data sets are all formulated in the sbams format and ready to be processed by the DAP and the MCMC algorithm implemented in the C++ program ``sbams_sslr``.
 
-Each data set contains 2,500 SNPs from the cis-regions of 100 random genes (i.e., 25 neighboring SNPs per region). As a result, the assembled genomic region consists of 100 relatively independent LD blocks with modest to high LD within each block. In each simulation, we randomly assign 1 to 4 causal QTLs and simulate a quantitative trait. The goal of the analysis is to identify the LD blocks that harbor the true QTLs. The truth is recorded in the file ``simulation_trhth.tgz``.
+Each data set contains 2,500 SNPs from the cis-regions of 100 random genes (i.e., 25 neighboring SNPs per region). As a result, the assembled genomic region consists of 100 relatively independent LD blocks with modest to high LD within each block. In each simulation, we randomly assign 1 to 4 causal QTLs and simulate a quantitative trait. The goal of the analysis is to identify the LD blocks that harbor the true QTLs. The truth is recorded in the file [simulation_truth.tgz](http://www-personal.umich.edu/~xwen/dap/data/simulation_truth.tgz).
 
 
 
