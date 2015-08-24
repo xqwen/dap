@@ -9,7 +9,7 @@ This is achieved by running dap with specialized parameters
 ``` 
 dap -d data_file  -g grid_file -it 0 -st 0  -t nthread
 ```
-The "-it 0" option will force dap include all SNPs as candidates and "-st 0" option will force dap run through all model size partitions, i.e., overide the default stopping rule. We strongly recommend parallel processing with multiple threads with the "-t nthread" option.
+The "-it 0" option will force dap to include all SNPs as candidates and the "-st 0" option will force dap to run through all model size partitions, i.e., overide the default stopping rule. We strongly recommend parallel processing using multiple threads with the "-t nthread" option.
 
 ### Input files
 
