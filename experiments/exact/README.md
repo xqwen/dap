@@ -32,7 +32,7 @@ The simulation procedure takes genotypes from a pre-defined genomic region with 
 
 ### Required files and directories
 
-* genotype files in directory ``geno_data`` (examples provided in geno_data.tgz)
+* genotype files in directory ``geno_data`` (examples provided in [geno_data.tgz](http://www-personal.umich.edu/~xwen/dap/data/geno_data.tgz))
 * pheno_data (empty directory)
 * sim_pheno.R 
 * sim.pl
