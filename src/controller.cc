@@ -33,9 +33,8 @@ controller::controller(char *data_file, char *grid_file){
   nthread = 1;
 
   output_all = 0;
-  size_select_thresh = 0.01;
+  size_select_thresh = 1e8;  // by default use the adaptive stopping rule
   snp_select_thresh = 0.02;
-
 
 
 }
@@ -276,7 +275,7 @@ void controller::run(){
       break;
     bm.clear();
     
-    fprintf(stderr, "Considering %d-SNP models ... candidates=%2d SNPs, current log10(NC)=%7.3f  ... ",cs,int(cand_set.size()),val);
+    fprintf(stderr, "Considering %d-SNP models ... candidates=%2d SNPs, current log10(NC)=%7.3f  ... \n ",cs,int(cand_set.size()),val);
 
     
       
@@ -289,18 +288,28 @@ void controller::run(){
     double ncps = szm_vec[szm_vec.size()-1].log10_sum_post;
     
     double rb = log10(double(p)-cs+1)+log10(prior_ratio) + cps;
-    double lb = log10(double(p-2*cs+2)/cs) + log10(prior_ratio) + cps;
+    //double lb = log10(double(p-2*cs+2)/cs) + log10(prior_ratio) + cps;
     
     // stopping criteria
-    fprintf(stderr,   "%7.3f   (%7.3f , %7.3f)\n", ncps, lb, rb);
+    //fprintf(stderr,   "%7.3f   (%7.3f , %7.3f)\n", ncps, lb, rb);
 
     //if( (ncps>=lb && ncps <= rb) || ncps-val <= log10(size_select_thresh) ){
+  
+
     if( ncps <= rb ){
-      backward_check(bm);
-      break;
+      if(val - curr_val <= size_select_thresh){
+	backward_check(bm);
+	break;
+      }
+      else 
+	curr_val = val;
     }
     
+    if (cs == p)
+      break;
   }
+  
+  
   
 
   
