@@ -10,7 +10,7 @@ Here we provide necessary data to carry out the enrichment analysis using the GE
 
 * Gene TSS position file: [geuv.gene.map.gz](http://www-personal.umich.edu/~xwen/dap/data/geuv/geuv.gene.map.gz)
 
-* Binding variants annotation file: [http://www-personal.umich.edu/~xwen/dap/data/geuv/geuv.annot.gz)
+* Binding variants annotation file: [geuv.annot.gz](http://www-personal.umich.edu/~xwen/dap/data/geuv/geuv.annot.gz)
 
 
 ## Running analysis
