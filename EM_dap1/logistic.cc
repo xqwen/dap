@@ -215,7 +215,7 @@ int logistic_fit(gsl_vector *beta
   //Initial fit
   //#ifdef _RPR_DEBUG_
   mLogLik = wgsl_optim_f(beta,&p);
-  fprintf(stderr,"#Initial -log(Lik(0))=%lf\n",mLogLik);
+  //fprintf(stderr,"#Initial -log(Lik(0))=%lf\n",mLogLik);
   //#endif //_RPR_DEBUG
 
   gsl_matrix *myH = gsl_matrix_alloc(npar,npar); /* Hessian*/
@@ -238,7 +238,7 @@ int logistic_fit(gsl_vector *beta
 
 #ifdef _RPR_DEBUG_
       mLogLik = wgsl_optim_f(beta,&p);
-        fprintf(stderr,"#iter %d, -log(Lik(0))=%lf,%lf\n",(int)iter,mLogLik,maxchange);
+      fprintf(stderr,"#iter %d, -log(Lik(0))=%lf,%lf\n",(int)iter,mLogLik,maxchange);
 #endif //_RPR_DEBUG
 
     if(maxchange<1E-4)
@@ -252,7 +252,7 @@ int logistic_fit(gsl_vector *beta
 
   //Final fit
   mLogLik = wgsl_optim_f(beta,&p);
-  fprintf(stderr,"#Final %d) -log(Lik(0))=%lf, maxchange %lf\n",iter,mLogLik,maxchange);
+  //fprintf(stderr,"#Final %d) -log(Lik(0))=%lf, maxchange %lf\n",iter,mLogLik,maxchange);
 
   gsl_vector_free (tau);
   gsl_vector_free (stBeta);
