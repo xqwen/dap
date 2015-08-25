@@ -32,8 +32,8 @@ int main(int argc, char **argv){
   double lambda = 0.5;
 
   
-  double snp_select_thresh = 0.02;
-  double size_select_thresh = 0.01;
+  double snp_select_thresh = -1;
+  double size_select_thresh = -1;
 
   int est_option = 0;
 
@@ -87,7 +87,7 @@ int main(int argc, char **argv){
     }
 
 
-
+  
 
     // thresholds
     
@@ -131,6 +131,8 @@ int main(int argc, char **argv){
   }
   
   controller con(data_file,grid_file);
+  
+
   con.set_outfile(out_file);
   con.set_gene(gene_name);
   con.set_sslr_option(abf_option);
@@ -152,8 +154,11 @@ int main(int argc, char **argv){
   if(output_all == 1)
     con.set_output_all();
 
-  con.set_snp_select_thresh(snp_select_thresh);
-  con.set_size_select_thresh(size_select_thresh);
+  if(snp_select_thresh>=0)
+    con.set_snp_select_thresh(snp_select_thresh);
+  
+  if(size_select_thresh >=0)
+    con.set_size_select_thresh(size_select_thresh);
   
   if(est_option == 1){
     con.quick_est();

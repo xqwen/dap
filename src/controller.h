@@ -111,6 +111,11 @@ class controller {
   int nthread;
 
  public:
+
+  int non_stop; // enumerating all models if non_stop = 1
+
+
+ public:
   
   // public interface
   

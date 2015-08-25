@@ -1,5 +1,5 @@
 main: main.o controller.o parser.o SSLR.o
-	g++  -fopenmp  -O3 main.o parser.o controller.o SSLR.o -lm -L /usr/local/lib -lgsl -lgslcblas -o dap
+	g++  -fopenmp  -O3 main.o parser.o controller.o SSLR.o -lm -L /usr/local/lib -lgsl -lgslcblas -o fmap
 main.o: main.cc
 	g++ -c -O3  main.cc
 parser.o: parser.cc parser.h
@@ -9,4 +9,4 @@ controller.o: controller.cc controller.h
 SSLR.o: SSLR.h SSLR.cc
 	g++ -c -O3 SSLR.cc
 clean:
-	rm *.o dap
+	rm *.o fmap

@@ -33,8 +33,8 @@ controller::controller(char *data_file, char *grid_file){
   nthread = 1;
 
   output_all = 0;
-  size_select_thresh = 1e8;  // by default use the adaptive stopping rule
-  snp_select_thresh = 0.02;
+  size_select_thresh = 0.01;  // set to big positive numbers to enforce the adaptive stopping rule
+  snp_select_thresh = 0.01;
 
 
 }
@@ -193,42 +193,6 @@ double controller::compute_log10_prior(map<int,int> & mcfg_map){
 
 
 void controller::quick_est(){
-  /*
-  init();
-  
-  vector<int> bm;
-  compute_post_model(bm);
-  
-  
-
-
-  int cs = 1;
-  double cval = -99999999;
-  while(1){
-    int totalc = (1<<s)-1;
-    double max = -9999;
-
-    vector<vector<int> > mcfg = null_config;
-    map<int,int> mcfg_map = null_cfg_map;
-
-    for(int i=0;i<bm.size();i++){
-      int index = bm[i];
-      mcfg[index] = get_config(totalc);
-      mcfg_map[index] = totalc;
-    }
-
-    double bval = sslr.compute_log10_ABF(mcfg) + compute_log10_prior(mcfg_map);
-    if(bval - cval <= -2){
-      break;
-    }
-     
-    printf("%2d     %3d      %7.3f\n", cs, int(cand_set.size()),bval);
-    cval = bval;
-    cs++;
-    conditional_est(bm);
-    
-  }
-  */
 }
 
 
@@ -255,14 +219,7 @@ void controller::run(){
 
     vector<double> wv(log10_pmass_vec.size(),1.0);
     double val = log10_weighted_sum(log10_pmass_vec,wv);
-    /*
-    double cps = szm_vec[szm_vec.size()-1].log10_sum_post;
-    double predict_cps =  log10((double(p)-cs)/(cs+1))+log10(prior_ratio) + cps;  
-    if(predict_cps-val <= log10(size_select_thresh)){
-      backward_check(bm);                                                                                                                                                                                           
-      break;       
-    }
-    */
+
     if(cs>=max_size){
       fprintf(outfd, "\n*** Warning: larger models *may* contain substantial probability mass, increase maximum model size and re-run ***\n");
       break;
@@ -288,10 +245,10 @@ void controller::run(){
     double ncps = szm_vec[szm_vec.size()-1].log10_sum_post;
     
     double rb = log10(double(p)-cs+1)+log10(prior_ratio) + cps;
-    //double lb = log10(double(p-2*cs+2)/cs) + log10(prior_ratio) + cps;
+    double lb = log10(double(p-2*cs+2)/cs) + log10(prior_ratio) + cps;
     
     // stopping criteria
-    //fprintf(stderr,   "%7.3f   (%7.3f , %7.3f)\n", ncps, lb, rb);
+    // fprintf(stderr,   "%7.3f   (%7.3f , %7.3f)\n", ncps, lb, rb);
 
     //if( (ncps>=lb && ncps <= rb) || ncps-val <= log10(size_select_thresh) ){
   
@@ -308,11 +265,7 @@ void controller::run(){
     if (cs == p)
       break;
   }
-  
-  
-  
-
-  
+    
 
   fprintf(stderr, "\n\n");
 
