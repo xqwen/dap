@@ -5,7 +5,7 @@
 
 ### Required utilities
 
-* openmp_wrapper []
+* [openmp_wrapper](https://github.com/xqwen/openmp_wrapper)
 * sim_data.pl (included)
 * sim_pheno.R (included)
 * assemble.pl (included)
