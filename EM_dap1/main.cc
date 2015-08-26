@@ -15,6 +15,8 @@ int main(int argc, char **argv){
   char gmap_file[128];
   char smap_file[128];
   char annot_file[128];
+  char prior_dir[128];
+
   int csize = -1;
   int gsize = -1;
   int nthread = 1;
@@ -22,7 +24,11 @@ int main(int argc, char **argv){
 
 
   char init_file[128];
-  int option = 0;
+
+
+  int find_egene = 0;
+  int est = 1;
+  
 
   
 
@@ -33,11 +39,12 @@ int main(int argc, char **argv){
   memset(smap_file,0,128);
   memset(annot_file,0,128);
   memset(init_file,0,128);
+  memset(prior_dir,0,128);
   
 
   int force_logistic = 0;
   int load_bf = 0;
-  double thresh = 0.05;
+  double EM_thresh = 0.05;
   double dist_bin_size = -1;
 
   for(int i=1;i<argc;i++){
@@ -67,7 +74,7 @@ int main(int argc, char **argv){
     }
     
     if(strcmp(argv[i], "-t")==0 || strcmp(argv[i], "-thresh")==0){
-      thresh = atof(argv[++i]);
+      EM_thresh = atof(argv[++i]);
       continue;
     }
 
@@ -85,17 +92,25 @@ int main(int argc, char **argv){
 
     if(strcmp(argv[i], "-dist_bin_size") == 0){
       dist_bin_size = atof(argv[++i]);
+      continue;
     }
 
     
     
     if(strcmp(argv[i], "-est")==0){
-      option = 0;
+      est = 1;
+      continue;
     }
     
     
     if(strcmp(argv[i], "-egene")==0){
-      option = 1;
+      find_egene = 1;
+      continue;
+    }
+
+    if(strcmp(argv[i], "-dump_prior")==0){
+      strcpy(prior_dir, argv[++i]);
+      continue;
     }
 
 
@@ -114,6 +129,7 @@ int main(int argc, char **argv){
     
   // a global variable 
   controller con;
+  con.EM_thresh = EM_thresh;
   
   if(dist_bin_size > 0){
     con.dist_bin_size = dist_bin_size;
@@ -122,6 +138,8 @@ int main(int argc, char **argv){
   if(force_logistic){
     con.force_logistic = 1;
   }
+
+
 
   if(load_bf){
     con.load_data_BF(data_file);
@@ -132,10 +150,14 @@ int main(int argc, char **argv){
   con.load_annotation(annot_file);
   
   fprintf(stderr,"Initializing ... \n");
-  if(option==0)
-    con.estimate(thresh);
-  if(option==1)
-    con.find_eGene(thresh);
+  if(est)
+    con.estimate();
+  if(find_egene)
+    con.find_eGene();
+  
+  if(strlen(prior_dir)>0){
+    con.dump_prior(prior_dir);
+  }
 }
 
 

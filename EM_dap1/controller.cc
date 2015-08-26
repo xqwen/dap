@@ -11,8 +11,9 @@
 #include <boost/iostreams/filter/gzip.hpp>
 #include <boost/iostreams/filtering_stream.hpp>
 #include "logistic.h"
-
-
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <errno.h>
 
 void controller::load_data(char *filename){
 
@@ -283,9 +284,14 @@ void controller::load_map(char* gene_file, char *snp_file){
     }
   }
   
-  int count = 0;
+
+  dtss_map[0] =0;
+  dtss_rmap[0] = 0;
+  int count = 1;
   for (map<int,int>::iterator it=bin_hash.begin(); it!=bin_hash.end(); ++it){
     //printf("bin %d    %d \n", it->first, it->second);
+    if(it->first==0)
+      continue;
     dtss_map[it->first] = count;
     dtss_rmap[count] = it->first;
     count++;
@@ -503,7 +509,7 @@ void controller::init_params(){
 }
 
 
-void controller::run_EM(double thresh){  
+void controller::run_EM(){  
   
   // start iteration
   fprintf(stderr,"Starting EM ... \n");
@@ -589,7 +595,7 @@ void controller::run_EM(double thresh){
     
     
     
-    if(fabs(curr_log10_lik-last_log10_lik)<thresh){
+    if(fabs(curr_log10_lik-last_log10_lik)<EM_thresh){
       final_log10_lik = curr_log10_lik;
       break;
     }
@@ -661,10 +667,10 @@ void controller::single_ct_regression(){
 // option 1: find egene
 
 
-void controller::find_eGene(double EM_thresh, double fdr_thresh){
+void controller::find_eGene(double fdr_thresh){
 
   if(!finish_em){
-    run_EM(EM_thresh);
+    run_EM();
     finish_em = 1;
   }
   
@@ -693,10 +699,10 @@ void controller::find_eGene(double EM_thresh, double fdr_thresh){
 
 // option 2: parameter estimation
 
-void controller::estimate(double EM_thresh){
+void controller::estimate(){
   
   if(!finish_em){
-    run_EM(EM_thresh);
+    run_EM();
     finish_em = 1;
   }
 
@@ -749,6 +755,52 @@ void controller::estimate(double EM_thresh){
   gsl_vector_free(saved_prior_vec);
 
 }
+
+
+
+void controller::dump_prior(char *prior_path){
+
+  if(!finish_em){
+    run_EM();
+    finish_em = 1;
+  }
+ 
+  
+  fprintf(stderr,"Output priors ...\n");
+  if(mkdir(prior_path, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH)!=0){
+    fprintf(stderr, "Error: cannot create directory %s\n", prior_path);
+    exit(1);
+  }
+  
+  string dir = string(prior_path);
+  for( int i=0; i<locVec.size();i++){
+    string file_name = dir + "/" + locVec[i].id+".prior";
+    FILE *fd = fopen(file_name.c_str(), "w");
+    for(int j=0;j<locVec[i].snpVec.size();j++){
+      int index = locVec[i].snpVec[j].index;
+      string name = locVec[i].snpVec[j].id;
+      fprintf(fd, "%s  %9.4e\n",name.c_str(), gsl_vector_get(prior_vec, index));
+    }
+    fclose(fd);
+  }
+}
+						
+    
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 void Locus::EM_update(){

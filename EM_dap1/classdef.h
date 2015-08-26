@@ -107,7 +107,7 @@ class controller {
   map<int, int> dtss_map;
   map<int, int> dtss_rmap;
   int dist_bin_level;
-  
+  double EM_thresh;
 
 
   
@@ -148,11 +148,14 @@ class controller {
 
   void init_params();
     
-  void run_EM(double thresh);
+  void run_EM();
 
   
-  void find_eGene(double EM_thresh, double thresh=0.05);
-  void estimate(double EM_thresh);
+  void find_eGene(double thresh=0.05);
+  void estimate();
+  void dump_prior(char *path);
+
+
 };
 
 
