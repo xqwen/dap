@@ -1,0 +1,230 @@
+#include <stdio.h>
+#include <math.h>
+#include <gsl/gsl_matrix.h>
+#include <gsl/gsl_rng.h>
+#include <gsl/gsl_multimin.h>
+#include <gsl/gsl_sf.h>
+#include "logistic.h"
+
+// I need to bundle all the data that goes to the function to optimze together. 
+typedef struct{
+  gsl_matrix_int *X;
+  gsl_vector_int *nlev;
+  gsl_vector *y;
+  double lambdaL1;
+  double lambdaL2;
+}fix_parm_T;
+
+
+double fLogitCat(gsl_vector *beta
+		 ,gsl_matrix_int *X
+		 ,gsl_vector_int *nlev
+		 ,gsl_vector *y
+		 ,double lambdaL1
+		 ,double lambdaL2)
+{
+  int n = y->size; 
+  //  int k = X->size2; 
+  int npar = beta->size; 
+  double total = 0;
+  double aux = 0;
+/*   omp_set_num_threads(ompthr); */
+/*   /\* Changed loop start at 1 instead of 0 to avoid regularization of beta 0*\/ */
+/*   /\*#pragma omp parallel for reduction (+:total)*\/ */
+  for(int i = 1; i < npar; ++i)
+    total += beta->data[i]*beta->data[i];
+  total = (-total*lambdaL2/2);
+/*   /\*#pragma omp parallel for reduction (+:aux)*\/ */
+  for(int i = 1; i < npar; ++i)
+    aux += (beta->data[i]>0 ? beta->data[i] : -beta->data[i]);
+  total = total-aux*lambdaL1;
+/* #pragma omp parallel for schedule(static) shared(n,beta,X,nlev,y) reduction (+:total) */
+  for(int i = 0; i < n; ++i) {
+    double Xbetai=beta->data[0];
+    int iParm=1;
+    for(int k = 0; k < X->size2; ++k) {
+      if(gsl_matrix_int_get(X,i,k)>0)
+	Xbetai+=beta->data[gsl_matrix_int_get(X,i,k)-1+iParm];
+      iParm+=nlev->data[k]-1;
+    }
+    total += y->data[i]*Xbetai-gsl_sf_log_1plusx(gsl_sf_exp(Xbetai));
+  }
+  return -total;
+} 
+
+
+void logistic_pred(gsl_vector *beta  // Vector of parameters length = 1 + Sum_k(C_k - 1)
+		  ,gsl_matrix_int *X  //Matrix Nobs x K 
+		  ,gsl_vector_int *nlev // Vector with number categories
+		  ,gsl_vector *yhat //Vector of prob. predicted by the logistic
+		  )
+{
+  for(int i = 0; i < X->size1; ++i) {
+    double Xbetai=beta->data[0];
+    int iParm=1;
+    for(int k = 0; k < X->size2; ++k) {
+      if(gsl_matrix_int_get(X,i,k)>0)
+	Xbetai+=beta->data[gsl_matrix_int_get(X,i,k)-1+iParm];
+      iParm+=nlev->data[k]-1;
+    }
+    yhat->data[i]=1/(1 + gsl_sf_exp(-Xbetai));
+  }
+}
+
+
+/* The gradient of f, df = (df/dx, df/dy). */
+void 
+wgsl_optim_df (const gsl_vector *beta, void *params, 
+       gsl_vector *out)
+{
+  fix_parm_T *p = (fix_parm_T *)params;
+  int n = p->y->size; 
+  int K = p->X->size2; 
+  int npar = beta->size; 
+  // Intitialize gradient out necessary?
+  for(int i = 0; i < npar; ++i) 
+    out->data[i]= 0; 
+  /* Changed loop start at 1 instead of 0 to avoid regularization of beta 0 */
+  for(int i = 1; i < npar; ++i)
+    out->data[i]= p->lambdaL2*beta->data[i]; 
+  for(int i = 1; i < npar; ++i)
+    out->data[i]+= p->lambdaL1*((beta->data[i]>0)-(beta->data[i]<0));
+  
+  for(int i = 0; i < n; ++i) {
+    double pn=0;
+    double Xbetai=beta->data[0];
+    int iParm=1;
+    for(int k = 0; k < K; ++k) {
+      if(gsl_matrix_int_get(p->X,i,k)>0)
+	Xbetai+=beta->data[gsl_matrix_int_get(p->X,i,k)-1+iParm];
+      iParm+=p->nlev->data[k]-1;
+    }
+    //    total += y->data[i]*Xbetai-log(1+gsl_sf_exp(Xbetai));
+    pn= -( p->y->data[i] - 1/(1 + gsl_sf_exp(-Xbetai)) );
+
+    out->data[0]+= pn;
+    iParm=1;
+    for(int k = 0; k < K; ++k) {
+      if(gsl_matrix_int_get(p->X,i,k)>0)
+	out->data[gsl_matrix_int_get(p->X,i,k)-1+iParm]+=pn;
+      iParm+=p->nlev->data[k]-1;
+    }
+  }
+}
+
+double wgsl_optim_f(gsl_vector *v, void *params)
+{
+  double mLogLik=0;
+  fix_parm_T *p = (fix_parm_T *)params;
+  mLogLik = fLogitCat(v,p->X,p->nlev,p->y,p->lambdaL1,p->lambdaL2);
+  return mLogLik; 
+}
+
+
+/* Compute both f and df together. */
+void 
+wgsl_optim_fdf (gsl_vector *x, void *params, 
+        double *f, gsl_vector *df) 
+{
+  *f = wgsl_optim_f(x, params); 
+  wgsl_optim_df(x, params, df);
+}
+
+
+/* gsl_multimin_function_fdf my_func; */
+
+/* /\* Paraboloid center at (1,2), scale factors (10, 20),  */
+/*    minimum value 30 *\/ */
+/* double p[5] = { 1.0, 2.0, 10.0, 20.0, 30.0 };  */
+
+/* my_func.n = 2;  /\* number of function components *\/ */
+/* my_func.f = &my_f; */
+/* my_func.df = &my_df; */
+/* my_func.fdf = &my_fdf; */
+/* my_func.params = (void *)p; */
+
+
+
+
+int logistic_fit(gsl_vector *beta
+		 ,gsl_matrix_int *X
+		 ,gsl_vector_int *nlev
+		 ,gsl_vector *y
+		 ,double lambdaL1
+		 ,double lambdaL2)
+{
+
+  size_t iter = 0;
+  int status;
+
+  const gsl_multimin_fdfminimizer_type *T;
+  gsl_multimin_fdfminimizer *s;
+
+  double mLogLik=0;
+  fix_parm_T p;
+
+  //  gsl_vector *x;
+  gsl_multimin_function_fdf my_func;
+
+  //Intializing fix parameters
+  p.X=X;
+  p.nlev=nlev;
+  p.y=y;
+  p.lambdaL1=lambdaL1;
+  p.lambdaL2=lambdaL2;
+
+  //gsl minimizer set up
+  my_func.n = beta->size;
+  my_func.f = wgsl_optim_f;
+  my_func.df = wgsl_optim_df;
+  my_func.fdf = wgsl_optim_fdf;
+  my_func.params = &p;
+  
+  //Initial fit
+  mLogLik = wgsl_optim_f(beta,&p);
+  printf("#Initial -log(Lik(0))=%lf\n",mLogLik);
+
+  //Minimizer type
+  //  T = gsl_multimin_fdfminimizer_conjugate_fr;
+  T = gsl_multimin_fdfminimizer_vector_bfgs2;
+  s = gsl_multimin_fdfminimizer_alloc (T, beta->size);
+
+  gsl_multimin_fdfminimizer_set (s, &my_func, beta, 0.5, 0.1);
+
+  printf ("#s is a '%s' minimizer\n", 
+	  gsl_multimin_fdfminimizer_name (s));
+
+  do{
+    iter++;
+    status = gsl_multimin_fdfminimizer_iterate(s);
+
+    if (status)
+      break;
+    
+    status = gsl_multimin_test_gradient (s->gradient, 1e-5);
+
+    mLogLik = wgsl_optim_f(s->x,&p);
+    printf("#iter %d, -log(Lik(0))=%lf,%lf\n",(int)iter,mLogLik,s->f);
+    
+    if (status == GSL_SUCCESS){
+      printf ("#Minimum found after %d iterations:\n",(int)iter);   
+      for (int i = 0; i < s->x->size; i++)
+	printf ("#par_%d= %lf\n",i,s->x->data[i]);
+    }
+  }while (status == GSL_CONTINUE && iter < 1000);
+
+  for (int i = 0; i < s->x->size; i++)
+    printf ("#par_%d= %lf\n",i,s->x->data[i]);
+
+  for (int i = 0; i < s->x->size; i++)
+    beta->data[i]=s->x->data[i];
+
+  //Final fit
+  mLogLik = wgsl_optim_f(beta,&p);
+  printf("#Final -log(Lik(0))=%lf\n",mLogLik);
+
+  gsl_multimin_fdfminimizer_free (s);
+  //  gsl_vector_free (x);
+
+  return 0;
+}

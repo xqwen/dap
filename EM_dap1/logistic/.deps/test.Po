@@ -1,0 +1,232 @@
+test.o: test.c /usr/include/stdio.h /usr/include/features.h \
+ /usr/include/sys/cdefs.h /usr/include/bits/wordsize.h \
+ /usr/include/gnu/stubs.h /usr/include/gnu/stubs-64.h \
+ /opt/centos/devtoolset-1.1/root/usr/lib/gcc/x86_64-redhat-linux/4.7.2/include/stddef.h \
+ /usr/include/bits/types.h /usr/include/bits/typesizes.h \
+ /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
+ /opt/centos/devtoolset-1.1/root/usr/lib/gcc/x86_64-redhat-linux/4.7.2/include/stdarg.h \
+ /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
+ /usr/include/bits/stdio.h /usr/include/math.h \
+ /usr/include/bits/huge_val.h /usr/include/bits/huge_valf.h \
+ /usr/include/bits/huge_vall.h /usr/include/bits/inf.h \
+ /usr/include/bits/nan.h /usr/include/bits/mathdef.h \
+ /usr/include/bits/mathcalls.h /usr/include/bits/mathinline.h \
+ /wsu/home/groups/piquelab/include/gsl/gsl_matrix.h \
+ /wsu/home/groups/piquelab/include/gsl/gsl_matrix_complex_long_double.h \
+ /usr/include/stdlib.h /wsu/home/groups/piquelab/include/gsl/gsl_types.h \
+ /wsu/home/groups/piquelab/include/gsl/gsl_errno.h /usr/include/errno.h \
+ /usr/include/bits/errno.h /usr/include/linux/errno.h \
+ /usr/include/asm/errno.h /usr/include/asm-generic/errno.h \
+ /usr/include/asm-generic/errno-base.h \
+ /wsu/home/groups/piquelab/include/gsl/gsl_complex.h \
+ /wsu/home/groups/piquelab/include/gsl/gsl_check_range.h \
+ /wsu/home/groups/piquelab/include/gsl/gsl_vector_complex_long_double.h \
+ /wsu/home/groups/piquelab/include/gsl/gsl_vector_long_double.h \
+ /wsu/home/groups/piquelab/include/gsl/gsl_inline.h \
+ /wsu/home/groups/piquelab/include/gsl/gsl_block_long_double.h \
+ /wsu/home/groups/piquelab/include/gsl/gsl_vector_complex.h \
+ /wsu/home/groups/piquelab/include/gsl/gsl_block_complex_long_double.h \
+ /wsu/home/groups/piquelab/include/gsl/gsl_matrix_complex_double.h \
+ /wsu/home/groups/piquelab/include/gsl/gsl_vector_complex_double.h \
+ /wsu/home/groups/piquelab/include/gsl/gsl_vector_double.h \
+ /wsu/home/groups/piquelab/include/gsl/gsl_block_double.h \
+ /wsu/home/groups/piquelab/include/gsl/gsl_block_complex_double.h \
+ /wsu/home/groups/piquelab/include/gsl/gsl_matrix_complex_float.h \
+ /wsu/home/groups/piquelab/include/gsl/gsl_vector_complex_float.h \
+ /wsu/home/groups/piquelab/include/gsl/gsl_vector_float.h \
+ /wsu/home/groups/piquelab/include/gsl/gsl_block_float.h \
+ /wsu/home/groups/piquelab/include/gsl/gsl_block_complex_float.h \
+ /wsu/home/groups/piquelab/include/gsl/gsl_matrix_long_double.h \
+ /wsu/home/groups/piquelab/include/gsl/gsl_matrix_double.h \
+ /wsu/home/groups/piquelab/include/gsl/gsl_matrix_float.h \
+ /wsu/home/groups/piquelab/include/gsl/gsl_matrix_ulong.h \
+ /wsu/home/groups/piquelab/include/gsl/gsl_vector_ulong.h \
+ /wsu/home/groups/piquelab/include/gsl/gsl_block_ulong.h \
+ /wsu/home/groups/piquelab/include/gsl/gsl_matrix_long.h \
+ /wsu/home/groups/piquelab/include/gsl/gsl_vector_long.h \
+ /wsu/home/groups/piquelab/include/gsl/gsl_block_long.h \
+ /wsu/home/groups/piquelab/include/gsl/gsl_matrix_uint.h \
+ /wsu/home/groups/piquelab/include/gsl/gsl_vector_uint.h \
+ /wsu/home/groups/piquelab/include/gsl/gsl_block_uint.h \
+ /wsu/home/groups/piquelab/include/gsl/gsl_matrix_int.h \
+ /wsu/home/groups/piquelab/include/gsl/gsl_vector_int.h \
+ /wsu/home/groups/piquelab/include/gsl/gsl_block_int.h \
+ /wsu/home/groups/piquelab/include/gsl/gsl_matrix_ushort.h \
+ /wsu/home/groups/piquelab/include/gsl/gsl_vector_ushort.h \
+ /wsu/home/groups/piquelab/include/gsl/gsl_block_ushort.h \
+ /wsu/home/groups/piquelab/include/gsl/gsl_matrix_short.h \
+ /wsu/home/groups/piquelab/include/gsl/gsl_vector_short.h \
+ /wsu/home/groups/piquelab/include/gsl/gsl_block_short.h \
+ /wsu/home/groups/piquelab/include/gsl/gsl_matrix_uchar.h \
+ /wsu/home/groups/piquelab/include/gsl/gsl_vector_uchar.h \
+ /wsu/home/groups/piquelab/include/gsl/gsl_block_uchar.h \
+ /wsu/home/groups/piquelab/include/gsl/gsl_matrix_char.h \
+ /wsu/home/groups/piquelab/include/gsl/gsl_vector_char.h \
+ /wsu/home/groups/piquelab/include/gsl/gsl_block_char.h \
+ /wsu/home/groups/piquelab/include/gsl/gsl_rng.h logistic.h
+
+/usr/include/stdio.h:
+
+/usr/include/features.h:
+
+/usr/include/sys/cdefs.h:
+
+/usr/include/bits/wordsize.h:
+
+/usr/include/gnu/stubs.h:
+
+/usr/include/gnu/stubs-64.h:
+
+/opt/centos/devtoolset-1.1/root/usr/lib/gcc/x86_64-redhat-linux/4.7.2/include/stddef.h:
+
+/usr/include/bits/types.h:
+
+/usr/include/bits/typesizes.h:
+
+/usr/include/libio.h:
+
+/usr/include/_G_config.h:
+
+/usr/include/wchar.h:
+
+/opt/centos/devtoolset-1.1/root/usr/lib/gcc/x86_64-redhat-linux/4.7.2/include/stdarg.h:
+
+/usr/include/bits/stdio_lim.h:
+
+/usr/include/bits/sys_errlist.h:
+
+/usr/include/bits/stdio.h:
+
+/usr/include/math.h:
+
+/usr/include/bits/huge_val.h:
+
+/usr/include/bits/huge_valf.h:
+
+/usr/include/bits/huge_vall.h:
+
+/usr/include/bits/inf.h:
+
+/usr/include/bits/nan.h:
+
+/usr/include/bits/mathdef.h:
+
+/usr/include/bits/mathcalls.h:
+
+/usr/include/bits/mathinline.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_matrix.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_matrix_complex_long_double.h:
+
+/usr/include/stdlib.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_types.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_errno.h:
+
+/usr/include/errno.h:
+
+/usr/include/bits/errno.h:
+
+/usr/include/linux/errno.h:
+
+/usr/include/asm/errno.h:
+
+/usr/include/asm-generic/errno.h:
+
+/usr/include/asm-generic/errno-base.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_complex.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_check_range.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_vector_complex_long_double.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_vector_long_double.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_inline.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_block_long_double.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_vector_complex.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_block_complex_long_double.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_matrix_complex_double.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_vector_complex_double.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_vector_double.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_block_double.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_block_complex_double.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_matrix_complex_float.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_vector_complex_float.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_vector_float.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_block_float.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_block_complex_float.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_matrix_long_double.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_matrix_double.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_matrix_float.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_matrix_ulong.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_vector_ulong.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_block_ulong.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_matrix_long.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_vector_long.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_block_long.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_matrix_uint.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_vector_uint.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_block_uint.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_matrix_int.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_vector_int.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_block_int.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_matrix_ushort.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_vector_ushort.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_block_ushort.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_matrix_short.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_vector_short.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_block_short.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_matrix_uchar.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_vector_uchar.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_block_uchar.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_matrix_char.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_vector_char.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_block_char.h:
+
+/wsu/home/groups/piquelab/include/gsl/gsl_rng.h:
+
+logistic.h:

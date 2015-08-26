@@ -274,7 +274,7 @@ void controller::load_map(char* gene_file, char *snp_file){
     string loc_id = locVec[i].id;
     for(int j=0;j<locVec[i].snpVec.size();j++){
       string snp_id = locVec[i].snpVec[j].id;
-      int bin = classify_dist_bin(snp_map[snp_id], gene_map[loc_id]);
+      int bin = classify_dist_bin(snp_map[snp_id], gene_map[loc_id],dist_bin_size);
       if(bin_hash.find(bin)==bin_hash.end()){
          bin_hash[bin] = 0;
       }
@@ -356,13 +356,15 @@ void controller::load_annotation(char* annot_file){
 	if(cat == "_c" || cat =="_C"){
 	  col2cat[col_count] = 1;
 	  col2cpos[col_count] = kc;
-	  cvar_name_vec.push_back(token);
+	  string name = token.substr(0,token.size()-2);
+	  cvar_name_vec.push_back(name);
 	  kc++;
 	} // discrete/categorical
 	else{
 	  col2cat[col_count] = 2;
 	  col2dpos[col_count] = kd;
-	  dvar_name_vec.push_back(token);
+	  string name = token.substr(0,token.size()-2);
+	  dvar_name_vec.push_back(name);
 	  kd++;
 	  
 	}
@@ -448,7 +450,7 @@ void controller::load_annotation(char* annot_file){
   if(dist_bin_level>0){
     gsl_matrix_int_set_col(Xd, ncol-1, dist_bin);
     gsl_vector_int_set(dlevel, ncol-1, dist_bin_level);
-    dvar_name_vec.push_back(string("dtss_d"));
+    dvar_name_vec.push_back(string("dtss"));
     kd++;
   }
   
@@ -509,6 +511,21 @@ void controller::run_EM(double thresh){
   double last_log10_lik = -9999999;
   init_params();
 
+  fprintf(stderr,"  Iter          loglik          Intercept    ");
+  
+  for(int i=0;i<dvar_name_vec.size();i++){
+    string prefix = dvar_name_vec[i];
+    int level = gsl_vector_int_get(dlevel,i);
+    for(int j=1;j<level;j++){
+      ostringstream stream;
+      stream <<prefix<<"."<<j;
+      string label = stream.str();
+      fprintf(stderr, "%s\t", label.c_str());
+    }
+    
+  }
+    
+  fprintf(stderr,"\n");
   while(1){
     
     
@@ -560,11 +577,11 @@ void controller::run_EM(double thresh){
     }
 
     //printf("%f   %f\n%f   %f\n",ct_00, ct_01, ct_10, ct_11);
-    fprintf(stderr,"iter  %4d  loglik = %.4f       ",count++,curr_log10_lik/log10(exp(1)));
+    fprintf(stderr,"%4d        %10.3f        ",count++,curr_log10_lik/log10(exp(1)));
     
 
     for(int i=0;i<ncoef;i++){
-      fprintf(stderr, "  %7.4f",gsl_vector_get(beta_vec,i));
+      fprintf(stderr, "%9.3f  ",gsl_vector_get(beta_vec,i));
     }
     fprintf(stderr,"\n");
    
@@ -572,19 +589,15 @@ void controller::run_EM(double thresh){
     
     
     
-    if(fabs(curr_log10_lik-last_log10_lik)<thresh)
+    if(fabs(curr_log10_lik-last_log10_lik)<thresh){
+      final_log10_lik = curr_log10_lik;
       break;
-    
+    }
+
     last_log10_lik = curr_log10_lik;
-  }
-
-   
-
+  }   
+  
 }
-
-
-
-
 
 
 
@@ -645,10 +658,15 @@ void controller::single_ct_regression(){
 
 
 
+// option 1: find egene
+
+
 void controller::find_eGene(double EM_thresh, double fdr_thresh){
 
-
-  run_EM(EM_thresh);
+  if(!finish_em){
+    run_EM(EM_thresh);
+    finish_em = 1;
+  }
   
   for(int i=0;i<locVec.size();i++){
     locVec[i].compute_fdr();
@@ -673,23 +691,64 @@ void controller::find_eGene(double EM_thresh, double fdr_thresh){
 }
 
 
+// option 2: parameter estimation
 
+void controller::estimate(double EM_thresh){
+  
+  if(!finish_em){
+    run_EM(EM_thresh);
+    finish_em = 1;
+  }
 
+  gsl_vector *saved_beta_vec = gsl_vector_calloc(ncoef);
+  gsl_vector *saved_prior_vec = gsl_vector_calloc(p);
+  gsl_vector_memcpy(saved_beta_vec, beta_vec);  
+  gsl_vector_memcpy(saved_prior_vec, prior_vec);
+  
 
+  
+  int index = 1; //start with 1, 0 always intercept
+  for(int i=0;i<dvar_name_vec.size();i++){
+    if(dvar_name_vec[i]=="dtss"){
+      index += gsl_vector_int_get(dlevel,i);
+      break;
+    }
+    int level = gsl_vector_int_get(dlevel,i);
+    string prefix = dvar_name_vec[i];
+    for(int j=1;j<level;j++){
+      ostringstream stream;
+      stream <<prefix<<"."<<j;
+      string label = stream.str();
+      double est = gsl_vector_get(beta_vec, index);
+      gsl_vector_set(beta_vec,index, 0.0);
+      logistic_pred(beta_vec, Xd, dlevel, prior_vec);
+      double null_log10_lik = 0;
+      for(int k=0;k<locVec.size();k++){
+	locVec[k].EM_update();
+	null_log10_lik += locVec[k].log10_lik;
+      }
+      double diff = (final_log10_lik - null_log10_lik)/log10(exp(1));
+      if(diff<1e-8){
+	diff = 1e-8;
+      }
+      double sd = est/sqrt(2*diff);
+      printf("%15s  %9.3f     %9.3f  %9.3f\n", label.c_str(), est, est-1.96*sd, est+1.96*sd);
+      index++;
+      // restore
+      gsl_vector_memcpy(beta_vec, saved_beta_vec);  
+      gsl_vector_memcpy(prior_vec, saved_prior_vec);
+    }
+  }
+  
+  // restore all
+  for(int k=0;k<locVec.size();k++){
+    locVec[k].EM_update();
+  }
+  
+  gsl_vector_free(saved_beta_vec);
+  gsl_vector_free(saved_prior_vec);
 
-
-
-
-
-
-
-
- 
-void controller::run_EM_null(double thresh){  
 }
-
-
-
 
 
 void Locus::EM_update(){
@@ -814,15 +873,18 @@ bool rank_by_fdr (const Locus & loc1 , const Locus & loc2){
 }
  
 
-/*
-int classify_dist_bin(int pos, int tss){
 
-  return int((pos-tss)/1000.0);
-}
-*/
 
-int classify_dist_bin(int pos, int tss){
 
+
+// default binning scheme
+int classify_dist_bin(int pos, int tss, double bin_size){
+
+  if(bin_size>0){
+    return int((pos-tss)/1000.0);
+  }
+  
+  // else default scheme
   double dist = (pos-tss)/1000.0;
   int sign = 1;
   if(dist < 0){

@@ -78,6 +78,8 @@ class controller {
   controller(){
     p=kc=kd=dist_bin_level = 0;
     force_logistic = 0;
+    dist_bin_size = -1;
+    finish_em = 0;
   }
 
   // storage
@@ -88,6 +90,9 @@ class controller {
   
   int kc; // number of continuous covariate
   int kd; // number of discrete covariate
+
+
+  double dist_bin_size;
 
 
   map<string,int> loc_hash;
@@ -119,11 +124,14 @@ class controller {
   
   int ncoef;
 
-  double log10_lik;
-  double log10_lik_null;
+  double final_log10_lik;
+  
 
 
   int nthread; 
+
+
+  int finish_em;
 
 
   void load_data(char *filename);    // load data with MatrixeQTL format -- default
@@ -141,10 +149,10 @@ class controller {
   void init_params();
     
   void run_EM(double thresh);
-  void run_EM_null(double thresh);
+
   
   void find_eGene(double EM_thresh, double thresh=0.05);
-
+  void estimate(double EM_thresh);
 };
 
 
@@ -154,6 +162,6 @@ double log10_weighted_sum(vector<double> & val_vec, vector<double> & wts_vec);
 double compute_log10_BF(double beta, double se_beta);
 bool   rank_by_fdr (const Locus & loc1 , const Locus & loc2);
   
-int classify_dist_bin(int snp_pos, int tss);
+int classify_dist_bin(int snp_pos, int tss, double bin_size = -1);
 
 #endif

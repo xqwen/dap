@@ -24,6 +24,8 @@ int main(int argc, char **argv){
   char init_file[128];
   int option = 0;
 
+  
+
   char ci_file[128];
   memset(ci_file,0,128); 
   memset(data_file,0,128); 
@@ -36,7 +38,7 @@ int main(int argc, char **argv){
   int force_logistic = 0;
   int load_bf = 0;
   double thresh = 0.05;
-  
+  double dist_bin_size = -1;
 
   for(int i=1;i<argc;i++){
     
@@ -80,6 +82,23 @@ int main(int argc, char **argv){
       continue;
     }
     
+
+    if(strcmp(argv[i], "-dist_bin_size") == 0){
+      dist_bin_size = atof(argv[++i]);
+    }
+
+    
+    
+    if(strcmp(argv[i], "-est")==0){
+      option = 0;
+    }
+    
+    
+    if(strcmp(argv[i], "-egene")==0){
+      option = 1;
+    }
+
+
     //fprintf("Error: undefined option %s\n", argv[i]);
 
   }    
@@ -96,6 +115,10 @@ int main(int argc, char **argv){
   // a global variable 
   controller con;
   
+  if(dist_bin_size > 0){
+    con.dist_bin_size = dist_bin_size;
+  }
+
   if(force_logistic){
     con.force_logistic = 1;
   }
@@ -109,8 +132,10 @@ int main(int argc, char **argv){
   con.load_annotation(annot_file);
   
   fprintf(stderr,"Initializing ... \n");
-    
-  con.find_eGene(thresh);
+  if(option==0)
+    con.estimate(thresh);
+  if(option==1)
+    con.find_eGene(thresh);
 }
 
 

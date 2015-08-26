@@ -5,6 +5,6 @@ main.o: main.cc
 controller.o: controller.cc classdef.h
 	g++    -c  controller.cc
 logistic.o: logistic.cc logistic.h
-	g++ -c logistic.cc -fpermissive
+	g++ -c logistic.cc 
 clean:
 	rm *.o em_dap1	
