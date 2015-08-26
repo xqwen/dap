@@ -1,1 +1,0 @@
-gcc test.c  -I /wsu/home/groups/piquelab/include -L/wsu/home/groups/piquelab/lib -l gsl -l gslcblas -o test
