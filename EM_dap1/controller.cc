@@ -737,7 +737,7 @@ void controller::estimate(){
       if(diff<1e-8){
 	diff = 1e-8;
       }
-      double sd = est/sqrt(2*diff);
+      double sd = fabs(est)/sqrt(2*diff);
       printf("%15s  %9.3f     %9.3f  %9.3f\n", label.c_str(), est, est-1.96*sd, est+1.96*sd);
       index++;
       // restore

@@ -6,7 +6,7 @@ This repository contains the software implementation for the algorithm of Determ
 
 ## Repository directories
 
-* ``src``: the source code of the core DAP algorithm implemented in C++, can be compiled as a standalone algoirthm
+* ``src``: the source code of the core DAP algorithm implemented in C++, can be compiled to a standalone program
 
 * ``EM_dap1``: a C++ implementation of DAP-1 embedded EM algorithm
 
