@@ -219,7 +219,7 @@ void controller::run(){
 
     vector<double> wv(log10_pmass_vec.size(),1.0);
     double val = log10_weighted_sum(log10_pmass_vec,wv);
-
+    //printf("val = %.3f",val);
     if(cs>=max_size){
       fprintf(outfd, "\n*** Warning: larger models *may* contain substantial probability mass, increase maximum model size and re-run ***\n");
       break;
@@ -340,20 +340,30 @@ double controller::conditional_est(vector<int>& bm){
   vector<double> post_vec;
   
   double KL = 0;
+  double maxp = 0;
+  int max_id = -1;
+  int csize = cand_map.size();
   for(int i=0;i<p;i++){
     double val = pow(10, abf_vec[i]-log10_sum);
+    if(val > maxp){
+      maxp = val;
+      max_id = i;
+    }
     KL += (1.0/p)*log(1.0/(p*val));
     if(val>snp_select_thresh){
       cand_map[i] = 1;
       post_vec.push_back(rstv[i]);
     }
   }
-
+  
+  // if nothing added, add the best SNP
+  
+  if(cand_map.size()==csize&&bm.size()==1){
+    cand_map[max_id] = 1;
+  }
+  
   //printf("KL = %f \n",KL);
   
-  
-
-
  
   if(post_vec.size()==0)
     post_vec.push_back(max);
@@ -409,22 +419,32 @@ size_model controller::compute_post_model(vector<int>& best_model){
   }
 
   
-
+  
   vector<double> wv(post_vec.size(),1.0);
   smod.log10_sum_post = sslr.log10_weighted_sum(post_vec,wv);
   
   double log10_sum = sslr.log10_weighted_sum(abf_vec,wv);
 
-  
+  double maxp = 0;
+  int max_id = -1;
+  int csize = cand_set.size();
   //printf("1 cand_set: ");
   for(int i=0;i<p;i++){
     double val = pow(10, abf_vec[i]-log10_sum);
+    if(val>maxp){
+      maxp = val;
+      max_id = i;
+    }
     if(val>snp_select_thresh){
       cand_map[i] = 1;
       //printf("%d ",i);
     }
   }
-  
+  //if nothing added, add the top SNP
+  if(cand_map.size()==csize){
+    cand_map[max_id] = 1;
+  }
+
   //printf("\n");
   return smod;
 
