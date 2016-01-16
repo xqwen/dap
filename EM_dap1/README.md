@@ -6,7 +6,7 @@ This direcotory contains the source code for integrative enrichment analysis of 
 
 The following C/C++ libraries are required for compiling the source code
 
-* GVU GSL library
+* GNU GSL library
 * Zlib library
 * Boost C++ library
 
