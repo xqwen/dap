@@ -20,6 +20,7 @@ int logistic_fit(gsl_vector *beta  // Vector of parameters length = 1 + Sum_k(C_
 double fLogitCat(gsl_vector *beta
 		 ,gsl_matrix_int *X
 		 ,gsl_vector_int *nlev
+		 ,gsl_matrix *Xc   // continuous covariates  Matrix Nobs x Kc (NULL if not used)
 		 ,gsl_vector *y
 		 ,double lambdaL1
 		 ,double lambdaL2);
