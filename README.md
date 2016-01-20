@@ -1,21 +1,27 @@
-# DAP - Deterministic Approximation of Posteriors
+#  Integrative Genetic Association Analysis using Deterministic Approximation of Posteriors (DAP)
 
 
-This repository contains the software implementation for the algorithm of Deterministic Approximation of Posteriors (DAP), which is specifically designed for mapping multiple QTLs while incorporating genomic annotations. In addition, we also provide source code, scripts and necessary data for various numerical experiments to evaluate the performance of the DAP algorithm. 
+This repository contains the software implementations for a suite of statistical methods to perform genetic association analysis integrating genomic annotations. These methods are designed to perform rigorous enrichment analysis, QTL discovery and multi-SNP fine-mapping analysis in a highly efficient way. The statistical model and the key algorithm, Deterministic Approximation of Posteriors (DAP), are described in this manuscript. 
+
+The repository includes source code, scripts and necessary data to replicate the results described in the manuscript. A detailed tutorial to guide the users through specific analysis tasks is also included. 
+
+For questions and comments regarding to the software package, please contact Xiaoquan Wen (xwen at umich dot edu).
+
 
 
 ## Repository directories
 
-* ``src``: the source code of the core DAP algorithm implemented in C++, can be compiled to a standalone program
+* ``src``: the C/C++ source code for adaptive DAP algorithm (for multi-SNP fine-mapping analysis)
 
-* ``EM_dap1``: a C++ implementation of DAP-1 embedded EM algorithm
+* ``tutorial``: provide detailed descriptions on usage of the software package (including data formating, results interpretation etc.)
 
 * ``experiments``: this directory contains necessary scripts/code and data for evaluating the DAP, e.g., performance comparison with the MCMC, exact Bayesian calculation etc. 
 
+In addition, the source code implementing enrichment analysis and QTL discovery can be found in a separate repo [torus] (https://github.com/xqwen/torus)
 
 ## Contributors
 
-* Xiaoqusn Wen (xwen@umich.edu)  
-* Roger Pique-Regi (rpique@wayne.edu)
-* Yeji Lee (yejilee@umich.edu)
+* Xiaoquan Wen (University of Michigan)
+* Roger Pique-Regi (Wayne State University)
+* Yeji Lee (University of Michigan)
 
