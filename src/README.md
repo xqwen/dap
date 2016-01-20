@@ -1,4 +1,4 @@
-# C++ implementation of DAP
+# C++ implementation of Adaptive DAP Algorithm
 
 ## Compilation 
 
