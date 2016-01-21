@@ -9,7 +9,7 @@ Comparing to the traditional genetic association analysis, which typically attem
 2. Discover genetic loci that harbor causal variants (QTL Discovery)
 3. Perform multi-SNP fine-mapping analysis for the identified loci from 2 (Multi-SNP Fine-mapping)
 
-The first two goals can be achieved by the executable [torus](https://github.com/torus/) and the third aim can be achieved by the executable ``dap``. 
+The first two goals can be achieved by the executable "[torus](https://github.com/xqwen/torus/)" and the third aim can be achieved by the executable ``dap``. 
 
 
 
