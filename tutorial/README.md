@@ -9,7 +9,7 @@ Comparing to the traditional genetic association analysis, which typically attem
 2. Discover genetic loci that harbor causal variants (QTL Discovery)
 3. Perform multi-SNP fine-mapping analysis for the identified loci from 2 (Multi-SNP Fine-mapping)
 
-The first two goals can be achieved by the program ``[torus](https://github.com/torus/)`` and the third aim can be achieved by the program ``dap``. 
+The first two goals can be achieved by the executable [torus](https://github.com/torus/) and the third aim can be achieved by the executable ``dap``. 
 
 
 
@@ -27,11 +27,11 @@ In molecular QTL mapping, the candidate (cis) locus for each molecular phenotype
 We currently support genetic association data collected in a single study or in a meta-analytic setting. We are working on extending the software to support applications like multi-tissue eQTL mapping as described in [Flutre et al, 2013](http://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1003486). 
 
 
-### Summary Level Statistics vs. Individual Level Genetic Data
+### Summary Statistics vs. Individual-Level Genetic Data
 
 Currently, the multi-SNP fine-mapping analysis requires individual-level genotype data, and we are actively working to extend the fine-mapping analysis using only summary-level data. 
 
-Both enrichment analysis and QTL discovery require only summary-level statistics (in the simplest case, z-score or p-value from the single SNP association test). 
+Both enrichment analysis and QTL discovery require only summary statistics (in the simplest case, z-score or p-value from the single SNP association test). 
 
 
  
