@@ -7,6 +7,13 @@
   * [Supported Data Structure](#supported-data-structure)
   * [Summary Statistics vs. Individual-Level Data](#summary-statistics-vs-individual-level-data)
 
+* [Case Studies](#case-studies)
+  * [Enrichment Analysis](#enrichment-analysis)
+    * [Enrichment Analysis for cis-eQTL](#enrichment-analysis-for-cis-eqtl)
+    * [Enrichment Analysis for GWAS](#enrichment-analysis-for-gwas)
+  * [QTL Discovery](#qtl-discovery)
+    * [QTL Discovery in cis-eQTL Mapping](#qtl-discovery-in-cis-eqtl-mapping)
+  * [Multi-SNP Fine-mapping](#multi-snp-fine-mapping)
 
 
 ## Overview of Integrative Genetic Associaiton Analysis
@@ -18,13 +25,13 @@ Comparing to the traditional genetic association analysis, which typically attem
 2. Discover genetic loci that harbor causal variants (QTL Discovery)
 3. Perform multi-SNP fine-mapping analysis for the identified loci from 2 (Multi-SNP Fine-mapping)
 
-The first two goals can be achieved by the executable "[torus](https://github.com/xqwen/torus/)" and the third aim can be achieved by the executable ``dap``. 
+The first two goals can be achieved by the executable "[torus](https://github.com/xqwen/torus/)" and the third aim can be achieved by the executable "dap". 
 
 
 
 ### Types of Applications
 
-We currently support two types of applications: molecular (cis) QTL mapping and tradition single phenotype genome-wide association study (GWAS). In comparison to GWAS,  a distinct feature of molecular QTL mapping is that tens of thousands (or hundreds of thousands) of molecular phenotypes (e.g., gene expression, DNA methylation, chromatin accessibility, histone modifications) are simultaneously measured and analyzed. In addition, the candidate (cis) genomic region for each molecular phenotype is typically not large (usually spanning 1 to 2 Mb), whereas for GWAS the candidate SNPs cover the whole genome. 
+We currently support two types of applications: molecular (cis) QTL mapping and tradition single phenotype genome-wide association study (GWAS). In comparison to GWAS,  a distinct feature of molecular QTL mapping is that tens of thousands (or hundreds of thousands) of molecular phenotypes (e.g., gene expression, DNA methylation, chromatin accessibility, histone modifications) are simultaneously measured and analyzed. In addition, the candidate (cis) genomic region for each molecular phenotype is typically not large (usually spanning 1 to 2 Mb), whereas for GWAS, the candidate SNPs cover the whole genome. 
 
 
 ### Define Genomic Loci
@@ -43,4 +50,20 @@ Currently, the multi-SNP fine-mapping analysis requires individual-level genotyp
 Both enrichment analysis and QTL discovery require only summary statistics (in the simplest case, z-score or p-value from the single SNP association test). 
 
 
- 
+## Case Studies
+
+
+### Enrichment Analysis 
+
+#### Enrichment Analysis for cis-eQTL 
+
+#### Enrichment Analysis for GWAS 
+
+
+### QTL Discovery 
+
+#### QTL Discovery in cis-eQTL Mapping
+
+
+
+### Multi-SNP Fine-mapping
