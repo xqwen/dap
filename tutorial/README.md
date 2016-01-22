@@ -1,5 +1,14 @@
 # Tutorial for Integrative Genetic Association Analysis
 
+
+*[Overview](#overview-of-integrative-genetic-association-analysis)
+** [Types of Applications](#types-of-applications)
+** [Define Genomic Loci](#define-genomic-loci)
+** [Supported Data Structure](#supported-data-structure)
+** [Summary Statistics vs. Individual-Level Data](summary-statistics-vs-individual-level-data)
+
+
+
 ## Overview of Integrative Genetic Associaiton Analysis
 
 
@@ -27,7 +36,7 @@ In molecular QTL mapping, the candidate (cis) locus for each molecular phenotype
 We currently support genetic association data collected in a single study or in a meta-analytic setting. We are working on extending the software to support applications like multi-tissue eQTL mapping as described in [Flutre et al, 2013](http://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1003486). 
 
 
-### Summary Statistics vs. Individual-Level Genetic Data
+### Summary Statistics vs. Individual-Level Data
 
 Currently, the multi-SNP fine-mapping analysis requires individual-level genotype data, and we are actively working to extend the fine-mapping analysis using only summary-level data. 
 
