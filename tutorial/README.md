@@ -64,7 +64,7 @@ This case study provides an example to perform enrichment analysis in molecular 
 
 In both examples, we use the TF binding annotations from the CENTIPEDE model and account for the genomic position of each candidate SNP with respect to the transcription start site (TSS) of the corresponding target gene.
 
-
+In our demonstration, we use two types of input format to run the enrichment analysis: the single-tissue analysis of GTEx liver tissue uses the summary-level output from the software package [MatrixEQTL](http://www.bios.unc.edu/research/genomic_software/Matrix_eQTL/); for the GEUVADIS data, we pre-process the data using a Bayesian single-SNP meta-analysis method and use the resulting Bayes factors as the input for the enrichment analysis. 
 
 #### Enrichment Analysis in GWAS 
 
