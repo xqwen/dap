@@ -9,8 +9,8 @@
 
 * [Case Studies](#case-studies)
   * [Enrichment Analysis](#enrichment-analysis)
-    * [Enrichment Analysis for cis-eQTL](#enrichment-analysis-for-cis-eqtl)
-    * [Enrichment Analysis for GWAS](#enrichment-analysis-for-gwas)
+    * [Enrichment Analysis for cis-eQTL](#enrichment-analysis-in-cis-eqtl-mapping)
+    * [Enrichment Analysis for GWAS](#enrichment-analysis-in-gwas)
   * [QTL Discovery](#qtl-discovery)
     * [QTL Discovery in cis-eQTL Mapping](#qtl-discovery-in-cis-eqtl-mapping)
   * [Multi-SNP Fine-mapping](#multi-snp-fine-mapping)
