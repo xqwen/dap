@@ -16,10 +16,10 @@
   * [Multi-SNP Fine-mapping](#multi-snp-fine-mapping)
 
 
-## Overview of Integrative Genetic Associaiton Analysis
+## Overview of Integrative Genetic Association Analysis
 
 
-Comparing to the traditional genetic association analysis, which typically attempts to identify association signals between a complex trait and densly genotyped genetic markers (SNPs), the integrative analysis also quantitatively includes genomic annotations of the genetic markers into the association analysis. Our software package aims to address three inter-related analysis goals:
+Comparing to the traditional genetic association analysis, which typically attempts to identify association signals between a complex trait and densely genotyped genetic markers (SNPs), the integrative analysis also quantitatively includes genomic annotations of the genetic markers into the association analysis. Our software package aims to address three inter-related analysis goals:
 
 1. Assess the enrichment level of the annotated SNPs in the association signals (Enrichment Analysis)
 2. Discover genetic loci that harbor causal variants (QTL Discovery)
@@ -40,12 +40,12 @@ In molecular QTL mapping, the candidate (cis) locus for each molecular phenotype
 
 ### Supported Data Structure
 
-We currently support genetic association data collected in a single study or in a meta-analytic setting. We are working on extending the software to support applications like multi-tissue eQTL mapping as described in [Flutre et al, 2013](http://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1003486). 
+We currently support genetic association data collected in a single study or in a meta-analytic setting. We are active working on extending the software to support applications like multi-tissue eQTL mapping as described in [Flutre et al, 2013](http://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1003486). 
 
 
 ### Summary Statistics vs. Individual-Level Data
 
-Currently, the multi-SNP fine-mapping analysis requires individual-level genotype data, and we are actively working to extend the fine-mapping analysis using only summary-level data. 
+In the current implementation, the multi-SNP fine-mapping analysis requires individual-level genotype data, and we are actively working to extend the fine-mapping analysis using only summary-level data.
 
 Both enrichment analysis and QTL discovery require only summary statistics (in the simplest case, z-score or p-value from the single SNP association test). 
 
@@ -55,9 +55,18 @@ Both enrichment analysis and QTL discovery require only summary statistics (in t
 
 ### Enrichment Analysis 
 
-#### Enrichment Analysis for cis-eQTL 
+#### Enrichment Analysis in cis-eQTL Mapping
 
-#### Enrichment Analysis for GWAS 
+This case study provides an example to perform enrichment analysis in molecular QTL mapping. The question we are asking in this case is: is SNP predicted to disrupt transcription factor (TF) binding enriched in cis-eQTLs? We perform the analysis using two eQTL data sets
+* [a single-tissue eQTL study using GTEx liver data](enrichment/qtl/gtex_liver/)
+* [a cross-population eQTL study using GEUVADIS data](enrichment/qtl/geuvadis/)
+In both examples, we use the TF binding annotations from the CENTIPEDE model and account for the genomic position of each candidate SNP with respect to the transcription start site (TSS) of the corresponding target gene.
+
+
+
+#### Enrichment Analysis in GWAS 
+
+
 
 
 ### QTL Discovery 
