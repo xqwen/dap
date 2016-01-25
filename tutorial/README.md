@@ -66,10 +66,12 @@ In both examples, we use the TF binding annotations from the CENTIPEDE model and
 
 In our demonstration, we use two types of input format to run the enrichment analysis: the single-tissue analysis of GTEx liver tissue uses the summary-level output from the software package [MatrixEQTL](http://www.bios.unc.edu/research/genomic_software/Matrix_eQTL/); for the GEUVADIS data, we pre-process the data using a Bayesian single-SNP meta-analysis method and use the resulting Bayes factors as the input for the enrichment analysis. 
 
+
 #### Enrichment Analysis in GWAS 
 
 In this example, we demonstrate the enrichment analysis in GWAS of a complex trait (HDL) using the genomic annotations used in [Gusev et al, 2014](http://www.cell.com/ajhg/abstract/S0002-9297(14)00426-1) (downloaded from [here](https://data.broadinstitute.org/alkesgroup/ANNOTATIONS/)). In this analysis, we use the summary-level single SNP association testing z-scores originally used by [Pickrell, 2014](http://www.cell.com/ajhg/abstract/S0002-9297(14)00263-8)
 
+Follow the [link](enrichment/gwas/) for details.
 
 ### QTL Discovery 
 
