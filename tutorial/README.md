@@ -58,8 +58,10 @@ Both enrichment analysis and QTL discovery require only summary statistics (in t
 #### Enrichment Analysis in cis-eQTL Mapping
 
 This case study provides an example to perform enrichment analysis in molecular QTL mapping. The question we are asking in this case is: is SNP predicted to disrupt transcription factor (TF) binding enriched in cis-eQTLs? We perform the analysis using two eQTL data sets
+
 * [a single-tissue eQTL study using GTEx liver data](enrichment/qtl/gtex_liver/)
 * [a cross-population eQTL study using GEUVADIS data](enrichment/qtl/geuvadis/)
+
 In both examples, we use the TF binding annotations from the CENTIPEDE model and account for the genomic position of each candidate SNP with respect to the transcription start site (TSS) of the corresponding target gene.
 
 
