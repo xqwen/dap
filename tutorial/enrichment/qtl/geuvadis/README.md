@@ -4,7 +4,22 @@ The GEUVADIS data are multi-population eQTL data, which are originally distribut
 
 
 
-## Step 1: Prepare input files
+
+## Sample Data Download
+
+We have prepared the complete input files of GEUVADIS data for user's reference. Due to the size limitation, all the gzipped files are placed on an external server.
+
+* Pre-computed single SNP Bayes factors by sbams_sslr: [geuv.summary.bf.gz](http://www-personal.umich.edu/~xwen/dap/data/geuv/geuv.summary.bf.gz)
+
+* SNP map: [geuv.snp.map.gz](http://www-personal.umich.edu/~xwen/dap/data/geuv/geuv.snp.map.gz)
+
+* Gene map: [geuv.gene.map.gz](http://www-personal.umich.edu/~xwen/dap/data/geuv/geuv.gene.map.gz)
+
+* Binding variants annotation file: [geuv.annot.gz](http://www-personal.umich.edu/~xwen/dap/data/geuv/geuv.annot.gz)
+
+
+
+## Input Data Format
 
 The GEUVADIS data contain expression-genotype data from 5 different populations (YRI, CEU, GBR, FIN and TSI), and we perform eQTL analysis across all 5 populations. In this analysis, we consider two types of genomic annotations: SNP distances to TSS and SNP-level transcritpion factor binding annotations from the CENTIPEDE model. 
 
@@ -54,19 +69,8 @@ In this particular example, category "0" represents the baseline SNPs, category 
 
 Finally, TORUS expects all input files are gzipped. 
 
-We have prepared the complete input files of GEUVADIS data for user's reference. Due to the size limitation, all the gzipped files are placed on an external server.
 
-* Pre-computed single SNP Bayes factors by sbams_sslr: [geuv.summary.bf.gz](http://www-personal.umich.edu/~xwen/dap/data/geuv/geuv.summary.bf.gz)
-
-* SNP map: [geuv.snp.map.gz](http://www-personal.umich.edu/~xwen/dap/data/geuv/geuv.snp.map.gz)
-
-* Gene map: [geuv.gene.map.gz](http://www-personal.umich.edu/~xwen/dap/data/geuv/geuv.gene.map.gz)
-
-* Binding variants annotation file: [geuv.annot.gz](http://www-personal.umich.edu/~xwen/dap/data/geuv/geuv.annot.gz)
-
-
-
-## Step 2: Perform Enrichment Analysis 
+## Running Enrichment Analysis 
 
 The enrichment analysis is embedded in the eGene discovery, it does not need to be run separately. However, if one is interested in obtaining point and uncertainty estimates for the enrichment parameters, use the following command 
 ```
@@ -75,7 +79,7 @@ The enrichment analysis is embedded in the eGene discovery, it does not need to 
 where ``` --load_bf``` specifies the input file is using pre-computed Bayes factors, and ```-est``` instructs TORUS to output the 95% confidence intervals for each estimated enrichment parameter.
 
 
-### Output from enrichment analysis
+## Output and Result
 
 The results for enrichment analysis is directly output to the screen, and can be re-directed to a file (in our example, "geuv.enrichment.est"). The output has the following format
 ```
