@@ -75,7 +75,7 @@ Finally, TORUS expects all input files are gzipped.
 
 The compiled binary executable ```torus``` is required to run the enrichment analysis. Use the following command to start the enrichment analysis
 ```
- torus -d  Liver_Analysis.cis.eqtl.gz  -smap snp.map.gz -gmap gene.map.gz -annot gtex.annot.gz  -est > gtex_liver.enrichment.est
+ torus -d  gtex.liver.summary.gz  -smap gtex.snp.map.gz -gmap gtex.gene.map.gz -annot gtex.centipede.annot.gz  -est > gtex_liver.enrichment.est
 ```
 In particular,```-est``` instructs TORUS to output the 95% confidence intervals for each estimated enrichment parameter.
 
