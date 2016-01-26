@@ -1,6 +1,6 @@
-#  cis-eQTL Enrichment Analysis  using GEUVADIS Data 
+#  Cis-eQTL Enrichment Analysis  using GEUVADIS Data 
 
-The GEUVADIS data are multi-population eQTL data, which are originally distributed from [this website](http://www.ebi.ac.uk/arrayexpress/files/E-GEUV-1/analysis_results/). We performed additional pre-processing steps that are documented in [Wen et al, 2015](http://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1005176). 
+The GEUVADIS data are multi-population eQTL data, which are originally distributed from [this website](http://www.ebi.ac.uk/arrayexpress/files/E-GEUV-1/analysis_results/). We performed additional pre-processing steps that are documented in [Wen et al, 2015](http://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1005176), and formated the data suitable for our software.
 
 
 
