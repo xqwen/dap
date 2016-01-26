@@ -5,10 +5,11 @@ The data set contains eQTL data in liver which are originally downloaded from [G
 
 ## Sample Data Download
 
-* single-SNP eQTL summary statistics output from ``MatrixEQTL": gtex.liver.summary.gz
-* SNP map: gtex.snp.map.gz
-* Gene map: gtex.gene.map.gz
-* Binding variants annotation file from the CENTIPEDE model: gtex.centipede.annot.gz 
+* single-SNP eQTL summary statistics output from ```MatrixEQTL```: gtex.liver.summary.gz (This file is too large for our server ~3Gb, please download it directly from [GTEx Portal](http://gtexpo\
+rtal.org/home/)
+* SNP map: [gtex.snp.map.gz](http://www-personal.umich.edu/~xwen/download/gtex_liver/gtex.snp.map.gz)
+* Gene map: [gtex.gene.map.gz](http://www-personal.umich.edu/~xwen/download/gtex_liver/gtex.gene.map.gz)
+* Binding variants annotation file from the CENTIPEDE model: [gtex.centipede.annot.gz](http://www-personal.umich.edu/~xwen/download/gtex_liver/gtex.centipede.annot.gz) 
 
 
 ## Input Data Format
