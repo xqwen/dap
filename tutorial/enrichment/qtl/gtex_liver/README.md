@@ -32,7 +32,8 @@ This output file from MatrixEQTL can be directly taken as input for ``torus``.
 To control for SNP distance to TSS, TORUS requires gene TSS information and SNP position files (i.e., gene map and SNP map). 
 
 The gene map also has the MatrixEQTL format,
-```Id	Chr	TSS	TSS
+```
+Id	Chr	TSS	TSS
 ENSG00000223972.4	1	11869	11869
 ENSG00000243485.2	1	29554	29554
 ENSG00000227232.4	1	29806	29806
@@ -41,7 +42,8 @@ ENSG00000237613.2	1	36081	36081
 where the column 1-3 represent gene name, chromosome and position of TSS. The last column (column 4) is reseved but currently not in use by TORUS (in this example, we just replicate the TSS, but one can certainly replace it with TES information).
 
 The SNP map also has the MatrixEQTL format, i.e., 
-```ID	CHROM	POS
+```
+ID	CHROM	POS
 1_30923_G_T_b37	1	30923
 1_51479_T_A_b37	1	51479
 1_52058_G_C_b37	1	52058
