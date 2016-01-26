@@ -1,6 +1,6 @@
 # Cis-eQTL Enrichment Analysis using GTEx Liver Data 
 
-The data set contains eQTL data in liver which are originally downloaded from [GTEx portal](http://gtexportal.org/home/). In particular, the summary-level data for each gene-SNP pair are directly output from the software package [MatrixEQTL](http://www.bios.unc.edu/research/genomic_software/Matrix_eQTL/), which is commonly used for cis-eQTL analysis.
+The data set contains eQTL data in liver which are originally downloaded from [GTEx portal](http://gtexportal.org/home/). In particular, the summary-level data for each gene-SNP pair are directly output from the software package [MatrixEQTL](http://www.bios.unc.edu/research/genomic_software/Matrix_eQTL/), which is commonly used for cis-eQTL analysis. In this example, we show that the enrichment analysis can take the input and output files from the popular eQTL analysis software ``MatrixEQTL`` and perform the desired enrichment analysis. 
 
 
 ## Sample Data Download
@@ -24,7 +24,7 @@ SNP	gene	beta	 t-stat	p-value
 ```
 The columns 1-2 represent SNP and gene names, respectively. Column 3 represents the least-square estimate (LSE, in this case also MLE) of the genetic effect for each gene-SNP pair. Columns 4 and 5 represent the corresponding t-statistic and p-values. 
 
-This output file can be directly used as input for ``torus``.
+This output file from MatrixEQTL can be directly taken as input for ``torus``.
 
 
 ### SNP and gene map files
