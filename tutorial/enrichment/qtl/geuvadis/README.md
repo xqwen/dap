@@ -72,7 +72,7 @@ Finally, TORUS expects all input files are gzipped.
 
 ## Running Enrichment Analysis 
 
-The enrichment analysis is embedded in the eGene discovery, it does not need to be run separately. However, if one is interested in obtaining point and uncertainty estimates for the enrichment parameters, use the following command 
+The compiled binary executable torus is required to run the enrichment analysis. Use the following command to start the enrichment analysis
 ```
  torus -d geuv.summary.bf.gz --load_bf -smap geuv.snp.map.gz -gmap geuv.gene.map.gz -annot geuv.annot.gz  -est > geuv.enrichment.est
 ```
