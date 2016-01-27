@@ -34,7 +34,7 @@ The first two goals can be achieved by the executable "[torus](https://github.co
 We currently support two types of applications: molecular (cis) QTL mapping and tradition single phenotype genome-wide association study (GWAS). In comparison to GWAS,  a distinct feature of molecular QTL mapping is that tens of thousands (or hundreds of thousands) of molecular phenotypes (e.g., gene expression, DNA methylation, chromatin accessibility, histone modifications) are simultaneously measured and analyzed. In addition, the candidate (cis) genomic region for each molecular phenotype is typically not large (usually spanning 1 to 2 Mb), whereas for GWAS, the candidate SNPs cover the whole genome. 
 
 
-### Define Genomic Loci
+### Defining Genomic Loci
 In molecular QTL mapping, the candidate (cis) locus for each molecular phenotype is naturally defined. For GWAS, we adopt the partitioning algorithm recently proposed by [Berisa and Pickrell, 2015](http://bioinformatics.oxfordjournals.org/content/32/2/283) to segment the whole genome into a set of disjoint loci, which roughly represent independent LD blocks. The partition is population specific: for European population, there are about 1,700 loci and  each locus on average spans 1.6Mb. The detailed information on the partitioning is provided in [here](https://bitbucket.org/nygcresearch/ldetect) by the Pickrell lab.
  
 
