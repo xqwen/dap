@@ -3,7 +3,7 @@
 
 * [Overview](#overview-of-integrative-genetic-association-analysis)
   * [Types of Applications](#types-of-applications)
-  * [Define Genomic Loci](#define-genomic-loci)
+  * [Defining Genomic Loci](#defining-genomic-loci)
   * [Supported Data Structure](#supported-data-structure)
   * [Summary Statistics vs. Individual-Level Data](#summary-statistics-vs-individual-level-data)
 
