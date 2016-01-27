@@ -71,8 +71,9 @@ In our demonstration, we use two types of input format to run the enrichment ana
 
 In this example, we demonstrate the enrichment analysis in GWAS of a complex trait (HDL) using the genomic annotations used in [Gusev et al, 2014](http://www.cell.com/ajhg/abstract/S0002-9297(14)00426-1) (downloaded from [here](https://data.broadinstitute.org/alkesgroup/ANNOTATIONS/)). In this analysis, we use the summary-level single SNP association testing z-scores originally used by [Pickrell, 2014](http://www.cell.com/ajhg/abstract/S0002-9297(14)00263-8). Follow the [link](enrichment/gwas/) for details.
 
-### QTL Discovery 
+### [QTL Discovery](https://github.com/xqwen/dap/tree/master/tutorial/QTL_discovery) 
 
-
+QTL discovery aims to perform multiple hypothesis testing and identify genomic loci that harbor causal variants. In cis-eQTL mapping, QTL discovery is often referred to as eGene discovery. 
+The analysis is done by the executable ```torus```, and the details can be found [here](https://github.com/xqwen/dap/tree/master/tutorial/QTL_discovery).
 
 ### Multi-SNP Fine-mapping
