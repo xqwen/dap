@@ -1,4 +1,4 @@
-# Enrichment Analysis of HDL-associated Genetic Variants 
+# Enrichment Analysis in GWAS 
 
 In this example, we study the enrichment of functionally annotated genetic variants associated with high density cholesterol (HDL). In this analysis, we use the z-scores of single-SNP association testing of HDL association ([Pickrell, 2014](http://www.cell.com/ajhg/abstract/S0002-9297(14)00263-8)) and functional annotations derived from ENCODE data by [Gusev et al, 2014](http://www.cell.com/ajhg/abstract/S0002-9297(14)00426-1).  
 
