@@ -2,7 +2,7 @@
 
 ## Sample Data Download
 
-A sample data set of gene ENSG00000112799 from the GEUVADIS project is included in the [sample_data](/sample_data/) directory.
+A sample data set of gene ENSG00000112799 from the GEUVADIS project is included in the [sample_data](sample_data/) directory.
 
 
 ## Input Data Format
