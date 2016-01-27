@@ -86,6 +86,7 @@ In particular,```-est``` instructs TORUS to output the 95% confidence intervals 
 
 The results for enrichment analysis is directly output to the screen, and can be re-directed to a file (in our example, "gtex_liver.enrichment.est"). The output has the following format
 ```
+Intercept     -4.170        -4.180     -4.161
 binding.1      0.623         0.226      1.021
 binding.2      1.222         0.946      1.499
 ```
