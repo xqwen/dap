@@ -55,7 +55,7 @@ Both enrichment analysis and QTL discovery require only summary statistics (in t
 
 ### Enrichment Analysis 
 
-#### Enrichment Analysis in cis-eQTL Mapping
+#### [Enrichment Analysis in cis-eQTL Mapping](https://github.com/xqwen/dap/tree/master/tutorial/enrichment/qtl/)
 
 This case study provides an example to perform enrichment analysis in molecular QTL mapping. The question we are asking in this case is: is SNP predicted to disrupt transcription factor (TF) binding enriched in cis-eQTLs? We perform the analysis using two eQTL data sets
 
@@ -67,15 +67,11 @@ In both examples, we use the TF binding annotations from the CENTIPEDE model and
 In our demonstration, we use two types of input format to run the enrichment analysis: the single-tissue analysis of GTEx liver tissue uses the summary-level output from the software package [MatrixEQTL](http://www.bios.unc.edu/research/genomic_software/Matrix_eQTL/); for the GEUVADIS data, we pre-process the data using a Bayesian single-SNP meta-analysis method and use the resulting Bayes factors as the input for the enrichment analysis. 
 
 
-#### Enrichment Analysis in GWAS 
+#### [Enrichment Analysis in GWAS](https://github.com/xqwen/dap/tree/master/tutorial/enrichment/gwas) 
 
-In this example, we demonstrate the enrichment analysis in GWAS of a complex trait (HDL) using the genomic annotations used in [Gusev et al, 2014](http://www.cell.com/ajhg/abstract/S0002-9297(14)00426-1) (downloaded from [here](https://data.broadinstitute.org/alkesgroup/ANNOTATIONS/)). In this analysis, we use the summary-level single SNP association testing z-scores originally used by [Pickrell, 2014](http://www.cell.com/ajhg/abstract/S0002-9297(14)00263-8)
-
-Follow the [link](enrichment/gwas/) for details.
+In this example, we demonstrate the enrichment analysis in GWAS of a complex trait (HDL) using the genomic annotations used in [Gusev et al, 2014](http://www.cell.com/ajhg/abstract/S0002-9297(14)00426-1) (downloaded from [here](https://data.broadinstitute.org/alkesgroup/ANNOTATIONS/)). In this analysis, we use the summary-level single SNP association testing z-scores originally used by [Pickrell, 2014](http://www.cell.com/ajhg/abstract/S0002-9297(14)00263-8). Follow the [link](enrichment/gwas/) for details.
 
 ### QTL Discovery 
-
-#### QTL Discovery in cis-eQTL Mapping
 
 
 
