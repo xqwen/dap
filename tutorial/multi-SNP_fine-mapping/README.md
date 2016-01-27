@@ -35,7 +35,7 @@ Missing values in phenotype and genotype data are allowed, and they should be re
 
 The grid file contains information on prior effect size specifications for causal variants. In the fine-mapping analysis, the effect size of each causal variant is treated as a nuisance parameter and integrated out. In our model, the effect size is defined on the scale of signal-noise ratio, and therefore unit-less. For the general meta-analytic setting, two (hyper-)parameters, phi and omega, are required: phi represents the heterogeneity of a genetic effect across multiple subgroups, and omega describes the average effect size. For commonly-used fixed-effect meta-analysis, simply specify phi=0. We use a grid of (phi, omega) combinations to describe the long-tail behavior of the genetic effects observed in practice. If the data only contains a single study, only omega needs to be specified and phi should be set as 0. The mathematical details on the effect size prior specification can be found in [Wen and Stephens, 2014](http://projecteuclid.org/euclid.aoas/1396966283) and [Flutre et al,2013](http://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1003486). 
 
-The grid file contains a two-column data matrix: the first column  specifies phi and the second column specifies omega the average effect size (hyper)-parameter (omega). Each row of the grid data matrix provides a unique combination. A grid file for fixed-effect meta-analysis is given in below.    
+The grid file contains a two-column data matrix: the first column  specifies phi and the second column specifies omega the average effect size (hyper)-parameter (omega). Each row of the grid data matrix provides a unique combination. A sample grid file for fixed-effect meta-analysis is given below.    
 
 ```
 0.0000  0.1000
@@ -47,4 +47,25 @@ The grid file contains a two-column data matrix: the first column  specifies phi
 
 
 ### Prior File (Optional)
+
+
+#### Automatic Prior Computation by TORUS
+
+
+### Running Multi-SNP Fine-mapping Analysis
+
+#### Important Command-line Options
+
+
+### Interpretation of Results
+
+
+
+
+
+
+
+
+
+
 
