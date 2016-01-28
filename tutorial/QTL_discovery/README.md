@@ -4,7 +4,7 @@
 
 ## Data Preparation 
 
-The QTL discovery requires same data format as in the enrichment analysis. It takes summary statistics in forms of [point estimates and standard errors](https://github.com/xqwen/dap/tree/master/tutorial/enrichment/qtl/gtex_liver/#input-data-format), [pre-computed Bayes factors](https://github.com/xqwen/dap/tree/master/tutorial/enrichment/qtl/geuvadis/#input-data-format), or simply [z-scores](https://github.com/xqwen/dap/tree/master/tutorial/enrichment/gwas#input-data-format), all from single-SNP association analysis. 
+The QTL discovery requires same data format as in the enrichment analysis. It takes summary statistics in forms of [point estimates and standard errors](https://github.com/xqwen/dap/tree/master/tutorial/enrichment/qtl/gtex_liver/#input-data-format), [pre-computed (log10) Bayes factors](https://github.com/xqwen/dap/tree/master/tutorial/enrichment/qtl/geuvadis/#input-data-format), or simply [z-scores](https://github.com/xqwen/dap/tree/master/tutorial/enrichment/gwas#input-data-format), all from single-SNP association analysis. 
 
 Functional annotations for SNPs and their position information can also be used in the QTL discovery. The data format can be found in above links.
 
