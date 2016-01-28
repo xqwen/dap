@@ -82,7 +82,22 @@ torus -d geuv.summary.bf.gz --load_bf -smap geuv.snp.map.gz -gmap geuv.gene.map.
 ```
 ### Running Multi-SNP Fine-mapping Analysis
 
+
+Running multi-SNP fine-mapping analysis requires binary executable ```dap```. To start the analysis, type the following command 
+``` 
+dap -d ENSG00000112799.dat -g grid -t 8 -it 0.05 > ENSG0000112799.fm.rst
+```
+
 #### Important Command-line Options
+
+The minimum required command-line options for running the analysis are "-d" (followed by phenotype-genotype data file name) and "-g" (followed by grid file name). Other options are all optional, however important for efficient computation. Here are some options are particularly important for efficiency:
+
+* ```-t thread_number```: specify number of parallel threads in computation. Using parallel processing can greatly improve the efficiency of the fine-mapping analysis, DAP is implemented using OpenMP library and can take advantage of multi-thread computation. Because of the computational intensity, we strongly recommend running DAP in a multi-core environment. By default, the thread\_number is set to 1.
+
+* ```-it inclusion_threshold```: the inclusion\_threshold is a parameter that DAP algorithm used to screen marginally or conditionally noteworthy candidate SNPs. It is defined in a probability scale ranging from 0 to 1. If it is set to 0, DAP regards all candidate SNPs as noteworthy, and the DAP carries out the exact calculation (without approximation), which is computationally most expensive and typically not desired; when it is set to a relatively large value, e.g., 0.25, the behavior of the DAP becomes similar to commonly applied conditional analysis, which is fast but does not fully account for LD or explore the model space. The default value is set to 0.01. However if a locus contains large number of SNPs and/or the LD pattern within a locus is complicated, the running time could be long.  in such cases, we recommend to set a modest inclusion\_threshold at 0.05, with which we observe very insignificant precision loss (comparing to the default 0.01 value)
+  
+
+
 
 
 ### Interpretation of Results
