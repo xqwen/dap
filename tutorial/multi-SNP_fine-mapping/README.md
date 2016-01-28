@@ -1,5 +1,7 @@
 # Multi-SNP Fine-mapping Analysis
 
+It is important to note that multi-SNP fine-mapping analysis should be performed for each locus, all the data files should be organized for each locus separately before running the analysis.
+
 
 ## Sample Data Download
 
@@ -54,6 +56,22 @@ The [sample file](sample_data/grid) used in cross-population cis-eQTL analysis a
 
 
 ### Prior File (Optional)
+
+The prior file specifies SNP-level prior for each candidate SNP. This file is optional, if not specified, the analysis assumes that prior for each SNP is 1/p, where p is the number of candidate SNPs in the locus. Note that, this default prior implies that the prior expected number of causal SNPs is 1 in the locus. For loci identified in the QTL discovery step, this default prior is likely conservative. Nevertheless, we highly recommend that users specify the SNP-level priors, especially when relevant genomic annotations are used, and their enrichment levels are quantified in the enrichment analysis step.
+
+The prior file takes the following simple format
+```
+chr6.6488577  3.033e-04
+chr6.6488581  3.033e-04
+chr6.6488609  3.033e-04
+chr6.6488817  3.033e-04
+chr6.6488818  3.033e-04
+chr6.6489565  2.575e-04
+chr6.6489624  2.575e-04
+chr6.6489755  2.575e-04
+chr6.6489774  2.575e-04
+```
+The first column represents the SNP name and the second column represents the prior probability that the SNP is associated. 
 
 
 #### Automatic Prior Computation by TORUS
