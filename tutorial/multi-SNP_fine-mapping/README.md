@@ -76,7 +76,10 @@ The first column represents the SNP name and the second column represents the pr
 
 #### Automatic Prior Computation by TORUS
 
-
+The SNP-level priors can be computed by the executable ```torus``` in the process of enrichment analysis. Essentially, the prior is computed using an empirical Bayes approach by plugging in the point estimate of the enrichment parameters. Use the command-line option "_dump\_prior_ direcotory_name" in either enrichment or QTL discovery analysis. Once the option specified, ```torus``` outputs prior files for each locus in the specified directory. e.g.,   
+```
+torus -d geuv.summary.bf.gz --load_bf -smap geuv.snp.map.gz -gmap geuv.gene.map.gz -annot geuv.annot.gz  -est -dump_prior gene_prior > geuv.enrichment.est
+```
 ### Running Multi-SNP Fine-mapping Analysis
 
 #### Important Command-line Options
