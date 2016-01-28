@@ -80,7 +80,7 @@ The SNP-level priors can be computed by the executable ```torus``` in the proces
 ```
 torus -d geuv.summary.bf.gz --load_bf -smap geuv.snp.map.gz -gmap geuv.gene.map.gz -annot geuv.annot.gz  -est -dump_prior gene_prior > geuv.enrichment.est
 ```
-### Running Multi-SNP Fine-mapping Analysis
+## Running Multi-SNP Fine-mapping Analysis
 
 
 Running multi-SNP fine-mapping analysis requires binary executable ```dap```. To start the analysis, type the following command 
@@ -88,7 +88,7 @@ Running multi-SNP fine-mapping analysis requires binary executable ```dap```. To
 dap -d ENSG00000112799.dat -g grid -t 8 -it 0.05 > ENSG0000112799.fm.rst
 ```
 
-#### Important Command-line Options
+### Important Command-line Options
 
 The minimum required command-line options for running the analysis are "-d" (followed by phenotype-genotype data file name) and "-g" (followed by grid file name). Other options are all optional, however important for efficient computation. Here are some options are particularly important for efficiency:
 
@@ -98,7 +98,7 @@ The minimum required command-line options for running the analysis are "-d" (fol
   
 
 
-### Interpretation of Results
+## Interpretation of Results
 
 
 
