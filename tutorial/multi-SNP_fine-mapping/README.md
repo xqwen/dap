@@ -100,7 +100,7 @@ The minimum required command-line options for running the analysis are "-d" (fol
 
 ## Interpretation of Results
 
-The output from the multi-SNP analysis contains full posterior information on possible association models and the inclusion probabilities of each individual SNP. 
+The output from the multi-SNP analysis contains full posterior information on possible association models and the inclusion probabilities of each individual SNP. A [sample output](sample_data/ENSG00000112799.fm.rst) is provided for reference.
 
 The first portion of the output ranks the high-probability association models
 
