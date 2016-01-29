@@ -717,7 +717,7 @@ void controller::summarize_approx_posterior(){
   
   
   fprintf(outfd, "\nPosterior expected model size: %.3f (sd = %.3f)\n", msize_mean, sqrt(msize_var));
-  fprintf(outfd, "LogBF = %.5f ( Log10BF = %.3f )", log10_pnorm/log10(exp(1)), log10_pnorm);
+  fprintf(outfd, "LogNC = %.5f ( Log10NC = %.3f )", log10_pnorm/log10(exp(1)), log10_pnorm);
   
   fprintf(outfd,"\nPosterior inclusion probability\n\n");
   std::sort(nsnp_vec.begin(),nsnp_vec.end(),sort_nsnp_dec_by_ip);
