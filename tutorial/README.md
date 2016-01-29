@@ -76,4 +76,6 @@ In this example, we demonstrate the enrichment analysis in GWAS of a complex tra
 QTL discovery aims to perform multiple hypothesis testing and identify genomic loci that harbor causal variants. In cis-eQTL mapping, QTL discovery is often referred to as eGene discovery. 
 The analysis is done by the executable ```torus```, and the details can be found [here](https://github.com/xqwen/dap/tree/master/tutorial/QTL_discovery).
 
-### Multi-SNP Fine-mapping
+### [Multi-SNP Fine-mapping](multi-SNP_fine-mapping/)
+
+in this section of the tutorial, we provide detailed instructions for multi-SNP fine-mapping analysis using DAP. Some useful utility scripts to aid interpreting fine-mapping results are also introduced [here](multi-SNP_fine-mapping/).   
