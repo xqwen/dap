@@ -123,7 +123,7 @@ The second portion of the output provides some useful summary posterior statisti
 Posterior expected model size: 3.039 (sd = 0.200)
 LogNC = 111.30984 ( Log10NC = 48.341 )
 ``` 
-The posterior expected model size indicates the posterior expected number of independent association signals within the locus of interest. In the above example, this summary statistics indicates that there are roughly 3 independent association signals co-existing in the locus. 
+The posterior expected model size indicates the posterior expected number of independent association signals within the locus of interest. In the above example, this summary statistics indicates that there are roughly 3 independent association signals co-existing in the locus. logNC (and log10NC) gives estimated normalizing constant.
 
 The last section of the output provides posterior inclusion probabilities for highly ranked SNPs
 ```
@@ -141,11 +141,33 @@ The first and the second column gives the rank and the id of the SNPs, the third
  
 ### Utilities Aiding Posterior Interpretation 
 
-Although the output files contain the full posterior information on the fine-mapping analysis, those results sometimes can still be difficult to digest. One of the frequently asked questions is how to identify independent signal clusters and member SNPs for each cluster. We provide a few utility scripts in [utility](../../utility/) direcotry to facilitate posterior interpretations. 
+Although the output files contain the full posterior information on the fine-mapping analysis, those results sometimes can still be difficult to digest. One of the frequently asked questions is how to identify independent signal clusters and member SNPs for each cluster. We provide a few utility scripts in [utility](../../utility/) directory to facilitate posterior interpretations. 
 
-  
+* ```cluster\_pip.pl```: this perl script  takes ```dap``` output and uses an ad-hoc algorithm (described in [Wen et al 2015](http://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1005176) supplementary text section S.4) to cluster SNPs into user defined number of independent signal clusters. Internally, the perl script invokes an R script ```cluster\_pip.R``` to perform hierarchical clustering. The path of ```cluster_pip.R``` should be specified in the perl script or on the command line. The syntax for running the automatic clustering script is:
+```
+cluster_pip.pl -d dap_output_file -c cluster_number
+```
+An sample output is shown below
+```
+   chr6.6589277   0.46010  1   1.03732   38.218
+   chr6.6587194   0.11850  1   1.03732   38.022
+   chr6.6588881   0.10760  1   1.03732   38.022
+   chr6.6585976   0.09394  1   1.03732   38.218
+   chr6.6583181   0.08269  1   1.03732   38.218
+   chr6.6586605   0.05558  1   1.03732   38.022
+   chr6.6582862   0.04892  1   1.03732   38.022
+   chr6.6582001   0.04681  1   1.03732   38.218
+   chr6.6581770   0.01715  1   1.03732   37.830
+   chr6.6659340   0.00603  1   1.03732    2.342
+   chr6.6626263   0.99900  2   0.99900    6.125
+   chr6.6643657   0.39640  3   0.99767    4.253
+   chr6.6640640   0.25920  3   0.99767    2.543
+   chr6.6646966   0.15940  3   0.99767    1.734
+   chr6.6641035   0.10810  3   0.99767    2.412
+   chr6.6644538   0.07457  3   0.99767    4.072
 
-
+``` 
+The first and second columns represent the SNP name and individual SNP PIP value, respectively. The 3rd and 4th columns provide cluster id and cluster-level PIPs (by summing up the SNP-level PIPs within the cluster), and the last column represents log10 Bayes factor from the single-SNP association testing. Note that as an ad-hoc algorithm, there is no guarantee that  cluster-level PIPs are bounded by 1, but they are not expected to be much larger than 1 if the number of clusters specified is reasonable. This clustering algorithm does not use LD information, one should also examine the genotype LD between SNPs within each cluster to confirm the validity of the automatic clustering (also as an independent check).  
 
 
 
