@@ -139,7 +139,11 @@ The last section of the output provides posterior inclusion probabilities for hi
 The first and the second column gives the rank and the id of the SNPs, the third column represents the posterior inclusion probability (PIP) marginalized from the posterior model probabilities. The last column gives log10 Bayes factor of the corresponding SNP in single-SNP testing. By default, the output only contains SNPs whose PIPs > 1e-3. The user can opt to output PIPs for all the candidate SNPs by setting the command-line option ```"-all"```. 
 
  
+### Utilities Aiding Posterior Interpretation 
 
+Although the output files contain the full posterior information on the fine-mapping analysis, those results sometimes can still be difficult to digest. One of the frequently asked questions is how to identify independent signal clusters and member SNPs for each cluster. We provide a few utility scripts in [utility](../../utility/) direcotry to facilitate posterior interpretations. 
+
+  
 
 
 
