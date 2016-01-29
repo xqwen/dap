@@ -725,7 +725,7 @@ void controller::summarize_approx_posterior(){
   for(int i=0;i<nsnp_vec.size();i++){
     if(nsnp_vec[i].incl_prob<1e-3&&!output_all)
       break;
-    fprintf(outfd,"%5d %10s   %8.5e   (c) %7.3f\n",i+1, nsnp_vec[i].name.c_str(), nsnp_vec[i].incl_prob, single_log10_abfv[nsnp_vec[i].name]);
+    fprintf(outfd,"%5d %10s   %8.5e    %7.3f\n",i+1, nsnp_vec[i].name.c_str(), nsnp_vec[i].incl_prob, single_log10_abfv[nsnp_vec[i].name]);
   }
 
   
