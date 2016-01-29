@@ -92,13 +92,34 @@ dap -d ENSG00000112799.dat -g grid -t 8 -it 0.05 > ENSG0000112799.fm.rst
 
 The minimum required command-line options for running the analysis are "-d" (followed by phenotype-genotype data file name) and "-g" (followed by grid file name). Other options are all optional, however important for efficient computation. Here are some options are particularly important for efficiency:
 
-* ```-t thread_number```: specify number of parallel threads in computation. Using parallel processing can greatly improve the efficiency of the fine-mapping analysis, DAP is implemented using OpenMP library and can take advantage of multi-thread computation. Because of the computational intensity, we strongly recommend running DAP in a multi-core environment. By default, the thread\_number is set to 1.
+* ```-t thread_number```: specify number of parallel threads in computation. Using parallel processing can greatly improve the efficiency of the fine-mapping analysis, DAP is implemented using OpenMP library and can take advantage of multi-thread computation. Because of the computational intensity, we strongly recommend running DAP in a multi-core environment. By default, the thread\_number is set to 1. On an eight-core computer, running the sample data set using 8 parallel thread takes about 21 seconds real time; the single-thread execution takes about 100 seconds.
 
-* ```-it inclusion_threshold```: the inclusion\_threshold is a parameter that DAP algorithm used to screen marginally or conditionally noteworthy candidate SNPs. It is defined in a probability scale ranging from 0 to 1. If it is set to 0, DAP regards all candidate SNPs as noteworthy, and the DAP carries out the exact calculation (without approximation), which is computationally most expensive and typically not desired; when it is set to a relatively large value, e.g., 0.25, the behavior of the DAP becomes similar to commonly applied conditional analysis, which is fast but does not fully account for LD or explore the model space. The default value is set to 0.01. However if a locus contains large number of SNPs and/or the LD pattern within a locus is complicated, the running time could be long.  in such cases, we recommend to set a modest inclusion\_threshold at 0.05, with which we observe very insignificant precision loss (comparing to the default 0.01 value)
+* ```-it inclusion_threshold```: the inclusion\_threshold is a parameter that DAP algorithm used to screen marginally or conditionally noteworthy candidate SNPs. It is defined in a probability scale ranging from 0 to 1. If it is set to 0, DAP regards all candidate SNPs as noteworthy, and carries out the exact calculation (without approximation), which is computationally most expensive and typically not desired; when it is set to a relatively large value, e.g., 0.25, the behavior of the DAP becomes similar to commonly applied conditional analysis, which is fast but does not fully account for LD or explore the model space sufficiently. The default value is set to 0.01. However if a locus contains large number of SNPs and/or the LD pattern within a locus is complicated, the running time could be long.  in such cases, we recommend to set a modest inclusion\_threshold at 0.05, with which we observe very insignificant precision loss (comparing to the default 0.01 value).
   
 
 
 ## Interpretation of Results
+
+The output from the multi-SNP analysis contains full posterior information on possible association models and the inclusion probabilities of each individual SNP. 
+
+The first portion of the output ranks the high-probability association models
+
+```
+    1   4.0559e-02    3     47.056   [chr6.6589277] [chr6.6626263] [chr6.6643657]
+    2   4.0559e-02    3     47.056   [chr6.6585976] [chr6.6626263] [chr6.6643657]
+    3   4.0559e-02    3     47.056   [chr6.6583181] [chr6.6626263] [chr6.6643657]
+    4   4.0559e-02    3     47.056   [chr6.6582001] [chr6.6626263] [chr6.6643657]
+    5   3.8027e-02    3     47.028   [chr6.6585976] [chr6.6626263] [chr6.6640640]
+    6   3.8027e-02    3     47.028   [chr6.6582001] [chr6.6626263] [chr6.6640640]
+    7   3.8027e-02    3     47.028   [chr6.6589277] [chr6.6626263] [chr6.6640640]
+    8   3.8027e-02    3     47.028   [chr6.6583181] [chr6.6626263] [chr6.6640640]
+    9   2.7093e-02    3     46.881   [chr6.6583181] [chr6.6626263] [chr6.6644538]
+   10   2.7093e-02    3     46.881   [chr6.6589277] [chr6.6626263] [chr6.6644538]
+   11   2.7093e-02    3     46.881   [chr6.6585976] [chr6.6626263] [chr6.6644538]
+   12   2.7093e-02    3     46.881   [chr6.6582001] [chr6.6626263] [chr6.6644538]
+   13   2.2986e-02    3     46.810   [chr6.6588881] [chr6.6626263] [chr6.6643657]
+```
+The second column indicates the posterior probability of each association model, the third column represents the size (i.e., the number of member SNPs) of the corresponding model. Column 4 represents the un-normalized posterior score at the log10 scale, i.e., log10(Prior) + log10(BF), and the remaining of the row lists the members of the corresponding association model. Note that in the above example, the first four rows have the identical posterior probabilities, because the SNPs chr6.6589277, chr6.6585976, chr6.6583181 and chr6.6582001 are in perfect LD, and therefore "interchangeable". 
 
 
 
