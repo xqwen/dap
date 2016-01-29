@@ -85,7 +85,7 @@ torus -d geuv.summary.bf.gz --load_bf -smap geuv.snp.map.gz -gmap geuv.gene.map.
 
 Running multi-SNP fine-mapping analysis requires binary executable ```dap```. To start the analysis, type the following command 
 ``` 
-dap -d ENSG00000112799.dat -g grid -t 8 -it 0.05 > ENSG0000112799.fm.rst
+dap -d ENSG00000112799.dat -g grid -t 8 -it 0.05 -prior ENSG00000112799.binding.prior> ENSG0000112799.fm.rst
 ```
 
 ### Important Command-line Options
@@ -105,23 +105,40 @@ The output from the multi-SNP analysis contains full posterior information on po
 The first portion of the output ranks the high-probability association models
 
 ```
-    1   4.0559e-02    3     47.056   [chr6.6589277] [chr6.6626263] [chr6.6643657]
-    2   4.0559e-02    3     47.056   [chr6.6585976] [chr6.6626263] [chr6.6643657]
-    3   4.0559e-02    3     47.056   [chr6.6583181] [chr6.6626263] [chr6.6643657]
-    4   4.0559e-02    3     47.056   [chr6.6582001] [chr6.6626263] [chr6.6643657]
-    5   3.8027e-02    3     47.028   [chr6.6585976] [chr6.6626263] [chr6.6640640]
-    6   3.8027e-02    3     47.028   [chr6.6582001] [chr6.6626263] [chr6.6640640]
-    7   3.8027e-02    3     47.028   [chr6.6589277] [chr6.6626263] [chr6.6640640]
-    8   3.8027e-02    3     47.028   [chr6.6583181] [chr6.6626263] [chr6.6640640]
-    9   2.7093e-02    3     46.881   [chr6.6583181] [chr6.6626263] [chr6.6644538]
-   10   2.7093e-02    3     46.881   [chr6.6589277] [chr6.6626263] [chr6.6644538]
-   11   2.7093e-02    3     46.881   [chr6.6585976] [chr6.6626263] [chr6.6644538]
-   12   2.7093e-02    3     46.881   [chr6.6582001] [chr6.6626263] [chr6.6644538]
-   13   2.2986e-02    3     46.810   [chr6.6588881] [chr6.6626263] [chr6.6643657]
+
+    1   1.7496e-01    3     47.584   [chr6.6589277] [chr6.6626263] [chr6.6643657]
+    2   1.1132e-01    3     47.388   [chr6.6589277] [chr6.6626263] [chr6.6640640]
+    3   6.9947e-02    3     47.186   [chr6.6589277] [chr6.6626263] [chr6.6646966]
+    4   4.7707e-02    3     47.020   [chr6.6589277] [chr6.6626263] [chr6.6641035]
+    5   4.2509e-02    3     46.970   [chr6.6587194] [chr6.6626263] [chr6.6643657]
+    6   3.8585e-02    3     46.928   [chr6.6588881] [chr6.6626263] [chr6.6643657]
+    7   3.5041e-02    3     46.886   [chr6.6585976] [chr6.6626263] [chr6.6643657]
+    8   3.2896e-02    3     46.858   [chr6.6589277] [chr6.6626263] [chr6.6644538]
+
 ```
-The second column indicates the posterior probability of each association model, the third column represents the size (i.e., the number of member SNPs) of the corresponding model. Column 4 represents the un-normalized posterior score at the log10 scale, i.e., log10(Prior) + log10(BF), and the remaining of the row lists the members of the corresponding association model. Note that in the above example, the first four rows have the identical posterior probabilities, because the SNPs chr6.6589277, chr6.6585976, chr6.6583181 and chr6.6582001 are in perfect LD, and therefore "interchangeable". 
+The second column indicates the posterior probability of each association model, the third column represents the size (i.e., the number of member SNPs) of the corresponding model. Column 4 represents the un-normalized posterior score at the log10 scale, i.e., log10(Prior) + log10(BF), and the remaining of the row lists the members of the corresponding association model. An important feature to note is that the posterior probabilities on association models are typically spread out, e.g., the absolute value for the maximum-a-posteriori model is generally not very high. This is mostly because high LD SNPs are roughly "interchangeable": e.g., in the above example, SNPs  chr6.6643657, chr6.6640640 and chr6.6646966 are in perfect LD, the posterior probability difference among the top three models are only due to the annotation difference.
 
+The second portion of the output provides some useful summary posterior statistics
+```
+Posterior expected model size: 3.039 (sd = 0.200)
+LogNC = 111.30984 ( Log10NC = 48.341 )
+``` 
+The posterior expected model size indicates the posterior expected number of independent association signals within the locus of interest. In the above example, this summary statistics indicates that there are roughly 3 independent association signals co-existing in the locus. 
 
+The last section of the output provides posterior inclusion probabilities for highly ranked SNPs
+```
+    1 chr6.6626263   9.99999e-01      6.125
+    2 chr6.6589277   4.60582e-01     38.218
+    3 chr6.6643657   3.96754e-01      4.253
+    4 chr6.6640640   2.59461e-01      2.543
+    5 chr6.6646966   1.59648e-01      1.734
+    6 chr6.6587194   1.18782e-01     38.022
+    7 chr6.6641035   1.08210e-01      2.412
+```
+
+The first and the second column gives the rank and the id of the SNPs, the third column represents the posterior inclusion probability (PIP) marginalized from the posterior model probabilities. The last column gives log10 Bayes factor of the corresponding SNP in single-SNP testing. By default, the output only contains SNPs whose PIPs > 1e-3. The user can opt to output PIPs for all the candidate SNPs by setting the command-line option ```"-all"```. 
+
+ 
 
 
 
