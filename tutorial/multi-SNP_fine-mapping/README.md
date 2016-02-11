@@ -31,6 +31,13 @@ The genotype section directly follows the phenotype section. Each line contains 
 ```
 The leading "geno" is a keyword that indicates the line encodes genotypes. The snp\_id field contains a character string that denotes the ID of a SNP. The additional group_id field indicates the particular subgroup in which genotypes are measured. The remaining entries are genotypes of the target SNP for individual 1 to _n_ in the subgroup coded in dosage format (i.e, 0,1 or 2, or any fractional numbers between [0,2] if the genotype is imputed). 
 
+In addition, variables to be controlled for can be added into input file. The format for covariates input is 
+```
+  covariate covariate_id group_id value_ind_1 value_ind_2 ... value_ind_n
+```
+
+
+
 Note that if the data only contains a single group, the group\_id becomes nuisance. Nevertheless, it is still required.
 
 Missing values in phenotype and genotype data are allowed, and they should be represented by "NA".
