@@ -40,7 +40,7 @@ In molecular QTL mapping, the candidate (cis) locus for each molecular phenotype
 
 ### Supported Data Structure
 
-We currently support genetic association data collected in a single study or in a meta-analytic setting. We are active working on extending the software to support applications like multi-tissue eQTL mapping as described in [Flutre et al, 2013](http://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1003486). 
+We currently support genetic association data collected in a single study or in a meta-analytic setting. We are actively working on extending the software to support applications like multi-tissue eQTL mapping as described in [Flutre et al, 2013](http://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1003486). 
 
 
 ### Summary Statistics vs. Individual-Level Data
