@@ -33,9 +33,9 @@ The leading "geno" is a keyword that indicates the line encodes genotypes. The s
 
 In addition, variables to be controlled for can be added into input file. The format for covariates input is 
 ```
-  covariate covariate_id group_id value_ind_1 value_ind_2 ... value_ind_n
+  controlled covariate_id group_id value_ind_1 value_ind_2 ... value_ind_n
 ```
-
+The keyword "controlled" indicates that the variable is a convariate to be controlled for. 
 
 
 Note that if the data only contains a single group, the group\_id becomes nuisance. Nevertheless, it is still required.
