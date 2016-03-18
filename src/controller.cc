@@ -248,7 +248,7 @@ void controller::run(){
     double lb = log10(double(p-2*cs+2)/cs) + log10(prior_ratio) + cps;
     
     // stopping criteria
-    // fprintf(stderr,   "%7.3f   (%7.3f , %7.3f)\n", ncps, lb, rb);
+    //fprintf(stderr,   "%7.3f   (%7.3f , %7.3f)   %f  %f\n", ncps, lb, rb,val, curr_val);
 
     //if( (ncps>=lb && ncps <= rb) || ncps-val <= log10(size_select_thresh) ){
   
@@ -258,14 +258,16 @@ void controller::run(){
 	backward_check(bm);
 	break;
       }
-      else 
-	curr_val = val;
     }
     
     if (cs == p)
       break;
-  }
+  
+    curr_val = val;
     
+  }
+  
+
 
   fprintf(stderr, "\n\n");
 
