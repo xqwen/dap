@@ -253,17 +253,15 @@ void controller::run(){
     //if( (ncps>=lb && ncps <= rb) || ncps-val <= log10(size_select_thresh) ){
   
 
-    if( ncps <= rb ){
-      if(val - curr_val <= size_select_thresh){
-	backward_check(bm);
-	break;
-      }
+    if( ncps <= rb && val - curr_val <= size_select_thresh){
+      backward_check(bm);
+      break;
     }
     
+    curr_val = val;
+
     if (cs == p)
       break;
-  
-    curr_val = val;
     
   }
   
