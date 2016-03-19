@@ -203,75 +203,84 @@ void controller::run(){
   
   vector<double> log10_pmass_vec;
 
+
+
   double curr_val = compute_log10_prior(null_cfg_map);
   log10_pmass_vec.push_back(curr_val);
-  
+
+  fprintf(stderr, "\n\n\tModel_Size \tcandidates \t  log10(NC)\n");
+
   // record best model
-  vector<int> bm; 
-  // marginal scan, label candidate SNPs for higher order models
+  vector<int> bm;
+  // single SNP scan, label candidate SNPs for higher order models
   szm_vec.push_back(compute_post_model(bm));
-  
+
   log10_pmass_vec.push_back(szm_vec[0].log10_sum_post);
-  
-  int cs =1;
-  
+
+
+  vector<double> wv(log10_pmass_vec.size(),1.0);
+  double val = log10_weighted_sum(log10_pmass_vec,wv);
+  fprintf(stderr,  "\t %4d \t \t    -\t \t %9.3f\n",1,val);
+
+
+  // start exploring higher-order model
+  int cs = 2;
+  double prev_val = val;
   while(1){
 
-    vector<double> wv(log10_pmass_vec.size(),1.0);
-    double val = log10_weighted_sum(log10_pmass_vec,wv);
-    //printf("val = %.3f",val);
+    // user specified stopping K (DAP-K)
     if(cs>=max_size){
       fprintf(outfd, "\n*** Warning: larger models *may* contain substantial probability mass, increase maximum model size and re-run ***\n");
       break;
     }
-      
+
+    fprintf(stderr,"\t %4d \t \t ",cs);
+    fflush(stderr);
+
+    // finding candidate SNP sets
     conditional_est(bm);
-    cs++;
-    
+
+
     if(cand_set.size()<cs)
       break;
     bm.clear();
     
-    fprintf(stderr, "Considering %d-SNP models ... candidates=%2d SNPs, current log10(NC)=%7.3f  ... \n ",cs,int(cand_set.size()),val);
-
     
-      
-      
     double cps = szm_vec[szm_vec.size()-1].log10_sum_post;
-    
+    // core computation for model size = cs
     szm_vec.push_back(compute_post_model(cs,bm));
-    log10_pmass_vec.push_back(szm_vec[szm_vec.size()-1].log10_sum_post);   
 
+
+    log10_pmass_vec.push_back(szm_vec[szm_vec.size()-1].log10_sum_post);
+
+
+    // update log10(NC)
+    vector<double> nwv(log10_pmass_vec.size(),1.0);
+    val = log10_weighted_sum(log10_pmass_vec,nwv);
+    fprintf(stderr,  "%4d \t \t %9.3f\n",int(cand_set.size()),val);
+
+
+    // stopping criteria
     double ncps = szm_vec[szm_vec.size()-1].log10_sum_post;
-    
     double rb = log10(double(p)-cs+1)+log10(prior_ratio) + cps;
     double lb = log10(double(p-2*cs+2)/cs) + log10(prior_ratio) + cps;
-    
-    // stopping criteria
-    //fprintf(stderr,   "%7.3f   (%7.3f , %7.3f)   %f  %f\n", ncps, lb, rb,val, curr_val);
-
-    //if( (ncps>=lb && ncps <= rb) || ncps-val <= log10(size_select_thresh) ){
-  
-
-    if( ncps <= rb && val - curr_val <= size_select_thresh){
+    if( ncps <= rb && val - prev_val <= size_select_thresh){
       backward_check(bm);
       break;
     }
-    
-    curr_val = val;
 
-    if (cs == p)
-      break;
-    
+    prev_val = val;
+    cs++;
+
   }
-  
 
 
   fprintf(stderr, "\n\n");
-
+  
   summarize_approx_posterior();
   
 }
+
 
 
   
