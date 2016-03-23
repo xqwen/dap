@@ -229,7 +229,7 @@ void controller::run(){
   while(1){
 
     // user specified stopping K (DAP-K)
-    if(cs>=max_size){
+    if(cs>max_size){
       fprintf(outfd, "\n*** Warning: larger models *may* contain substantial probability mass, increase maximum model size and re-run ***\n");
       break;
     }
