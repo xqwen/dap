@@ -1,11 +1,19 @@
 #  Integrative Genetic Association Analysis using Deterministic Approximation of Posteriors (DAP)
 
 
-This repository contains the software implementations for a suite of statistical methods to perform genetic association analysis integrating genomic annotations. These methods are designed to perform rigorous enrichment analysis, QTL discovery and multi-SNP fine-mapping analysis in a highly efficient way. The statistical model and the key algorithm, Deterministic Approximation of Posteriors (DAP), are described in this manuscript. 
+This repository contains the software implementations for a suite of statistical methods to perform genetic association analysis integrating genomic annotations. These methods are designed to perform rigorous enrichment analysis, QTL discovery and multi-SNP fine-mapping analysis in a highly efficient way. The statistical model and the key algorithm, Deterministic Approximation of Posteriors (DAP), are described in this [manuscript](http://biorxiv.org/content/early/2016/03/26/026450). 
 
 The repository includes source code, scripts and necessary data to replicate the results described in the manuscript. A detailed tutorial to guide the users through some specific analysis tasks is also included. 
 
 For questions/comments regarding to the software package, please contact Xiaoquan Wen (xwen at umich dot edu).
+
+
+
+
+## [Tutorial](tutorial/)
+
+We provide a detailed tutorial to demonstrate the usage of software in enrichment analysis, QTL discovery and multi-SNP fine-mapping. Sample data are made provided when possible. 
+
 
 
 ## Repository directories
@@ -22,9 +30,10 @@ For questions/comments regarding to the software package, please contact Xiaoqua
 In addition, the source code implementing enrichment analysis and QTL discovery can be found in a separate repo [torus] (https://github.com/xqwen/torus)
 
 
-## [Tutorial](tutorial/)
 
-We provide a detailed tutorial to demonstrate the usage of software in enrichment analysis, QTL discovery and multi-SNP fine-mapping.
+## License
+
+Software distributed under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. See [LICENSE](http://www.gnu.org/licenses/gpl-3.0.en.html) for more details.
 
 
 ## Contributors
@@ -33,3 +42,6 @@ We provide a detailed tutorial to demonstrate the usage of software in enrichmen
 * Roger Pique-Regi (Wayne State University)
 * Yeji Lee (University of Michigan)
 
+## Citation
+
+** Efficient Integrative Multi-SNP Association Analysis using Deterministic Approximation of Posteriors. Wen, X., Lee, Y., Luca, F., Pique-Regi, R. BioRxiv 026450.
