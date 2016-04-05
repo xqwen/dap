@@ -12,7 +12,7 @@ For questions/comments regarding to the software package, please contact Xiaoqua
 
 ## [Tutorial](tutorial/)
 
-We provide a detailed tutorial to demonstrate the usage of software in enrichment analysis, QTL discovery and multi-SNP fine-mapping. Sample data are made provided when possible. 
+We provide a detailed tutorial to demonstrate the usage of software in enrichment analysis, QTL discovery and multi-SNP fine-mapping. Sample data are provided when possible. 
 
 
 
@@ -20,14 +20,13 @@ We provide a detailed tutorial to demonstrate the usage of software in enrichmen
 
 * ``src``: the C/C++ source code for adaptive DAP algorithm (for multi-SNP fine-mapping analysis)
 
+* ``torus``:  a separate [repo] (https://github.com/xqwen/torus) implementing functions for enrichment analysis and QTL discovery
+
 * ``tutorial``: provide detailed descriptions on usage of the software package (including data formating, results interpretation etc.)
 
-* ``utility``: utility scripts for results interpretation etc.
+* ``utility``: utility scripts for results interpretation, file format conversion etc.
 
-* ``experiments``: this directory contains necessary scripts/code and data for evaluating the DAP, e.g., performance comparison with the MCMC, exact Bayesian calculation etc. 
-
-
-In addition, the source code implementing enrichment analysis and QTL discovery can be found in a separate repo [torus] (https://github.com/xqwen/torus)
+* ``experiments``: this directory contains necessary scripts/code and data for evaluating the DAP in the manuscript, e.g., performance comparison with the MCMC, exact Bayesian calculation etc. Note, some of the code has become obsolete, i.e., better code has been implemented in either ```torus``` or ```dap```. This particular directory is setup mostly for reproduciblility purpose.   
 
 
 
@@ -45,3 +44,4 @@ Software distributed under the terms of the GNU General Public License as publis
 ## Citation
 
 * Efficient Integrative Multi-SNP Association Analysis using Deterministic Approximation of Posteriors. Wen, X., Lee, Y., Luca, F., Pique-Regi, R. BioRxiv 026450.
+
