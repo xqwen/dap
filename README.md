@@ -43,5 +43,5 @@ Software distributed under the terms of the GNU General Public License as publis
 
 ## Citation
 
-* Efficient Integrative Multi-SNP Association Analysis using Deterministic Approximation of Posteriors. Wen, X., Lee, Y., Luca, F., Pique-Regi, R. BioRxiv 026450.
+* Wen, X., Lee, Y., Luca, F., Pique-Regi, R. [Efficient Integrative Multi-SNP Association Analysis using Deterministic Approximation of Posteriors.](http://biorxiv.org/content/early/2016/03/26/026450)  *bioRxiv* 026450.
 
