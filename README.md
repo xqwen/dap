@@ -10,9 +10,9 @@ For questions/comments regarding to the software package, please contact Xiaoqua
 
 
 
-## [Tutorial](tutorial/)
+## [Tutorial](https://github.com/xqwen/dap/wiki)
 
-We provide a detailed tutorial to demonstrate the usage of software in enrichment analysis, QTL discovery and multi-SNP fine-mapping. Sample data are provided when possible. 
+We provide a detailed tutorial wiki to demonstrate the usage of software in enrichment analysis, QTL discovery and multi-SNP fine-mapping. Sample data are provided when possible. 
 
 
 
@@ -22,7 +22,7 @@ We provide a detailed tutorial to demonstrate the usage of software in enrichmen
 
 * ``torus``:  a separate [repo] (https://github.com/xqwen/torus) implementing functions for enrichment analysis and QTL discovery
 
-* ``tutorial``: provide detailed descriptions on usage of the software package (including data formating, results interpretation etc.)
+* ``sample_data``: sample data for multi-SNP fine-mapping
 
 * ``utility``: utility scripts for results interpretation, file format conversion etc.
 
