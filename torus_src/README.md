@@ -15,7 +15,7 @@ The following C/C++ libraries are required for compiling the source code
 
 ## Command-line Syntax 
 
-``torus -d data_file.gz -est|-qtl|-dump_prior [-annot annotation_file.gz] [-smap snp_map.gz] [-gmap gene_map.gz]```  
+``torus -d data_file.gz -est|-qtl|-dump_prior [-annot annotation_file.gz] [-smap snp_map.gz] [-gmap gene_map.gz]``  
 
 ## Command line options
 
