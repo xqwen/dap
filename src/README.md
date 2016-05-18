@@ -12,7 +12,7 @@ Simply run ``make`` to compile the executable named ``dap``
 
 ## Command-line Syntax
 
-```dap -d data_file -g grid-file [-prior prior_file] [-msize K] [-it value] [-st value] [-t nthread] [-o output_file] [-all]```
+```dap -d data_file -g grid_file [-prior prior_file] [-msize K] [-it value] [-st value] [-t nthread] [-o output_file] [-all]```
 
 
 ## Important command line options
