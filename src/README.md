@@ -4,10 +4,15 @@
 
 The following C/C++ libraries are required for compiling the source code
 
-* GNU GSL library 
-* OpenMP library  
+* GNU [GSL](http://www.gnu.org/software/gsl/) library 
+* [OpenMP](http://openmp.org/wp/openmp-compilers/) compiler (many popular compilers are compatible)
 
 Simply run ``make`` to compile the executable named ``dap``
+
+
+## Command-line Syntax
+
+```dap -d data_file -g grid-file [-prior prior_file] [-msize K] [-it value] [-st value] [-t nthread] [-o output_file] [-all]```
 
 
 ## Important command line options
