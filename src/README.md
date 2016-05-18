@@ -19,8 +19,8 @@ Simply run ``make`` to compile the executable named ``dap``
 
 ### 1. Required input data files
 
-* ``-d data_file``: specify the input genotype-phenotype data file in sbams format (example provided)
-* ``-g grid_file``: specify the prior effect size for Bayes factor calculation (example provided)
+* ``-d data_file``: specify the input genotype-phenotype data file in sbams format ([example](sample_data/sample.sbams.dat) provided)
+* ``-g grid_file``: specify the prior effect size for Bayes factor calculation ([example](sample_data/sample.fixed_effect.grid) provided)
 
 
 ### 2. Optional input data file
