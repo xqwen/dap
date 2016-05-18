@@ -18,9 +18,9 @@ We provide a detailed tutorial wiki to demonstrate the usage of software in enri
 
 ## Repository directories
 
-* ``src``: the C/C++ source code for adaptive DAP algorithm (for multi-SNP fine-mapping analysis)
+* ``dap_src``: C/C++ source code of the adaptive DAP and DAP-K algorithm (for multi-SNP fine-mapping analysis)
 
-* ``torus``:  a separate [repo] (https://github.com/xqwen/torus) implementing functions for enrichment analysis and QTL discovery
+* ``torus_src``: C/C++ source code of the EM-DAP1 algorithm (for enrichment analysis and QTL discovery)
 
 * ``sample_data``: sample data for multi-SNP fine-mapping
 
