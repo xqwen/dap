@@ -28,7 +28,7 @@ The following C/C++ libraries are required for compiling the source code
 
 * ``-est``: perform joint enrichment analysis of annotations, output the estimates of enrichment parameters and their confidence intervals
 * ``-qtl``: perform Bayesian FDR control for QTL discovery
-* ``-dump_prior output_dir``: perform joint enrichment analysis of annotations and compute SNP-level priors using the estimated enrichment estimates for each SNP in each locus. The priors for each locus are saved in a single file in the ``output\_dir`` and the file is ready for use by DAP to perform integrative fine-mapping analysis
+* ``-dump_prior output_dir``: perform joint enrichment analysis of annotations and compute SNP-level priors using the estimated enrichment estimates for each SNP in each locus. The priors for each locus are saved in a single file in the ``output_dir`` and the file is ready for use by DAP to perform integrative fine-mapping analysis
 
 
 
@@ -61,7 +61,7 @@ SNP	locus	log10_BF
 rs1234	geneA	0.234 
 ...
 ``` 
-A header is allowed (but not required) in the input file. It is important to specify the command-line option ``-load\_bf`` when this particular format is used in the input data file.
+A header is allowed (but not required) in the input file. It is important to specify the command-line option ``-load_bf`` when this particular format is used in the input data file.
 Using this  format, TORUS can deal with more complicated data structures, e.g., meta-analysis, multi-tissue eqtls, by pre-computing SNP-level Bayes factors from the softwares like [MeSH](https://github.com/xqwen/mesh) and [eQTLBMA](https://github.com/timflutre/eqtlbma). 
 
 
@@ -72,7 +72,7 @@ SNP	locus	z-val
 rs1234	geneA	1.28
 ...
 ```
-A header is allowed (but not required) in the input file. It is	important to specify the command-line option ``-load\_zval`` when this particular format is used in the input data file. This format is probably most convenient for analyzing GWAS data, for which single-SNP association z-values are typically available.
+A header is allowed (but not required) in the input file. It is	important to specify the command-line option ``-load_zval`` when this particular format is used in the input data file. This format is probably most convenient for analyzing GWAS data, for which single-SNP association z-values are typically available.
 
 
 
