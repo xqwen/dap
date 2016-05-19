@@ -42,7 +42,7 @@ With both files specified, torus will control for SNP distance to transcript sta
 ## File formats
 
 
-### Input data format 
+### 1. Input data format 
 
 Currently, the following three input formats are supported:
 
