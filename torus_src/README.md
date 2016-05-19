@@ -83,7 +83,7 @@ chr1.51479  0
 chr1.52058  2
 chr1.52238  1
 ```
-The first column  ("SNP") alwasys represents the SNP name. The following columns represent specific annotations. For categorical/discrete annotations, the annotation name should alwasy have a suffix "_d"; whereas for continuous annotations, the name should end with "_c".  In the above example, the annotation "binding" is a categorical variable with 3 categories (0, 1 and 2).  There is no restriction for the number of annotations for enrichment analysis.
+The first column  (always named "SNP") represents the SNP name. The following columns represent specific annotations. For categorical/discrete annotations, the annotation name should alwasy have a suffix "_d"; whereas for continuous annotations, the name should end with "_c".  In the above example, the annotation "binding" is a categorical variable with 3 categories (0, 1 and 2).  There is no restriction for the number of annotations for enrichment analysis.
 
  
 
