@@ -1,7 +1,7 @@
 ## TORUS - QTL Discovery utilizing Genomic Annotations 
 
 
-``torus`` is a free software package that implements a computational procedure for discovering molecular QTLs incorporating genomic annotations. 
+``torus`` is a free software package that implements the EM-DAP1 algorithm for enrichment analysis and QTL discovery.
 
 
 ## Compilation
