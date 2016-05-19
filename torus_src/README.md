@@ -23,12 +23,13 @@ The following C/C++ libraries are required for compiling the source code
 
 * ``-d data_file.gz``: the data_file should be compressed in gzip format and  contain summary statistics from single SNP association analysis. Currently, the following three input formats are supported:
 
-    *MatrixEQTL output of single-SNP association results, e.g., 
+    * MatrixEQTL output of single-SNP association results, e.g., 
 ```
 SNP	locus  beta	     t-stat	 p-value
 rs1234	geneA  0.13	     1.28	 0.198    
 ...
-``` A header is allowed (but not required) in the input file. This is the format directly output from the software [MatrixEQTL](http://www.bios.unc.edu/research/genomic_software/Matrix_eQTL/). This is the default input format recognized by torus.
+``` 
+A header is allowed (but not required) in the input file. This is the format directly output from the software [MatrixEQTL](http://www.bios.unc.edu/research/genomic_software/Matrix_eQTL/). This is the default input format recognized by torus.
 
 
 
@@ -37,13 +38,14 @@ rs1234	geneA  0.13	     1.28	 0.198
 SNP	locus	log10_BF
 rs1234	geneA	0.234 
 ...
-``` A header is allowed (but not required) in the input file. It is important to specify the command-line option ``-load\_bf`` when this particular format is used in the input data file.
+``` 
+A header is allowed (but not required) in the input file. It is important to specify the command-line option ``-load\_bf`` when this particular format is used in the input data file.
 Using this  format, TORUS can deal with more complicated data structures, e.g., meta-analysis, multi-tissue eqtls, by pre-computing SNP-level Bayes factors from the softwares like [MeSH](https://github.com/xqwen/mesh) and [eQTLBMA](https://github.com/timflutre/eqtlbma). 
 
 
 
     
-    *Summary-level Z-statistics from single SNP association tests, e.g.,
+    * Summary-level Z-statistics from single SNP association tests, e.g.,
 ```
 SNP	locus	z-val
 rs1234	geneA	1.28
