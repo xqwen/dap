@@ -25,19 +25,18 @@ The following C/C++ libraries are required for compiling the source code
 
 ### 2. Task options
 
-
 * ``-est``: perform joint enrichment analysis of annotations, output the estimates of enrichment parameters and their confidence intervals
 * ``-qtl``: perform Bayesian FDR control for QTL discovery
 * ``-dump_prior output_dir``: perform joint enrichment analysis of annotations and compute SNP-level priors using the estimated enrichment estimates for each SNP in each locus. The priors for each locus are saved in a single file in the ``output_dir`` and the file is ready for use by DAP to perform integrative fine-mapping analysis
 
 
-
 ### 3. Optional input files
 
-* ``-smap snp_map.gz``: gzipped SNP position files
-* ``-gmap gene_map.gz``: gzipped Gene position (transcription start site) file
-With both files specified, torus will control for SNP distance to transcript start site (TSS)
+* ``-annot annotation_file.gz``: the annotation_file should be compressed in gzip format and contain SNP annotation information 
+* ``-smap snp_map.gz``: this option is designed for controlling SNP distance to transcript start site (TSS) in cis-eQTL mapping
+* ``-gmap gene_map.gz``: this option is designed for controlling SNP distance to TSS in cis-eQTL mapping. The gene_map file contains TSS information of each target gene. With both ``-smap`` and ``-gmap`` specified, torus will automatically control SNP distance to TSS in enrichemnt analysis and QTL discovery. 
 
+If none of the above three options are specified, torus simply treats each candidate SNP exchangeable and estimates only the baseline enrichemnt parameter (alpha_0).
 
 ## File formats
 
@@ -75,6 +74,18 @@ rs1234	geneA	1.28
 A header is allowed (but not required) in the input file. It is	important to specify the command-line option ``-load_zval`` when this particular format is used in the input data file. This format is probably most convenient for analyzing GWAS data, for which single-SNP association z-values are typically available.
 
 
+### 2. Annotation file format
+
+The annotation requires a header to specify the name and the nature (categorical or continuous) of each SNP-level anntation. For example,
+```
+SNP   binding_d
+chr1.51479  0
+chr1.52058  2
+chr1.52238  1
+```
+The first column  ("SNP") alwasys represents the SNP name. The following columns represent specific annotations. For categorical/discrete annotations, the annotation name should alwasy have a suffix "_d"; whereas for continuous annotations, the name should end with "_c".  In the above example, the annotation "binding" is a categorical variable with 3 categories (0, 1 and 2).  There is no restriction for the number of annotations for enrichment analysis.
+
+ 
 
 
 
