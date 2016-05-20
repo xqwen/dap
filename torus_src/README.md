@@ -17,20 +17,20 @@ The following C/C++ libraries are required for compiling the source code
 
 ``torus -d data_file.gz -est|-qtl|-dump_prior [-annot annotation_file.gz] [-smap snp_map.gz] [-gmap gene_map.gz]``  
 
-## Command line options
+## Command-line Options
 
-### 1. Required input files
+### 1. Required Input Files
 
 * ``-d data_file.gz``: the data_file should be compressed in gzip format and  contain summary statistics from single SNP association analysis. 
 
-### 2. Task options
+### 2. Task Options
 
 * ``-est``: perform joint enrichment analysis of annotations, output the estimates of enrichment parameters and their confidence intervals
 * ``-qtl``: perform Bayesian FDR control for QTL discovery
 * ``-dump_prior output_dir``: perform joint enrichment analysis of annotations and compute SNP-level priors using the estimated enrichment estimates for each SNP in each locus. The priors for each locus are saved in a single file in the ``output_dir`` and the file is ready for use by DAP to perform integrative fine-mapping analysis
 
 
-### 3. Optional input files
+### 3. Optional Input Files
 
 * ``-annot annotation_file.gz``: the annotation_file should be compressed in gzip format and contain SNP annotation information 
 * ``-smap snp_map.gz``: this option is designed for controlling SNP distance to transcript start site (TSS) in cis-eQTL mapping
@@ -38,10 +38,10 @@ The following C/C++ libraries are required for compiling the source code
 
 If none of the above three options are specified, torus simply treats each candidate SNP exchangeable and estimates only the baseline enrichemnt parameter (alpha_0).
 
-## File formats
 
+## Input File format
 
-### 1. Input data format 
+### 1. Input Data File
 
 Currently, the following three input formats are supported:
 
@@ -74,7 +74,7 @@ rs1234	geneA	1.28
 A header is allowed (but not required) in the input file. It is	important to specify the command-line option ``-load_zval`` when this particular format is used in the input data file. This format is probably most convenient for analyzing GWAS data, for which single-SNP association z-values are typically available.
 
 
-### 2. Annotation file format
+### 2. Annotation File 
 
 The annotation requires a header to specify the name and the nature (categorical or continuous) of each SNP-level anntation. For example,
 ```
@@ -85,7 +85,29 @@ chr1.52238  1
 ```
 The first column  (always named "SNP") represents the SNP name. The following columns represent specific annotations. For categorical/discrete annotations, the annotation name should alwasy have a suffix "_d"; whereas for continuous annotations, the name should end with "_c".  In the above example, the annotation "binding" is a categorical variable with 3 categories (0, 1 and 2).  There is no restriction on the number of annotations for enrichment analysis.
 
- 
+### 3. Gene and SNP Map Files
+
+These two files are typically used in cis-eQTL mappings. The file formats follows MatrixEQTL formats for respective map files. The gene and SNP IDs should be consistent with what used in the input data file.
+
+* The gene map file has the following format 
+```
+Gene  Chromosome TSS TES
+ENSG00000237683  1  139379 139379
+ENSG00000237491  1  714162 714162
+ENSG00000230021  1  741274 741274
+ENSG00000187634  1  860260 860260
+...
+```
+The header is allowed but not required. Note that current implementation only uses transcription start site (TSS) information, the transcription end site (TES) column is currently utilized, therefore, we provide dummy information in above example. 
+
+* The SNP map file has the following format 
+```
+SNP Chromosome Position
+rs1234  1      51485
+rs1235  1      52085
+...
+```
+The header is allowed but not required.  
 
 
 
