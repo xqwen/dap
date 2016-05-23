@@ -78,12 +78,12 @@ A header is allowed (but not required) in the input file. It is	important to spe
 
 The annotation requires a header to specify the name and the nature (categorical or continuous) of each SNP-level anntation. For example,
 ```
-SNP   binding_d
-chr1.51479  0
-chr1.52058  2
-chr1.52238  1
+SNP   feature1_d	feature2_c
+chr1.51479  0		0.23		
+chr1.52058  2		0.45
+chr1.52238  1		0.97
 ```
-The first column  (always named "SNP") represents the SNP name. The following columns represent specific annotations. For categorical/discrete annotations, the annotation name should alwasy have a suffix "_d"; whereas for continuous annotations, the name should end with "_c".  In the above example, the annotation "binding" is a categorical variable with 3 categories (0, 1 and 2).  There is no restriction on the number of annotations for enrichment analysis.
+The first column  (always named "SNP") represents the SNP name. The following columns represent specific annotations. For categorical/discrete annotations, the annotation name should alwasy have a suffix "_d"; whereas for continuous annotations, the name should end with "_c".  In the above example, the annotation "feature1" is a categorical variable with 3 categories (0, 1 and 2), and "feature2" is a continuous variable.There is no restriction on the number of annotations for enrichment analysis.
 
 ### 3. Gene and SNP Map Files
 
