@@ -9,10 +9,11 @@ For questions/comments regarding to the software package, please contact Xiaoqua
 
 
 
+## License
 
-## [Tutorial](https://github.com/xqwen/dap/wiki)
+Software distributed under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. See [LICENSE](http://www.gnu.org/licenses/gpl-3.0.en.html) for more details.
 
-We provide a detailed tutorial wiki to demonstrate the usage of software in enrichment analysis, QTL discovery and multi-SNP fine-mapping. Sample data are provided when possible. 
+
 
 
 
@@ -29,10 +30,13 @@ We provide a detailed tutorial wiki to demonstrate the usage of software in enri
 * ``experiments``: this directory contains necessary scripts/code and data for evaluating the DAP in the manuscript, e.g., performance comparison with the MCMC, exact Bayesian calculation etc. Note, some of the code has become obsolete, i.e., better code has been implemented in either ```torus``` or ```dap```. This particular directory is setup mostly for reproduciblility purpose.   
 
 
+## [Tutorial](https://github.com/xqwen/dap/wiki)
 
-## License
+We provide a detailed tutorial wiki to demonstrate the usage of software in enrichment analysis, QTL discovery and multi-SNP fine-mapping. Sample data are provided when possible. 
 
-Software distributed under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. See [LICENSE](http://www.gnu.org/licenses/gpl-3.0.en.html) for more details.
+
+
+
 
 
 ## Contributors
