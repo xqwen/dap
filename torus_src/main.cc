@@ -40,7 +40,7 @@ int main(int argc, char **argv){
 
   int find_egene = 0;
   int est = 0;
-  
+  double alpha = 0.05;
 
   double init_pi1 = 1e-3;
 
@@ -133,9 +133,7 @@ int main(int argc, char **argv){
       load_zval = 1;
       continue;
     }
-    
-
-   
+       
 
 
     if(strcmp(argv[i], "-dist_bin_size") == 0){
@@ -165,6 +163,12 @@ int main(int argc, char **argv){
     if(strcmp(argv[i], "-h")==0 || strcmp(argv[i], "-help")==0 ){
       show_banner();
       continue;
+    }
+
+
+
+    if(strcmp(argv[i], "-alpha")==0){
+      alpha = atof(argv[++i]);
     }
 
 
@@ -236,9 +240,9 @@ int main(int argc, char **argv){
 
   if(est)
     con.estimate();
-  if(find_egene)
-    con.find_eGene();
-  
+  if(find_egene){
+    con.find_eGene(alpha);
+  }
   if(strlen(prior_dir)>0){
     con.dump_prior(prior_dir);
   }

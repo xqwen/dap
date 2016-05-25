@@ -15,7 +15,7 @@ The following C/C++ libraries are required for compiling the source code
 
 ## Command-line Syntax 
 
-``torus -d data_file.gz -est|-qtl|-dump_prior [-annot annotation_file.gz] [-smap snp_map.gz] [-gmap gene_map.gz]``  
+``torus -d data_file.gz -est|-qtl|-dump_prior [-annot annotation_file.gz] [-smap snp_map.gz] [-gmap gene_map.gz] [-alpha fdr_level]``  
 
 ## Command-line Options
 
@@ -38,6 +38,10 @@ The following C/C++ libraries are required for compiling the source code
 
 If none of the above three options are specified, torus simply treats each candidate SNP exchangeable and estimates only the baseline enrichemnt parameter (alpha_0).
 
+
+### 4. Other options
+
+* ``-alpha fdr_control_level``: pre-defined FDR control level, by default, it is set to 0.05
 
 ## Input File format
 
@@ -108,6 +112,40 @@ rs1235  1      52085
 ...
 ```
 The header is allowed but not required.  
+
+
+
+## Output File Format
+
+### 1. Enrichment Estimation File
+
+The enrichment estimation output has the following format
+
+```
+Intercept	-8.723	      -8.802	 -8.701	
+binding.1	 0.623         0.226      1.021
+binding.2	 1.222         0.946      1.499
+```
+The first column represents the annotation name and its corresponding level (for a categorical variable). The second column is the point estimate (MLE) of the log odds ratio. Columns 3-4 represent the boundries of the corresponding 95% confidence interval.
+
+
+
+### 2. QTL Discovery Result
+
+The output from the QTL discovery has the following format
+```
+    1       ENSG00000164308    3.406e-106    1
+    2       ENSG00000166750    4.212e-105    1
+    3       ENSG00000198468    1.544e-104    1
+    4       ENSG00000174652    6.366e-102    1
+    5       ENSG00000197728    1.568e-101    1
+    6       ENSG00000233927    1.364e-99    1
+    7       ENSG00000237651    5.658e-95    1
+    8       ENSG00000006282    8.019e-91    1
+    9       ENSG00000112306    5.995e-89    1
+   10       ENSG00000166839    9.625e-88    1
+```
+The output is a ranked list of all tested loci. The first and the second columns represent the rank and the name of a gene/locus, respectively. Column 3 represents the false discovery probability of the corresponding gene (smaller value indicates that the locus likely to harbor QTNs). Finally, column 4 represents a indicator for the hypothesis testing outcome: 1 indicates rejection of the null hypothesis at the pre-defined FDR level.
 
 
 
