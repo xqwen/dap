@@ -15,6 +15,11 @@ Simply run ``make`` to compile the executable named ``dap``
 ```dap -d data_file -g grid_file [-prior prior_file] [-msize K] [-it value] [-st value] [-t nthread] [-o output_file] [-all]```
 
 
+## Important Tips
+
+Run adaptive DAP algorithm with multi-thread option (``-t nthread``) whenever possible! 
+
+
 ## Command-line Options
 
 ### 1. Required input data files
