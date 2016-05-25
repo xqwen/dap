@@ -41,7 +41,7 @@ If none of the above three options are specified, torus simply treats each candi
 
 ### 4. Other options
 
-* ``-alpha fdr_control_level``: pre-defined FDR control level, by default, it is set to 0.05
+* ``-alpha fdr_control_level``: pre-defined FDR control level. By default, it is set to 0.05
 
 ## Input File format
 
