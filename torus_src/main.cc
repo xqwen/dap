@@ -27,6 +27,7 @@ int main(int argc, char **argv){
   char smap_file[128];
   char annot_file[128];
   char prior_dir[128];
+  char output_pip[128];
 
   int csize = -1;
   int gsize = -1;
@@ -52,7 +53,7 @@ int main(int argc, char **argv){
   memset(annot_file,0,128);
   memset(init_file,0,128);
   memset(prior_dir,0,128);
-  
+  memset(output_pip,0,128);
 
   int force_logistic = 0;
   int prob_annot = 0;
@@ -159,6 +160,11 @@ int main(int argc, char **argv){
       continue;
     }
 
+    if(strcmp(argv[i], "-dump_pip")==0){
+      strcpy(output_pip, argv[++i]);
+      continue;
+    }
+
 
     if(strcmp(argv[i], "-h")==0 || strcmp(argv[i], "-help")==0 ){
       show_banner();
@@ -245,6 +251,10 @@ int main(int argc, char **argv){
   }
   if(strlen(prior_dir)>0){
     con.dump_prior(prior_dir);
+  }
+  if(strlen(output_pip)>0){
+    fprintf(stderr,"#-dump_pip output_pip file: %s \n",output_pip);
+    con.dump_pip(output_pip);
   }
 }
 
