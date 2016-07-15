@@ -23,7 +23,7 @@ class SNP {
   string id;
   int index;
   double log10_BF;
-
+  int dtss_bin; // distance to TSS, used by fastQTL
 
   SNP(string snp_id, double snp_log10_BF, int snp_index){
     id = snp_id;
@@ -138,6 +138,8 @@ class controller {
   void load_data(char *filename);    // load data with MatrixeQTL format -- default
   void load_data_zscore(char *filename); // load data with z-score/t-score
   void load_data_BF(char *filename); // load data with pre-computed log10 Bayes factors
+  void load_data_fastqtl(char *filename); //load data with fastQTL format
+
 
   void load_map(char *gene_map_file, char *snp_map_file);
   void load_annotation(char *annot_file);

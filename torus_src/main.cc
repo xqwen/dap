@@ -57,8 +57,9 @@ int main(int argc, char **argv){
 
   int force_logistic = 0;
   int prob_annot = 0;
-  int load_bf = 0;
-  int load_zval =0;
+  
+  int data_format = 1;
+
   double EM_thresh = 0.05;
   double dist_bin_size = -1;
   double l1_lambda = 0;
@@ -123,18 +124,29 @@ int main(int argc, char **argv){
       continue;
     }
     
-    if(strcmp(argv[i], "--load_bf")==0){
-      load_bf = 1;
+    if(strcmp(argv[i], "--load_bf")==0 || strcmp(argv[i], "--bf")==0 ){
+      data_format = 2;
       continue;
     }
     
-
    
-    if(strcmp(argv[i], "--load_zval")==0){
-      load_zval = 1;
+    if(strcmp(argv[i], "--load_zval")==0 || strcmp(argv[i], "--zval")==0){
+      data_format = 3;
       continue;
     }
        
+    
+    if(strcmp(argv[i], "--load_fastqtl")==0 || strcmp(argv[i], "--fastqtl")==0){
+      data_format = 4;
+      continue;
+    }
+
+    if(strcmp(argv[i], "--load_matrixeqtl")==0 || strcmp(argv[i], "--matrixeqtl")==0){
+      data_format = 1;
+      continue;
+    }
+
+
 
 
     if(strcmp(argv[i], "-dist_bin_size") == 0){
@@ -224,19 +236,28 @@ int main(int argc, char **argv){
   con.init_pi1 = init_pi1;
 
 
-  if(load_bf){
+  switch(data_format){
+  case 1:
+    con.load_data(data_file);
+    break;
+  case 2:
     con.load_data_BF(data_file);
-  }else{
-    if(load_zval)
-      con.load_data_zscore(data_file);
-    else
-      con.load_data(data_file);
+    break;
+  case 3:
+    con.load_data_zscore(data_file);
+    break;
+  case 4:
+    con.load_data_fastqtl(data_file);
+    gmap_file[0]=smap_file[0] = 0;
+    break;
+  default:
+    con.load_data(data_file);
+    break;
   }
+   
 
-  con.load_map(gmap_file, smap_file);
-  
+  con.load_map(gmap_file, smap_file);  
   con.load_annotation(annot_file);
-  
   fprintf(stderr,"Initializing ... \n");
 
   if(est==0 && find_egene==0){

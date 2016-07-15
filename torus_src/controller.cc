@@ -108,6 +108,152 @@ void controller::load_data(char *filename){
 }
 
 
+
+
+void controller::load_data_fastqtl(char *filename){
+  
+  // fastQTL file contains dtss info, automatically parse and use dtss in analysis
+  
+  ifstream dfile(filename, ios_base::in | ios_base::binary);
+  boost::iostreams::filtering_istream in;
+
+  in.push(boost::iostreams::gzip_decompressor());
+  in.push(dfile);
+
+
+  string line;
+  istringstream ins;
+
+  string curr_loc_id = "";
+
+  vector<SNP> snp_vec;
+  string loc_id;
+  string snp_id;
+  
+  double bhat;
+  double sdbeta;
+  double pval;
+  double dtss;
+  
+  int index_count = 0;
+  int loc_count = 0;
+
+  map<int, int> bin_hash;
+  
+
+  while(getline(in,line)){
+
+    ins.clear();
+    ins.str(line);
+
+    if(ins>> loc_id >> snp_id >> dtss >>pval >> bhat >> sdbeta){
+      //printf("%s  %f\n", snp_id.c_str(), beta);                                                         
+      if(curr_loc_id != loc_id){
+        if(curr_loc_id != ""){
+
+          if(loc_hash.find(curr_loc_id)== loc_hash.end()){
+            Locus loc(curr_loc_id, snp_vec);
+            int pos = loc_hash.size();
+            loc_hash[curr_loc_id] = pos;
+            locVec.push_back(loc);
+            loc_count++;
+          }else{
+            // already defined, concate the existing snpVec                                              
+            int pos = loc_hash[curr_loc_id];
+            for(int i=0;i<snp_vec.size();i++){
+              locVec[pos].snpVec.push_back(snp_vec[i]);
+            }
+          }
+
+          snp_vec.clear();
+
+        }
+        curr_loc_id = loc_id;
+
+      }
+      
+      double log10_BF = compute_log10_BF(bhat, sdbeta);
+      SNP snp(snp_id, log10_BF, index_count);
+
+      // handling dtss info
+      int bin = classify_dist_bin(dtss, 0 , dist_bin_size);
+      if(bin_hash.find(bin)==bin_hash.end()){
+	bin_hash[bin] = 0;
+      }
+
+      bin_hash[bin]++;
+      snp.dtss_bin = bin;
+      
+      index_count++;
+      snp_hash[snp_id] = 100;
+      snp_vec.push_back(snp);
+      
+    }
+  }
+
+  dfile.close();
+
+  // record the last loc
+
+  if(loc_hash.find(curr_loc_id)== loc_hash.end()){
+    Locus loc(curr_loc_id, snp_vec);
+    int pos = loc_hash.size();
+    loc_hash[curr_loc_id] = pos;
+    locVec.push_back(loc);
+    loc_count++;
+  }else{
+    // already defined, concate the existing snpVec                                                       
+    int pos = loc_hash[curr_loc_id];
+    for(int i=0;i<snp_vec.size();i++){
+      locVec[pos].snpVec.push_back(snp_vec[i]);
+    }
+  }
+
+
+  p = index_count;
+
+
+  
+  dtss_map[0] =0;
+  dtss_rmap[0] = 0;
+  int count = 1;
+  
+  dist_bin = gsl_vector_int_calloc(p);
+
+  // re-map bin number to skip empty bins
+  for (map<int,int>::iterator it=bin_hash.begin(); it!=bin_hash.end(); ++it){
+    if(it->first==0)
+      continue;
+    dtss_map[it->first] = count;
+    dtss_rmap[count] = it->first;
+    count++;
+  }
+  dist_bin_level = count;
+
+  for (int i=0;i<locVec.size();i++){
+    
+    for(int j=0;j<locVec[i].snpVec.size();j++){
+      string snp_id = locVec[i].snpVec[j].id;
+      gsl_vector_int_set(dist_bin,locVec[i].snpVec[j].index, dtss_map[locVec[i].snpVec[j].dtss_bin]);
+    }
+  }
+
+
+  fprintf(stderr, "Read in %d loci, %d locus-SNP pairs ... \n",loc_count, p);
+
+  prior_vec = gsl_vector_calloc(p);
+
+
+
+}
+
+
+  
+
+
+
+
+
 void controller::load_data_zscore(char *filename){
 
   
@@ -304,10 +450,12 @@ void controller::load_data_BF(char *filename){
 
 void controller::load_map(char* gene_file, char *snp_file){
 
-  dist_bin = 0;
+
   if(strlen(gene_file)==0 || strlen(snp_file)==0){
     return;
   }
+
+  dist_bin = 0;
 
   map<string, int> gene_map;
   map<string, int> snp_map;
@@ -530,7 +678,6 @@ void controller::load_annotation(char* annot_file){
     dlevel = gsl_vector_int_calloc(ncol);
   }
   
- 
   
   if(kc+kd>0){
     for (int i=0;i<locVec.size();i++){
@@ -571,9 +718,13 @@ void controller::load_annotation(char* annot_file){
     dvar_name_vec.push_back(string("dtss"));
     kd++;
   }
+
+
   
   if(dist_bin != 0)
     gsl_vector_int_free(dist_bin);
+
+
 }
 
 
