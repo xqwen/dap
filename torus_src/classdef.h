@@ -161,6 +161,8 @@ class controller {
   void find_eGene(double thresh=0.05);
   void estimate();
   void dump_prior(char *path);
+  void dump_pip(char *file);
+
 
  private:
   double eval_likelihood(double x, int index);

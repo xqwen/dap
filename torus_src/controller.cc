@@ -1095,6 +1095,26 @@ void controller::dump_prior(char *prior_path){
     fclose(fd);
   }
 }
+
+
+void controller::dump_pip(char *file){
+  if(!finish_em){
+    run_EM();
+    finish_em = 1;
+  }
+  fprintf(stderr,"Output pip file: %s ...\n",file);
+  FILE *fd = fopen(file, "w");
+  for( int i=0; i<locVec.size();i++){
+    string gname = locVec[i].id;
+    for(int j=0;j<locVec[i].snpVec.size();j++){
+      int index = locVec[i].snpVec[j].index;
+      string name = locVec[i].snpVec[j].id;
+      fprintf(fd, "%s\t%s\t%9.4e\t%9.4e\t%9.4e\n",name.c_str(), gname.c_str(), gsl_vector_get(prior_vec, index), gsl_vector_get(pip_vec, index), locVec[i].fdr);
+    }
+  }
+  fclose(fd);
+}
+
 						
     
 
