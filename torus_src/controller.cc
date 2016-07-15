@@ -46,7 +46,7 @@ void controller::load_data(char *filename){
 
     if(ins>>snp_id>>loc_id>>beta>>t_val){
       
-
+      //printf("%s  %f\n", snp_id.c_str(), beta);
       if(curr_loc_id != loc_id){
 	if(curr_loc_id != ""){
 	  
@@ -136,6 +136,8 @@ void controller::load_data_zscore(char *filename){
     ins.str(line);
 
     if(ins>>snp_id>>loc_id>>z_val){
+
+      //printf("%s  %f\n", snp_id.c_str(), z_val);
 
       if(curr_loc_id != loc_id){
 	if(curr_loc_id != ""){
@@ -233,6 +235,7 @@ void controller::load_data_BF(char *filename){
 
     if(ins>>snp_id>>loc_id>>log10_BF){
       
+      //printf("%s  %f\n", snp_id.c_str(), log10_BF);
 
       if(curr_loc_id != loc_id){
 	if(curr_loc_id != ""){

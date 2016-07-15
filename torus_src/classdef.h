@@ -111,8 +111,6 @@ class controller {
   map<int, int> dtss_rmap;
   int dist_bin_level;
   double EM_thresh;
-
-
   
   gsl_vector_int *dlevel; // (kd+1) entry levels of each factor
 
