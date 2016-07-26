@@ -87,7 +87,7 @@ chr1.51479  0		0.23
 chr1.52058  2		0.45
 chr1.52238  1		0.97
 ```
-The first column  (always named "SNP") represents the SNP name. The following columns represent specific annotations. For categorical/discrete annotations, the annotation name should alwasy have a suffix "_d"; whereas for continuous annotations, the name should end with "_c".  In the above example, the annotation "feature1" is a categorical variable with 3 categories (0, 1 and 2), and "feature2" is a continuous variable.There is no restriction on the number of annotations for enrichment analysis.
+The first column  (always named "SNP") represents the SNP name. The following columns represent specific annotations. For categorical/discrete annotations, the annotation name should alwasy have a suffix "_d"; whereas for continuous annotations, the name should end with "_c".  In the above example, the annotation "feature1" is a categorical variable with 3 categories (0, 1 and 2), and "feature2" is a continuous variable.There is no restriction on the number of annotations for enrichment analysis. As an example the annotations used for ([Wen et al. 2016, PLoS Genetics](http://www.sciencedirect.com/science/article/pii/S0002929716300957)) can be found [here](http://genome.grid.wayne.edu/centisnps/anno/).
 
 ### 3. Gene and SNP Map Files
 
