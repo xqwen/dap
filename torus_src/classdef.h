@@ -134,6 +134,9 @@ class controller {
 
   int finish_em;
 
+  int fastqtl_use_dtss;
+
+
 
   void load_data(char *filename);    // load data with MatrixeQTL format -- default
   void load_data_zscore(char *filename); // load data with z-score/t-score

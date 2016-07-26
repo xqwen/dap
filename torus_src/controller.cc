@@ -176,13 +176,15 @@ void controller::load_data_fastqtl(char *filename){
       SNP snp(snp_id, log10_BF, index_count);
 
       // handling dtss info
-      int bin = classify_dist_bin(dtss, 0 , dist_bin_size);
-      if(bin_hash.find(bin)==bin_hash.end()){
-	bin_hash[bin] = 0;
+      if(fastqtl_use_dtss){
+	int bin = classify_dist_bin(dtss, 0 , dist_bin_size);
+	if(bin_hash.find(bin)==bin_hash.end()){
+	  bin_hash[bin] = 0;
+	}
+	
+	bin_hash[bin]++;
+	snp.dtss_bin = bin;
       }
-
-      bin_hash[bin]++;
-      snp.dtss_bin = bin;
       
       index_count++;
       snp_hash[snp_id] = 100;
@@ -212,32 +214,34 @@ void controller::load_data_fastqtl(char *filename){
 
   p = index_count;
 
-
+  dist_bin = 0;
   
-  dtss_map[0] =0;
-  dtss_rmap[0] = 0;
-  int count = 1;
+  if(fastqtl_use_dtss){
+    dtss_map[0] =0;
+    dtss_rmap[0] = 0;
+    int count = 1;
   
-  dist_bin = gsl_vector_int_calloc(p);
+    dist_bin = gsl_vector_int_calloc(p);
 
-  // re-map bin number to skip empty bins
-  for (map<int,int>::iterator it=bin_hash.begin(); it!=bin_hash.end(); ++it){
-    if(it->first==0)
-      continue;
-    dtss_map[it->first] = count;
-    dtss_rmap[count] = it->first;
-    count++;
-  }
-  dist_bin_level = count;
+    // re-map bin number to skip empty bins
+    for (map<int,int>::iterator it=bin_hash.begin(); it!=bin_hash.end(); ++it){
+      if(it->first==0)
+	continue;
+      dtss_map[it->first] = count;
+      dtss_rmap[count] = it->first;
+      count++;
+    }
+    dist_bin_level = count;
 
-  for (int i=0;i<locVec.size();i++){
+    for (int i=0;i<locVec.size();i++){
     
-    for(int j=0;j<locVec[i].snpVec.size();j++){
-      string snp_id = locVec[i].snpVec[j].id;
-      gsl_vector_int_set(dist_bin,locVec[i].snpVec[j].index, dtss_map[locVec[i].snpVec[j].dtss_bin]);
+      for(int j=0;j<locVec[i].snpVec.size();j++){
+	string snp_id = locVec[i].snpVec[j].id;
+	gsl_vector_int_set(dist_bin,locVec[i].snpVec[j].index, dtss_map[locVec[i].snpVec[j].dtss_bin]);
+      }
     }
   }
-
+   
 
   fprintf(stderr, "Read in %d loci, %d locus-SNP pairs ... \n",loc_count, p);
 

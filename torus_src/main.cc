@@ -33,6 +33,10 @@ int main(int argc, char **argv){
   int gsize = -1;
   int nthread = 1;
   
+  int fastqtl_use_dtss = 1;
+
+
+
   memset(data_file,0,128);
 
 
@@ -146,7 +150,10 @@ int main(int argc, char **argv){
       continue;
     }
 
-
+    if(strcmp(argv[i], "--no_dtss") == 0) {
+      fastqtl_use_dtss = 0;
+      continue;
+    }
 
 
     if(strcmp(argv[i], "-dist_bin_size") == 0){
@@ -154,7 +161,6 @@ int main(int argc, char **argv){
       continue;
     }
 
-    
     
     if(strcmp(argv[i], "-est")==0){
       est = 1;
@@ -247,6 +253,7 @@ int main(int argc, char **argv){
     con.load_data_zscore(data_file);
     break;
   case 4:
+    con.fastqtl_use_dtss = fastqtl_use_dtss;
     con.load_data_fastqtl(data_file);
     gmap_file[0]=smap_file[0] = 0;
     break;
