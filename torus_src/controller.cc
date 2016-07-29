@@ -261,7 +261,7 @@ void controller::load_data_fastqtl(char *filename){
 void controller::load_data_zscore(char *filename){
 
   
-
+  
   ifstream dfile(filename, ios_base::in | ios_base::binary);
   boost::iostreams::filtering_istream in;
 
@@ -346,7 +346,7 @@ void controller::load_data_zscore(char *filename){
   fprintf(stderr, "Read in %d loci, %d locus-SNP pairs ... \n",loc_count, p);
   
   prior_vec = gsl_vector_calloc(p);
-
+  
 }
 
 
@@ -453,13 +453,13 @@ void controller::load_data_BF(char *filename){
 
 
 void controller::load_map(char* gene_file, char *snp_file){
-
-
+  
+  dist_bin = 0;
   if(strlen(gene_file)==0 || strlen(snp_file)==0){
     return;
   }
 
-  dist_bin = 0;
+  
 
   map<string, int> gene_map;
   map<string, int> snp_map;
