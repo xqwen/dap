@@ -214,7 +214,6 @@ void controller::load_data_fastqtl(char *filename){
 
   p = index_count;
 
-  dist_bin = 0;
   
   if(fastqtl_use_dtss){
     dtss_map[0] =0;
@@ -454,7 +453,9 @@ void controller::load_data_BF(char *filename){
 
 void controller::load_map(char* gene_file, char *snp_file){
   
-  dist_bin = 0;
+  if(fastqtl_use_dtss)
+    return;
+  
   if(strlen(gene_file)==0 || strlen(snp_file)==0){
     return;
   }

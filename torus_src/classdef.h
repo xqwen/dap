@@ -79,6 +79,8 @@ class controller {
     p=kc=kd=dist_bin_level = 0;
     force_logistic = 0;
     dist_bin_size = -1;
+    fastqtl_use_dtss = 0;
+    dist_bin = 0;
     finish_em = 0;
     single_fuzzy_annot = 0;
     l1_lambda=l2_lambda=0;
