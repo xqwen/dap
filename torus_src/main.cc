@@ -22,25 +22,26 @@ int main(int argc, char **argv){
   //olist.push_back(0.1);
   //phlist.push_back(0.05);
 
-  char data_file[128];
-  char gmap_file[128];
-  char smap_file[128];
-  char annot_file[128];
-  char prior_dir[128];
-  char output_pip[128];
+  char data_file[256];
+  char gmap_file[256];
+  char smap_file[256];
+  char annot_file[256];
+  char prior_dir[256];
+  char output_pip[256];
 
   int csize = -1;
   int gsize = -1;
   int nthread = 1;
+  int print_avg = 0;
   
   int fastqtl_use_dtss = 1;
 
 
 
-  memset(data_file,0,128);
+  memset(data_file,0,256);
 
 
-  char init_file[128];
+  char init_file[256];
 
 
   int find_egene = 0;
@@ -49,15 +50,15 @@ int main(int argc, char **argv){
 
   double init_pi1 = 1e-3;
 
-  char ci_file[128];
-  memset(ci_file,0,128); 
-  memset(data_file,0,128); 
-  memset(gmap_file,0,128);
-  memset(smap_file,0,128);
-  memset(annot_file,0,128);
-  memset(init_file,0,128);
-  memset(prior_dir,0,128);
-  memset(output_pip,0,128);
+  char ci_file[256];
+  memset(ci_file,0,256); 
+  memset(data_file,0,256); 
+  memset(gmap_file,0,256);
+  memset(smap_file,0,256);
+  memset(annot_file,0,256);
+  memset(init_file,0,256);
+  memset(prior_dir,0,256);
+  memset(output_pip,0,256);
 
   int force_logistic = 0;
   int prob_annot = 0;
@@ -154,6 +155,9 @@ int main(int argc, char **argv){
       fastqtl_use_dtss = 0;
       continue;
     }
+    
+    
+
 
 
     if(strcmp(argv[i], "-dist_bin_size") == 0){
@@ -190,9 +194,15 @@ int main(int argc, char **argv){
     }
 
 
+    if(strcmp(argv[i], "--print_avg")==0 ){
+      print_avg = 1;
+      continue;
+    }
+
 
     if(strcmp(argv[i], "-alpha")==0){
       alpha = atof(argv[++i]);
+      continue;
     }
 
 
@@ -240,7 +250,7 @@ int main(int argc, char **argv){
   
   
   con.init_pi1 = init_pi1;
-
+  con.print_avg = print_avg;
 
   switch(data_format){
   case 1:

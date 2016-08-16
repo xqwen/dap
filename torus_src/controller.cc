@@ -888,7 +888,13 @@ void controller::run_EM(){
     last_log10_lik = curr_log10_lik;
   }
   
-
+  
+  double tp = 0;
+  for(int i=0;i<p;i++){
+    tp += gsl_vector_get(prior_vec,i);
+  }
+  if(print_avg)
+    fprintf(stderr, "\nAvg. probability of association (%d unique variants): %9.3e\n", int(snp_hash.size()),tp/int(snp_hash.size()));
   
 }
 

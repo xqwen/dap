@@ -85,6 +85,7 @@ class controller {
     single_fuzzy_annot = 0;
     l1_lambda=l2_lambda=0;
     init_pi1 = 1e-3;
+    print_avg = 0;
   }
 
   // storage
@@ -137,7 +138,7 @@ class controller {
   int finish_em;
 
   int fastqtl_use_dtss;
-
+  int print_avg;
 
 
   void load_data(char *filename);    // load data with MatrixeQTL format -- default
