@@ -1271,7 +1271,7 @@ void controller::dump_pip(char *file){
     for(int j=0;j<locVec[i].snpVec.size();j++){
       int index = locVec[i].snpVec[j].index;
       string name = locVec[i].snpVec[j].id;
-      fprintf(fd, "%s\t%s\t%9.4e\t%9.4e\t%9.4e\n",name.c_str(), gname.c_str(), gsl_vector_get(prior_vec, index), gsl_vector_get(pip_vec, index), locVec[i].fdr);
+      fprintf(fd, "%s\t%s\t%9.4e\t%9.4e\n",name.c_str(), gname.c_str(), gsl_vector_get(prior_vec, index), gsl_vector_get(pip_vec, index));
     }
   }
   fclose(fd);
