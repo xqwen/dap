@@ -72,7 +72,7 @@ void controller::load_data(char *filename){
       }
       
       se_beta = beta/t_val;
-      double log10_BF = compute_log10_BF(beta, se_beta);
+      double log10_BF = compute_log10_BF(t_val);
       SNP snp(snp_id, log10_BF, index_count);
       index_count++;
       snp_hash[snp_id] = 100;
