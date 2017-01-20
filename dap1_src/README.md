@@ -1,7 +1,7 @@
 # Fine-mapping with DAP-1 using Summary-level Statistics
 
 
-```dap_ss``` implements the DAP-1 algorithm for fine-mapping analysis. The main advantage of the algorithm is that it utilizes only summary-level information (e.g., pre-computed Bayes factors or z-scores) from single-SNP association testing.
+```dap1``` implements the DAP-1 algorithm for fine-mapping analysis. The main advantage of the algorithm is that it utilizes only summary-level information (e.g., pre-computed Bayes factors or z-scores) from single-SNP association testing.
 
 Warning: this particular implementation is under active development, use the current code with cautions.
 
@@ -13,7 +13,7 @@ Simply run ``make`` to compile the executable named ``dap_ss``.
 
 ## Command-line Syntax
 
-```dap_ss -d data_file [-prior prior_file] > output_file```
+```dap1 -d data_file [-prior prior_file] > output_file```
 
 
 ## Command-line Options
@@ -61,6 +61,6 @@ SNP   PIP    log10BF
 
 ## Running sample data
 
-``dap -d sample.zval.dat  -p sample.prior``
+``dap1 -d sample.zval.dat  -p sample.prior``
 
  
