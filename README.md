@@ -25,7 +25,7 @@ Software distributed under the terms of the GNU General Public License as publis
 
 * ``dap_ss_src``: C/C++ source code of the adpative DAP algorithm (taking summary-level statistics and LD matrix as input)
 
-* ``dap_greedy_src``: New implementation of the adaptive DAP algorithm with improved efficiency and features (taking individual-level genotype data as input)
+* ``dap_greedy_src``: New implementation of the adaptive DAP algorithm with improved efficiency and features (taking individual-level genotype data as input) *under beta testing*
 
 * ``torus_src``: C/C++ source code of the EM-DAP1 algorithm (for enrichment analysis and QTL discovery)
 
