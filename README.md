@@ -19,7 +19,13 @@ Software distributed under the terms of the GNU General Public License as publis
 
 ## Repository directories
 
-* ``dap_src``: C/C++ source code of the adaptive DAP and DAP-K algorithm (for multi-SNP fine-mapping analysis)
+* ``dap_src``: C/C++ source code of the adaptive DAP and DAP-K algorithm (for multi-SNP fine-mapping analysis, taking individual-level genotype data as input)
+
+* ``dap1_src``: C/C++ source code of the DAP-1 algorithm (taking *only* summary-level statistics as input)
+
+* ``dap_ss_src``: C/C++ source code of the adpative DAP algorithm (taking summary-level statistics and LD matrix as input)
+
+* ``dap_greedy_src``: New implementation of the adaptive DAP algorithm with improved efficiency and features (taking individual-level genotype data as input)
 
 * ``torus_src``: C/C++ source code of the EM-DAP1 algorithm (for enrichment analysis and QTL discovery)
 
