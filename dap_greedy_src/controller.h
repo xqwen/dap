@@ -109,7 +109,9 @@ class controller {
   double cluster_pip_thresh; 
   int    priority_msize;
   double log10_bf_thresh;
+  double ld_control_thresh;
 
+  
   // ABF options
   double sslr_sigma_option;
   
@@ -144,6 +146,11 @@ class controller {
     size_limit = size_limit_thresh;
   }
 
+  void set_ld_control(double thresh){
+    ld_control_thresh = thresh;
+  }
+
+  
   
   void set_prior(char *prior_file);
   void set_prior(double pes=1, double lambda=0.5);

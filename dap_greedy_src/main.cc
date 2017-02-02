@@ -30,7 +30,8 @@ int main(int argc, char **argv){
 
   double pes = 1.0;
   double lambda = 0.5;
-
+  double ld_control = 0;
+  
   int size_limit = 25;
   
   
@@ -102,8 +103,13 @@ int main(int argc, char **argv){
       size_limit = -1;
       continue;
     }
-    
-    
+
+
+    if(strcmp(argv[i],"-ld_control")==0){
+      ld_control = atof(argv[++i]);
+      continue;
+    }
+
 
 
     
@@ -165,9 +171,9 @@ int main(int argc, char **argv){
   con.set_gene(gene_name);
   con.set_sslr_option(abf_option);
   con.set_thread(thread);
-
+  
   con.set_size_limit(size_limit);
-
+  con.set_ld_control(ld_control);
 
   if(msize>=1){
     con.set_max_size(msize);

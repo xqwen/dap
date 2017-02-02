@@ -43,7 +43,7 @@ controller::controller(char *data_file, char *grid_file){
   cluster_pip_thresh = 0.25;
   priority_msize = 100;
   log10_bf_thresh = 1;
-
+  ld_control_thresh = 0; // by default no ld control in selecting candidate SNPs
 }
 
 
@@ -365,6 +365,8 @@ double controller::conditional_est(vector<int>& bm){
   if(max > -9999){
     for(int i=0;i<p;i++){
       if( max - abf_vec[i]  <= log10_bf_thresh  && abf_vec[i]>=thresh){
+	if(compute_r2(max_id,i)< ld_control_thresh)
+	  continue;
 	cand_set.push_back(i);
 	cand_map[i]=1;
 	flag =1;
@@ -432,7 +434,8 @@ size_model controller::compute_post_model_single(vector<int>& bm){
  
   for(int i=0;i<p;i++){
     if( max_log10_abf - abf_vec[i]  <= log10_bf_thresh && abf_vec[i]>= thresh){
-      
+      if(compute_r2(max_id,i)< ld_control_thresh)
+	continue;
       vector<int> mv;
       mv.push_back(i);
       smod.mvec.push_back(mv);
