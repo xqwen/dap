@@ -710,9 +710,9 @@ void controller::summarize_approx_posterior(){
   for(int i=0;i<nsnp_vec_sort.size();i++){
     if(nsnp_vec_sort[i].incl_prob<1e-3&&!output_all)
       break;
-    if(nsnp_vec_sort[i].cluster==-1)
+    if(nsnp_vec_sort[i].cluster==-1&&!output_all)
       continue;
-    fprintf(outfd,"%5d\t%15s\t%8.5e\t%7.3f\t%d\n",i+1, nsnp_vec_sort[i].name.c_str(), nsnp_vec_sort[i].incl_prob, single_log10_abfv[nsnp_vec_sort[i].name], nsnp_vec_sort[i].cluster);
+    fprintf(outfd,"((%d))\t%15s\t%8.5e\t%7.3f\t%d\n",i+1, nsnp_vec_sort[i].name.c_str(), nsnp_vec_sort[i].incl_prob, single_log10_abfv[nsnp_vec_sort[i].name], nsnp_vec_sort[i].cluster);
   }
 
 
@@ -724,7 +724,7 @@ void controller::summarize_approx_posterior(){
     for(int i=0;i<cluster_count.size();i++){
       if(cluster_pip[i]<cluster_pip_thresh)
 	continue;
-      fprintf(outfd,"\t   %2d\t\t  %3d\t\t %7.3f \t  %7.3f    \t\t",i+1,cluster_count[i],cluster_pip[i],cluster_r2[i]);
+      fprintf(outfd,"\t   {%d}\t\t  %3d\t\t %7.3f \t  %7.3f    \t\t",i+1,cluster_count[i],cluster_pip[i],cluster_r2[i]);
       int counti = grpr2_map[i];
       
       for(int k=0;k<cluster_count.size();k++){
