@@ -96,8 +96,17 @@ void controller::set_outfile(char *outfile){
 void controller::set_prior(double pes, double lambda){
   
   int size = 1<<s;
+  double pi1 = pes/double(p);
+  vector<double> pvec(size,0);
   
+  if(pi1 > 1 - 1e-3)
+    pi1 = 1-1e-3;
+  
+  pvec[0] = 1-pi1;
+  pvec[size-1] = pi1;
+  //printf("pi1 = %.4e\n",pi1);
   // no configuration option yet!!!!!
+  /*
   lambda = 1;
   vector<double> pvec;
   double pi1 = pes/double(p);
@@ -112,6 +121,8 @@ void controller::set_prior(double pes, double lambda){
 	pvec.push_back(pi1*(1-lambda)/double(size-2));
     }
   }
+  */
+
   
   for(int i=0;i<p;i++){
     pi_vec.push_back(pvec);
@@ -286,7 +297,16 @@ void controller::run(){
     
     
     // stopping rule
+
     int cs = size;
+    // if the prior expectation is high for number of signals, carry on
+
+    // expected contribution of next size partition, assuming model is saturated 
+    double project_ratio = (p-cs+1)*prior_ratio/cs;
+    if(project_ratio > 1)
+      continue;
+    
+    // else check stopping point
     double ncps = szm.log10_sum_post;
     double rb = log10(double(p)-cs+1)+log10(prior_ratio) + cps;
     double lb = log10(double(p-2*cs+2)/cs) + log10(prior_ratio) + cps;
@@ -324,37 +344,65 @@ double controller::conditional_est(vector<int>& bm){
     
   }
   
-
+  //vector<double> post_vec;
   vector<double> abf_vec;
+  
   int max_id;
   for(int i=0;i<p;i++){
 
     if(cand_map[i]==1){
+      //post_vec.push_back(-99999);
       abf_vec.push_back(-99999);
       continue;
     }
 
+    
     vector<vector<int> > cmcfg = mcfg;
     map<int,int> cmcfg_map = mcfg_map;
-   
+    
         
     cmcfg[i] = get_config(totalc);
     cmcfg_map[i] = totalc;
-    double rst =  sslr.compute_log10_ABF(cmcfg);
-    
-    
-    abf_vec.push_back(rst);
-    
 
+    /*
+    double rst =  sslr.compute_log10_ABF(cmcfg) + compute_log10_prior(cmcfg_map);
+    post_vec.push_back(rst);
+    */
     
+    double rst =  sslr.compute_log10_ABF(cmcfg);
+    abf_vec.push_back(rst);
+
     if(rst > max){
-      max=rst;
+      max= rst;
       max_id = i;
     }
+    
   }
   
   double thresh = -99999;
+
+  /*
+  if(post_vec.size()>size_limit){
+    vector<double> post_vec_sort = post_vec;
+    sort(post_vec_sort.rbegin(), post_vec_sort.rend());
+    thresh = post_vec_sort[size_limit-1];
+  }
   
+  int flag = 0;
+  if(max > -9999){
+    for(int i=0;i<p;i++){
+      if( max - post_vec[i]  <= log10_bf_thresh  && post_vec[i]>=thresh){
+	if(compute_r2(max_id,i)< ld_control_thresh)
+	  continue;
+	cand_set.push_back(i);
+	cand_map[i]=1;
+	flag =1;
+      }
+      
+    }
+  }
+  */
+
   if(abf_vec.size()>size_limit){
     vector<double> abf_vec_sort = abf_vec;
     sort(abf_vec_sort.rbegin(), abf_vec_sort.rend());
@@ -374,7 +422,7 @@ double controller::conditional_est(vector<int>& bm){
       
     }
   }
-
+  
 
   if(flag == 1)
     bm.push_back(max_id);
@@ -570,6 +618,7 @@ void controller::summarize_approx_posterior(){
   
   vector<double>  log10_pmass_vec;
   log10_pmass_vec.push_back(compute_log10_prior(null_cfg_map));
+  
 
   for(int i=0;i<szm_vec.size();i++){
     log10_pmass_vec.push_back(szm_vec[i].log10_sum_post);
@@ -590,8 +639,15 @@ void controller::summarize_approx_posterior(){
 
   vector<double> wv(log10_pmass_vec.size(),1.0);
   log10_pnorm  = sslr.log10_weighted_sum(log10_pmass_vec,wv);
-  //printf("log10_pnorm = %7.3f\n", log10_pnorm);
 
+  /*
+  printf("log10_pnorm = %7.3f\n", log10_pnorm);
+  for(int i=0;i<wv.size();i++){
+    printf("%d:  %7.3f\n", i, log10_pmass_vec[i]);
+  }
+  */
+
+  
   Nmodel nm;
   nm.id = "NULL";
   nm.prob = pow(10, log10_pmass_vec[0]-log10_pnorm);
