@@ -344,15 +344,15 @@ double controller::conditional_est(vector<int>& bm){
     
   }
   
-  //vector<double> post_vec;
-  vector<double> abf_vec;
+  vector<double> post_vec;
+  //vector<double> abf_vec;
   
   int max_id;
   for(int i=0;i<p;i++){
 
     if(cand_map[i]==1){
-      //post_vec.push_back(-99999);
-      abf_vec.push_back(-99999);
+      post_vec.push_back(-99999);
+      //abf_vec.push_back(-99999);
       continue;
     }
 
@@ -364,14 +364,14 @@ double controller::conditional_est(vector<int>& bm){
     cmcfg[i] = get_config(totalc);
     cmcfg_map[i] = totalc;
 
-    /*
+    
     double rst =  sslr.compute_log10_ABF(cmcfg) + compute_log10_prior(cmcfg_map);
     post_vec.push_back(rst);
-    */
     
+    /*
     double rst =  sslr.compute_log10_ABF(cmcfg);
     abf_vec.push_back(rst);
-
+    */
     if(rst > max){
       max= rst;
       max_id = i;
@@ -381,7 +381,7 @@ double controller::conditional_est(vector<int>& bm){
   
   double thresh = -99999;
 
-  /*
+  
   if(post_vec.size()>size_limit){
     vector<double> post_vec_sort = post_vec;
     sort(post_vec_sort.rbegin(), post_vec_sort.rend());
@@ -401,8 +401,8 @@ double controller::conditional_est(vector<int>& bm){
       
     }
   }
-  */
-
+  
+  /*
   if(abf_vec.size()>size_limit){
     vector<double> abf_vec_sort = abf_vec;
     sort(abf_vec_sort.rbegin(), abf_vec_sort.rend());
@@ -422,7 +422,7 @@ double controller::conditional_est(vector<int>& bm){
       
     }
   }
-  
+  */
 
   if(flag == 1)
     bm.push_back(max_id);
@@ -442,10 +442,12 @@ size_model controller::compute_post_model_single(vector<int>& bm){
   size_model smod;
   smod.size = 1;
   smod.log10_sum_post = 0;
+
   vector<double> post_vec;
   vector<double> abf_vec;
   
   double max_log10_abf = -9999;
+  double max_log10_post = -9999;
   int max_id = -1;
   for(int index=0;index<p;index++){
     
@@ -460,11 +462,18 @@ size_model controller::compute_post_model_single(vector<int>& bm){
     double log10_post =  log10_abf + compute_log10_prior(mcfg_map);
     post_vec.push_back(log10_post);
     
-    
+    /*
     if(log10_abf>max_log10_abf){
       max_log10_abf = log10_abf;
       max_id = index;
     }
+    */
+
+    if(log10_post>max_log10_post){
+      max_log10_post = log10_post;
+      max_id = index;
+    }
+    
     smod.post_map[name] = log10_post;
   }
 
@@ -474,12 +483,14 @@ size_model controller::compute_post_model_single(vector<int>& bm){
   smod.log10_sum_post = sslr.log10_weighted_sum(post_vec,wv);
   
   double thresh = -99999;
+
+  /*
   if(abf_vec.size()>size_limit){
     vector<double> abf_vec_sort = abf_vec;
     sort(abf_vec_sort.rbegin(), abf_vec_sort.rend());
     thresh= abf_vec_sort[size_limit-1];
   }
- 
+  
   for(int i=0;i<p;i++){
     if( max_log10_abf - abf_vec[i]  <= log10_bf_thresh && abf_vec[i]>= thresh){
       if(compute_r2(max_id,i)< ld_control_thresh)
@@ -492,6 +503,28 @@ size_model controller::compute_post_model_single(vector<int>& bm){
       
     }
   }
+  */
+
+  if(post_vec.size()>size_limit){
+    vector<double> post_vec_sort = post_vec;
+    sort(post_vec_sort.rbegin(), post_vec_sort.rend());
+    thresh= post_vec_sort[size_limit-1];
+  }
+  
+  for(int i=0;i<p;i++){
+    if( max_log10_post - post_vec[i]  <= log10_bf_thresh && post_vec[i]>= thresh){
+      if(compute_r2(max_id,i)< ld_control_thresh)
+	continue;
+      vector<int> mv;
+      mv.push_back(i);
+      smod.mvec.push_back(mv);
+      cand_set.push_back(i);
+      cand_map[i] = 1;
+      
+    }
+  }
+
+  
   smod.snp_cluster = cand_set;
   bm.push_back(max_id);
   return smod;
