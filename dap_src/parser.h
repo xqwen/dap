@@ -20,6 +20,8 @@ class parser {
   map<int, string> geno_map;
   map<string, int> geno_rmap;
 
+  string pheno_name;
+
   void process_data(char *filename);
   void output();
   

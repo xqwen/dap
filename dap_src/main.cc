@@ -36,7 +36,7 @@ int main(int argc, char **argv){
   double size_select_thresh = -1;
 
   int est_option = 0;
-
+  int run_scan = 0;
   int thread = 1;
   
   for(int i=1;i<argc;i++){
@@ -124,6 +124,11 @@ int main(int argc, char **argv){
     }
 
 
+    if(strcmp(argv[i], "-scan")==0){
+      run_scan = 1;
+      continue;
+    }
+
     
     fprintf(stderr, "Error: unknown option \"%s\"\n",argv[i]);
     exit(1);
@@ -165,8 +170,11 @@ int main(int argc, char **argv){
     return 1;
   }
     
-
-  con.run();
+  if(run_scan){
+    con.scan();
+  }else{
+    con.run();
+  }
   return 1;
    
 

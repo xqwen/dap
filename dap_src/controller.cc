@@ -126,6 +126,7 @@ void controller::set_prior(char *prior_file){
     ins>>value;
     pi_vec[index][0] = 1-value;
     pi_vec[index][size-1] = value;
+    //printf("SNP %d %s  %.4e\n", index, snp_name.c_str(), value);
 
   }
 
@@ -805,6 +806,26 @@ double *controller::get_weights(vector<double>& vec){
   
 }
 
+
+// utility for single SNP analysis -- input individual-level data output: log10 BF
+void controller::scan(){
+
+  init();
+
+  int totalc = (1<<s)-1;
+
+  for(int i=0;i<p;i++){
+
+    vector<vector<int> > mcfg = null_config;
+    map<int,int> mcfg_map = null_cfg_map;    
+    mcfg[i] = get_config(totalc);
+    mcfg_map[i] = totalc;
+    
+    fprintf(outfd,"%25s %10s   %9.3f\n" , pars.geno_map[i].c_str(), pars.pheno_name.c_str(), sslr.compute_log10_ABF(mcfg));
+    
+  }  
+
+}
 
 
 

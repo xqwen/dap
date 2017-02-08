@@ -122,7 +122,7 @@ class controller {
   controller(char *data_file, char *grid_file);
   void run();
   void quick_est();
-
+  void scan();
   // system setting
   
   // options

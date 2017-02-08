@@ -2,7 +2,9 @@ using namespace std;
 
 #include "parser.h"
 #include "stdlib.h"
-
+#include <string>
+#include <sstream>
+#include <fstream>
 
 void parser::process_data(char *filename){
   
@@ -22,30 +24,33 @@ void parser::process_data(char *filename){
 void parser::process_line(string line){
     
   // parsing
+
+  istringstream ins(line);
+  
   char *content = new char[strlen(line.c_str())+1];
   strcpy(content, line.c_str());
-  
-  char *header = strtok(content, " ");
-  if(header==0)
-    return;
 
-  char *name = strtok(0, " ");
-  char *grp  = strtok(0, " ");
+
+  string header;
+  ins>>header;
+
+  string name;
+  string grp;
+  ins>> name;
+  ins >> grp;
+  
 
   vector<double> vecv;
   
-  int missing_flag = 0;  // missing data flag 
-  while(1){
-    char *val = strtok(0, " ");
-        
-    if(val==0)
-      break;
+  int missing_flag = 0;  // missing data flag
+  string val;
+  while(ins>>val){
     
-    if(strcmp(val,"NA")==0 || strcmp(val,"na")==0){
+    if(val == "NA" || val == "na"){
       missing_flag = 1;
       vecv.push_back(-1);
     }else
-      vecv.push_back(atof(val));
+      vecv.push_back(atof(val.c_str()));
   }
   
   // impute missing data with mean
@@ -76,9 +81,10 @@ void parser::process_line(string line){
       
 
 
-  if(strcmp(header,"pheno") == 0||strcmp(header,"response")==0){
+  if( header == "pheno" || header == "response"){
+    pheno_name = name;
     pheno_vec.push_back(vecv);  
-    pheno_map[pheno_vec.size()-1] = string(grp);
+    pheno_map[pheno_vec.size()-1] = grp;
     
     pheno_index[string(grp)] = pheno_vec.size()-1;
     
@@ -86,26 +92,23 @@ void parser::process_line(string line){
     geno_vec.push_back(gvec);
     vector<vector<double> > cvec;
     covar_vec.push_back(cvec);
-  }
-  if(strcmp(header,"geno") == 0 || strcmp(header,"covariate")==0){
-    int index = pheno_index[string(grp)];
+  }else if( header == "geno" || header == "covariate" ){
+    int index = pheno_index[grp];
     geno_vec[index].push_back(vecv);
-    if(geno_rmap.find(string(name))==geno_rmap.end()){
-      geno_map[geno_vec[index].size()-1] = string(name);
-      geno_rmap[string(name)] = geno_vec[index].size()-1;
+    if(geno_rmap.find(name)==geno_rmap.end()){
+      geno_map[geno_vec[index].size()-1] = name;
+      geno_rmap[name] = geno_vec[index].size()-1;
     }
-  } 
- 
-  if(strcmp(header, "controlled") == 0){
-    int index = pheno_index[string(grp)];
+  }else if(header == "controlled"){
+    int index = pheno_index[grp];
     covar_vec[index].push_back(vecv);
+    
+  }
+  else{
+    fprintf(stderr, "unknown header %s ... skipping \n", header.c_str());
   }
 
 
-
-
-
-  delete[] content;
 
 
 }
