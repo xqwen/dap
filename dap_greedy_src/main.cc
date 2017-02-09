@@ -29,6 +29,7 @@ int main(int argc, char **argv){
   int output_all = 0;
 
   double pes = 1.0;
+  double pi1 = -1;
   double lambda = 0.5;
   double ld_control = 0;
   
@@ -41,6 +42,9 @@ int main(int argc, char **argv){
   int est_option = 0;
   int run_scan = 0;
   int thread = 1;
+
+
+
   
   for(int i=1;i<argc;i++){
      
@@ -75,6 +79,12 @@ int main(int argc, char **argv){
 
     if(strcmp(argv[i], "-ens")==0 ){
       pes = atof(argv[++i]);
+      continue;
+    }
+
+
+    if(strcmp(argv[i], "-pi1")==0){
+      pi1 = atof(argv[++i]);
       continue;
     }
     
@@ -180,9 +190,19 @@ int main(int argc, char **argv){
   }
   
   
-  if(strlen(prior_file)==0)
-    con.set_prior(pes,lambda);
-  else
+  if(strlen(prior_file)==0){
+    if(pi1 != -1){
+      if(0<pi1 && pi1 <1){
+	con.set_prior(pi1);
+      }else{
+	fprintf(stderr, "Warning: pi1 specification is outside the range, ignored...\n");
+	con.set_prior(pes,lambda);
+      }
+    }else{
+      // default
+      con.set_prior(pes,lambda);
+    }
+  }else
     con.set_prior(prior_file);
   
   if(output_all == 1)

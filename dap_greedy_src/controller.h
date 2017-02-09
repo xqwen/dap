@@ -153,7 +153,8 @@ class controller {
   
   
   void set_prior(char *prior_file);
-  void set_prior(double pes=1, double lambda=0.5);
+  void set_prior(double pes, double lambda);
+  void set_prior(double pi1);
 
   void set_max_size(int msize){
     max_size = msize;
@@ -176,6 +177,8 @@ class controller {
 
   void set_output_all(){
     output_all = 1;
+    cluster_pip_thresh = -1;
+    
   }
   
   void set_thread(int thread){

@@ -40,7 +40,7 @@ controller::controller(char *data_file, char *grid_file){
   snp_select_thresh = 0.01;
 
 
-  cluster_pip_thresh = 0.25;
+  cluster_pip_thresh = 0.25; // for output cluster purpose
   priority_msize = 100;
   log10_bf_thresh = 1;
   ld_control_thresh = 0; // by default no ld control in selecting candidate SNPs
@@ -130,6 +130,28 @@ void controller::set_prior(double pes, double lambda){
   
   return;
 }
+
+
+
+
+void controller::set_prior(double pi1){
+  
+  if(pi1 > 1 - 1e-3)
+    pi1 = 1-1e-3;
+
+  int size = 1<<s;
+  vector<double> pvec(size,0);
+  
+  pvec[0] = 1-pi1;
+  pvec[size-1] = pi1;
+    
+  for(int i=0;i<p;i++){
+    pi_vec.push_back(pvec);
+  }
+  
+  return;
+}
+
 
 void controller::set_prior(char *prior_file){
 
@@ -813,7 +835,7 @@ void controller::summarize_approx_posterior(){
     for(int i=0;i<cluster_count.size();i++){
       if(cluster_pip[i]<cluster_pip_thresh)
 	continue;
-      fprintf(outfd,"\t   {%d}\t\t  %3d\t\t %7.3f \t  %7.3f    \t\t",i+1,cluster_count[i],cluster_pip[i],cluster_r2[i]);
+      fprintf(outfd,"\t   {%d}\t\t  %3d\t\t %7.3e \t  %7.3f    \t\t",i+1,cluster_count[i],cluster_pip[i],cluster_r2[i]);
       int counti = grpr2_map[i];
       
       for(int k=0;k<cluster_count.size();k++){
