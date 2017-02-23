@@ -42,7 +42,7 @@ controller::controller(char *data_file, char *grid_file){
 
   cluster_pip_thresh = 0.25; // for output cluster purpose
   priority_msize = 100;
-  log10_bf_thresh = 1;
+  log10_bf_thresh = 2;
   ld_control_thresh = 0; // by default no ld control in selecting candidate SNPs
 }
 
