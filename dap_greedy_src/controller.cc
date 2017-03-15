@@ -709,6 +709,7 @@ void controller::summarize_approx_posterior(){
   nm.size = 0;
   nm.post_score = log10_pmass_vec[0];
   nmodel_vec.push_back(nm);
+
   
   for(int i=0;i<szm_vec.size();i++){
     map<string, double>::iterator iter;
@@ -729,6 +730,7 @@ void controller::summarize_approx_posterior(){
   double msize_mean = 0;
   double msize_var = 0;
 
+  
   for(int i=0;i<nmodel_vec.size();i++){
     
     string name = nmodel_vec[i].id;
@@ -739,16 +741,16 @@ void controller::summarize_approx_posterior(){
       start_pos += 3; 
     }
     
-    if( nmodel_vec[i].prob >= 1e-5){
+    if( nmodel_vec[i].prob >= 1e-5 || name == "NULL"){
       fprintf(outfd, "%5d   %7.4e    %d    %7.3f   [%s]\n",i+1, nmodel_vec[i].prob, nmodel_vec[i].size, nmodel_vec[i].post_score, name.c_str());
     }
     cump += nmodel_vec[i].prob;
     msize_mean += nmodel_vec[i].prob*nmodel_vec[i].size;
     msize_var  += nmodel_vec[i].prob*pow(nmodel_vec[i].size,2);
-  
+    
   }
-  
-  
+
+
 
   msize_var -= pow(msize_mean,2.0);
   if(msize_var < 0){
