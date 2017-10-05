@@ -21,11 +21,13 @@ void parser::process_data(char *filename){
    
   //output();
   for(int i=0;i<pheno_vec.size();i++){
-       regress_cov(pheno_vec[i], covar_vec[i], geno_vec[i]);
+       if(covar_vec[i].size()>0)	  
+          regress_cov(pheno_vec[i], covar_vec[i], geno_vec[i]);
   } 
 
   for(int i=0;i<covar_vec.size();i++){
-      covar_vec[i].clear();
+      if(covar_vec[i].size()>0)
+         covar_vec[i].clear();
   }  
 }
 
