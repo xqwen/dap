@@ -294,7 +294,7 @@ void controller::run(){
       break;
     size++;
 
-    if(size == max_size)
+    if(size > max_size)
       break;
     
     fprintf(stderr,"\t %4d \t \t ",size);
@@ -678,6 +678,10 @@ void controller::summarize_approx_posterior(){
   for(int i=0;i<szm_vec.size();i++){
     log10_pmass_vec.push_back(szm_vec[i].log10_sum_post);
   }
+
+  vector<double> wv1(log10_pmass_vec.size(),1.0);
+  double log10_pip_NC = sslr.log10_weighted_sum(log10_pmass_vec,wv1);
+
   double val = log10_pmass_vec[log10_pmass_vec.size()-1];
 
   double sum = 0;
