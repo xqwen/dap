@@ -618,7 +618,7 @@ size_model controller::compute_post_model(int size, int use_abs_cutoff){
    
     SSLR local_sslr ;
     local_sslr.init(pheno_vec,geno_vec,covar_vec);
-    local_sslr.set_sigma_option(0.5);
+    local_sslr.set_sigma_option(sslr_sigma_option);
     local_sslr.set_effect_vec(my_phi2_vec,my_omg2_vec);
 
     double log10_abf  = local_sslr.compute_log10_ABF(mcfg);
