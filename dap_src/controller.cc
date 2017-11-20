@@ -67,8 +67,28 @@ void controller::set_default_options(){
     ld_control_thresh = 0.25; // by default  ld control with r^2 = 0.25
 }
 
+
+// =============== summarize all configuations ======================
+
+
 void controller::print_dap_config(){
+    fprintf(logfd,"\n============ DAP Configuration ============\n\n");
+    fprintf(logfd,"INPUT\n\n");
+    if(use_ss){
+        fprintf(logfd,"\t* summary-level data (z-scores and LD matrix)\n");
+        fprintf(logfd,"\t* number of candidate SNPs: %d\n",p);
+    }else{
+        fprintf(logfd,"\t* individual-level data (sbams format)\n");
+        fprintf(logfd,"\t* number of candidate SNPs: %d\n",p);
+        fprintf(logfd,"\t* sample size: %d\n",int(pars.geno_vec[0][0].size()));
+        fprintf(logfd,"\t* number of covariates: %d\n", int(pars.covar_vec[0].size()));
+    }
+        
+    fprintf(logfd,"\n");
     
+
+
+    fprintf(logfd,"\nRUN LOG\n");
 }
 
 
