@@ -19,22 +19,15 @@ Software distributed under the terms of the GNU General Public License as publis
 
 ## Repository directories
 
-* ``dap_src``: C/C++ source code of the adaptive DAP and DAP-K algorithm (for multi-SNP fine-mapping analysis, taking individual-level genotype data as input)
+* ``dap_src``: C/C++ source code of the adaptive DAP algorithm with new and improved features (now working with summary-level statistics)
 
-* ``dap1_src``: C/C++ source code of the DAP-1 algorithm (taking *only* summary-level statistics as input)
-
-* ``dap_ss_src``: C/C++ source code of the adpative DAP algorithm (taking summary-level statistics and LD matrix as input)
-
-* ``dap_greedy_src``: New implementation of the adaptive DAP algorithm with improved efficiency and features (taking individual-level genotype data as input) *under beta testing*
 
 * ``torus_src``: C/C++ source code of the EM-DAP1 algorithm (for enrichment analysis and QTL discovery)
 
-* ``sample_data``: sample data for multi-SNP fine-mapping
 
 * ``utility``: utility scripts for results interpretation, file format conversion etc.
 
-* ``experiments``: this directory contains necessary scripts/code and data for evaluating the DAP in the manuscript, e.g., performance comparison with the MCMC, exact Bayesian calculation etc. Note, some of the code has become obsolete, i.e., better code has been implemented in either ```torus``` or ```dap```. This particular directory is setup mostly for reproduciblility purpose.   
-
+* ``version 1``: legency code from verison 1 from the DAP implementation 
 
 ## [Tutorial](https://github.com/xqwen/dap/wiki)
 
@@ -53,5 +46,5 @@ We provide a detailed tutorial wiki to demonstrate the usage of software in enri
 
 ## Citation
 
-* Wen, X., Lee, Y., Luca, F., Pique-Regi, R. [Efficient Integrative Multi-SNP Association Analysis using Deterministic Approximation of Posteriors.](http://biorxiv.org/content/early/2016/03/26/026450)  *bioRxiv* 026450.
+* Wen, X., Lee, Y., Luca, F., Pique-Regi, R. [Efficient Integrative Multi-SNP Association Analysis using Deterministic Approximation of Posteriors.](http://biorxiv.org/content/early/2016/03/26/026450)  The American Journal of Human Genetics, 98(6), 1114-1129
 
