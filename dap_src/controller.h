@@ -117,11 +117,13 @@ class controller {
  public:
   
   // public interface
-  
+  int run_option; 
   void initialize(char *data_file, char *grid_file);
   void initialize(char *zval_file, char *ld_file, char *grid_file);
  
   void run();
+
+  void fine_map();
   void scan();
   void extract_ss();
 

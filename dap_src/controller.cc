@@ -83,12 +83,25 @@ void controller::print_dap_config(){
         fprintf(logfd,"\t* sample size: %d\n",int(pars.geno_vec[0][0].size()));
         fprintf(logfd,"\t* number of covariates: %d\n", int(pars.covar_vec[0].size()));
     }
-        
     fprintf(logfd,"\n");
     
+    fprintf(logfd, "PROGRAM OPTIONS\n\n");
+    
+    if(run_option==0){
+        fprintf(logfd,"\t* maximum model size allowed [-msize]: %d ",max_size);
+        if(max_size ==p){
+            fprintf(logfd,"(no restriction)\n");
+        }else{
+            fprintf(logfd,"\n");
+        }
 
+        fprintf(logfd,"\t* LD control threshold [-ld_control]: %7.2f\n", ld_control_thresh);
+        fprintf(logfd,"\t* normalizing constant convergence threshold [-converg_thresh]: %7.2e\n", size_select_thresh);
+    }
 
-    fprintf(logfd,"\nRUN LOG\n");
+    
+   if(run_option==0)
+       fprintf(logfd,"\nRUN LOG\n");
 }
 
 
@@ -246,9 +259,23 @@ double controller::compute_log10_prior(vector<int> &mcfg){
 }
 
 
-
-
 void controller::run(){
+    switch(run_option){
+        case 0:
+            fine_map();
+            break;
+        case 1:
+            scan();
+            break;
+        case 2:
+            extract_ss();
+            break;
+        default:
+            break;
+    }
+}
+
+void controller::fine_map(){
 
 
     init();
@@ -840,12 +867,11 @@ double *controller::get_weights(vector<double>& vec){
 void controller::scan(){
 
     init();
-
     for(int i=0;i<p;i++){
 
         vector<int>  mcfg = null_config;
         mcfg[i] = 1;
-        fprintf(outfd,"%25s %10s   %9.3f\n" , pars.geno_map[i].c_str(), pars.pheno_name.c_str(), mlr.compute_log10_ABF(mcfg));
+        fprintf(outfd,"%25s  %9.3f\n" , pars.geno_map[i].c_str(),  mlr.compute_log10_ABF(mcfg));
 
     }  
 

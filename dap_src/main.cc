@@ -36,7 +36,7 @@ int main(int argc, char **argv){
     double pes = 1.0;
     double pi1 = -1;
     double lambda = 0.5;
-    double ld_control = 0;
+    double ld_control = -1;
 
     int size_limit = 25;
 
@@ -120,6 +120,11 @@ int main(int argc, char **argv){
 
         // thresholds
 
+        if(strcmp(argv[i],"-converg_thresh")==0){
+            size_select_thresh = atof(argv[++i]);
+            continue;
+        }
+
         if(strcmp(argv[i],"-size_limit")==0){
             size_limit = atoi(argv[++i]);
             continue;
@@ -198,7 +203,9 @@ int main(int argc, char **argv){
     con.set_thread(thread);
 
     con.set_size_limit(size_limit);
-    con.set_ld_control(ld_control);
+
+    if(ld_control>=0)
+        con.set_ld_control(ld_control);
 
     if(msize>=1){
         con.set_max_size(msize);
@@ -230,18 +237,18 @@ int main(int argc, char **argv){
         con.set_size_select_thresh(size_select_thresh);
 
 
+    if(run_scan){
+        con.run_option = 1;
+    }else if(extract_ss){
+        con.run_option =2;
+    }else{
+        con.run_option = 0;
+    } 
+
     // all done, print all configs
     con.print_dap_config();
 
-
-
-    if(run_scan){
-        con.scan();
-    }else if(extract_ss){
-        con.extract_ss();
-    }else{
-        con.run();
-    } 
+    con.run();
     return 1;
 
 
