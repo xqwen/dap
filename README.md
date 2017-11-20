@@ -27,7 +27,7 @@ Software distributed under the terms of the GNU General Public License as publis
 
 * ``utility``: utility scripts for results interpretation, file format conversion etc.
 
-* ``version 1``: legency code from verison 1 from the DAP implementation 
+* ``version 1``: legacy code of the DAP implementation from version 1 
 
 ## [Tutorial](https://github.com/xqwen/dap/wiki)
 
