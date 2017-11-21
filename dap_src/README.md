@@ -22,9 +22,12 @@ Run adaptive DAP algorithm with multi-thread option (``-t nthread``) whenever po
 ## Input Data Options
 
 DAP now accepts three different types of input data: 
-    * Individual-level genotype and phenotype data in sbams format
-    * Z-scores for each candidate SNP from single-SNP analysis and an LD matrix
-    * Estimated effect size (beta-hat) and corresponding standard error for each candidate SNP from single-SNP analysis, an LD matrix, plus two numbers: sample size and Syy (explained below).
+    
+    1. Individual-level genotype and phenotype data in sbams format
+
+    2. Z-scores for each candidate SNP from single-SNP analysis and an LD matrix
+    
+    3. Estimated effect size (beta-hat) and corresponding standard error for each candidate SNP from single-SNP analysis, an LD matrix, plus two numbers: sample size and Syy (explained below).
 
 
 
