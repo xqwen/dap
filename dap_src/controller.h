@@ -61,6 +61,9 @@ class controller {
 
   int p;
 
+  int N;
+  double syy;
+
   vector<int>  null_config;
   
   vector<double>  pi_vec; //prior for configs
@@ -118,6 +121,7 @@ class controller {
   
   // public interface
   int run_option; 
+  void initialize(char *effect_file, char *ld_file, char *grid_file, int sample_size, double syy_);
   void initialize(char *data_file, char *grid_file);
   void initialize(char *zval_file, char *ld_file, char *grid_file);
  

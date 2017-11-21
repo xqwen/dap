@@ -14,6 +14,22 @@ using namespace std;
 #include <gsl/gsl_sf_gamma.h>
 #include <omp.h>
 
+void controller::initialize(char *effect_file, char *ld_file, char *grid_file, int sample_size, double syy_){
+    
+    use_ss = 2;
+
+    N = sample_size;
+    syy = syy_;
+
+    if(strlen(grid_file) == 0)
+        set_default_grid();
+    else
+        load_grid(grid_file);
+    
+    pars.process_summary_data2(effect_file, ld_file,sample_size, syy);;
+    p = pars.ld_matrix->size1;
+    set_default_options();
+}
 
 void controller::initialize(char *zval_file, char *ld_file, char *grid_file){
 
@@ -126,7 +142,7 @@ void controller::load_grid(char *grid_file){
 }
 
 void controller::set_default_grid(){
-    if(!use_ss){
+    if(use_ss!=1){
         omg2_vec.push_back(0.04);
         omg2_vec.push_back(0.16);
         omg2_vec.push_back(0.64);
@@ -209,7 +225,7 @@ void controller::set_prior(char *prior_file){
 
 
 void controller::init(){  
-    if(!use_ss){
+    if(use_ss==0){
         vector<vector<vector<double> > > Xgv;
 
         Xgv = pars.geno_vec;
@@ -223,11 +239,29 @@ void controller::init(){
         //sslr.set_prior_option(sslr_prior_option);
         mlr.set_effect_vec(omg2_vec);
         
-    }else{
+    }else if(use_ss==1){
         mlr.init_ss(pars.zval_matrix, pars.ld_matrix);
         mlr.set_effect_vec(kv_vec);
-    }
+    }else if(use_ss==2){
+        gsl_matrix *GtG = gsl_matrix_calloc(p,p);
+        gsl_matrix_memcpy(GtG,pars.ld_matrix);
+        gsl_matrix *Gty = gsl_matrix_calloc(p,1);
 
+        for(int i=0;i<p;i++){
+            gsl_matrix_set(Gty, i,0, pars.gty_vec[i]);
+        }
+
+        for(int i=0;i<p;i++){
+            for(int j=0;j<p;j++){
+                double factor = sqrt(pars.sxx_vec[i]*pars.sxx_vec[j]);
+                double val = factor*gsl_matrix_get(GtG,i,j);
+                gsl_matrix_set(GtG,i,j,val);
+            }
+        }
+        mlr.init(syy, GtG, Gty, N);
+        mlr.set_abf_option(abf_sigma_option);
+        mlr.set_effect_vec(omg2_vec);
+    }
 
     null_config = vector<int>(p,0);  
     //start with empty table

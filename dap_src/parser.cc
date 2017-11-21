@@ -11,6 +11,47 @@ using namespace std;
 
 void parser::process_summary_data2(char *effect_file, char *ld_file, int sample_size, double syy){
 
+    ifstream infile(effect_file);
+    string line;
+    int counter = 0;
+
+    while(getline(infile,line)){
+        double beta;
+        double se;
+        string snp;
+        istringstream ins(line);
+        if(ins>>snp>>beta>>se){
+            double var = se*se;
+            double z = beta/se;
+            double r2 = z*z/(sample_size-2+z*z);
+            double s2 = syy*(1-r2)/(sample_size-2.0);
+            double sxx = s2/var;
+            double sxy = beta*sxx;
+            geno_map[counter] = snp;
+            geno_rmap[snp] = counter;
+            
+            gty_vec.push_back(sxy);
+            sxx_vec.push_back(sxx);
+                
+            counter++;
+        }
+    }
+    int p = gty_vec.size();
+
+    ld_matrix = gsl_matrix_calloc(p,p);
+    ifstream infile2(ld_file);
+    int row = 0;
+    while(getline(infile2,line)){
+        stringstream ins(line);
+        double val;
+        int col = 0;
+        while(ins>>val){
+            gsl_matrix_set(ld_matrix,row,col,val);
+            col++;
+        }
+        row++;
+    }
+ 
 }
 
 void parser::process_summary_data(char *zval_file, char *ld_file){

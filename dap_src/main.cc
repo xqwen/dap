@@ -8,6 +8,7 @@ int main(int argc, char **argv){
     char grid_file[128];
     char data_file[128];
     char zval_file[128];
+    char est_file[128];
     char ld_file[128];
     char out_file[128];
     char log_file[128];
@@ -21,8 +22,9 @@ int main(int argc, char **argv){
     memset(out_file,0,128);
     memset(log_file,0,128);
     memset(data_file,0,128);
-    memset(zval_file,0,128);
     memset(ld_file,0,128);
+    memset(zval_file,0,128);
+    memset(est_file,0,128);
 
     memset(prior_file,0,128);
 
@@ -40,6 +42,8 @@ int main(int argc, char **argv){
 
     int size_limit = 25;
 
+    int sample_size = -1;
+    double syy = -1;
 
     double snp_select_thresh = -1;
     double size_select_thresh = -1;
@@ -77,6 +81,23 @@ int main(int argc, char **argv){
             strcpy(ld_file,argv[++i]);
             continue;
         }
+
+        
+        if(strcmp(argv[i], "-d_est")==0){ 
+            strcpy(est_file,argv[++i]);
+            continue;
+        } 
+
+        if(strcmp(argv[i], "-d_n")==0){
+            sample_size = atoi(argv[++i]);
+            continue;
+        }
+
+        if(strcmp(argv[i], "-d_syy")==0){
+            syy = atof(argv[++i]);
+            continue;
+        }
+
 
         // prior file
         if(strcmp(argv[i], "-prior")==0 || strcmp(argv[i], "-p")==0 ){
@@ -199,6 +220,8 @@ int main(int argc, char **argv){
         con.initialize(data_file,grid_file);
     }else if(strlen(zval_file)!=0 && strlen(ld_file)!=0 ){
         con.initialize(zval_file, ld_file, grid_file);
+    }else if(strlen(ld_file)!=0 && strlen(est_file)!=0 && sample_size >0 && syy>0){
+        con.initialize(est_file, ld_file, grid_file, sample_size, syy);
     }else{
         fprintf(stderr, "Error: no suitable input data specified \n");
         exit(1);

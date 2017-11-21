@@ -26,7 +26,8 @@ class parser {
   // summary level inof
   gsl_matrix *zval_matrix;
   gsl_matrix *ld_matrix;
-
+  vector<double> gty_vec;
+  vector<double> sxx_vec;
 
   void process_data(char *filename);
   void process_summary_data(char *zval_file, char *ld_file);
