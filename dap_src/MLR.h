@@ -84,6 +84,13 @@ class MLR {
             return Z;
         }
 
+        void get_summary(){
+            printf("N = %d\n",n);
+            printf("Syy = %7.3e\n\n", yty);
+        }
+        // for data extraction
+        vector<double> beta_vec;
+        vector<double> se_vec;
         void print_matrix(gsl_matrix *M, int a, int b, FILE *outfd = 0);
 };
 

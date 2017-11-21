@@ -68,7 +68,7 @@ int main(int argc, char **argv){
             continue;
         }
 
-        if(strcmp(argv[i], "-d_zval")==0 || strcmp(argv[i], "-data_zval")==0){
+        if(strcmp(argv[i], "-d_z")==0 || strcmp(argv[i], "-d_zval")==0 || strcmp(argv[i], "-data_zval")==0){
             strcpy(zval_file,argv[++i]);
             continue;
         } 
@@ -181,6 +181,14 @@ int main(int argc, char **argv){
             continue;
         }
 
+        if(strcmp(argv[i], "--dump_summary2")==0){
+            extract_ss = 2;
+            continue;
+        }
+
+
+
+
         fprintf(stderr, "Error: unknown option \"%s\"\n",argv[i]);
         exit(1);
 
@@ -236,14 +244,20 @@ int main(int argc, char **argv){
     if(size_select_thresh >=0)
         con.set_size_select_thresh(size_select_thresh);
 
+  
+    con.run_option = 0;
 
     if(run_scan){
         con.run_option = 1;
-    }else if(extract_ss){
+    }
+    
+    if(extract_ss==1){
         con.run_option =2;
-    }else{
-        con.run_option = 0;
-    } 
+    }
+    if(extract_ss==2){
+        con.run_option =3;
+    }
+ 
 
     // all done, print all configs
     con.print_dap_config();

@@ -8,6 +8,11 @@ using namespace std;
 #include <gsl/gsl_linalg.h>
 #include <gsl/gsl_blas.h>
 
+
+void parser::process_summary_data2(char *effect_file, char *ld_file, int sample_size, double syy){
+
+}
+
 void parser::process_summary_data(char *zval_file, char *ld_file){
     // reading data file
     ifstream infile(zval_file);
@@ -64,11 +69,13 @@ void parser::process_data(char *filename){
         if(covar_vec[i].size()>0)	  
             regress_cov(pheno_vec[i], covar_vec[i], geno_vec[i]);
     } 
-
+    // keep covar for bookkeeping 
+    /*  
     for(int i=0;i<covar_vec.size();i++){
         if(covar_vec[i].size()>0)
             covar_vec[i].clear();
-    }  
+    } 
+    */
 }
 
 void parser::process_line(string line){

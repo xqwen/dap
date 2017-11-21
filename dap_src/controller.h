@@ -126,7 +126,7 @@ class controller {
   void fine_map();
   void scan();
   void extract_ss();
-
+  void extract_ss2();
   void print_dap_config();
   // system setting
   

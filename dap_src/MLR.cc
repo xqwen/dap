@@ -470,6 +470,8 @@ void MLR::extract_summary(){
         double s2 = (Syy - Sxy*Sxy/Sxx)/(n-2);
         double beta = Sxy/Sxx;
         double se = sqrt(s2/Sxx); 
+        beta_vec.push_back(beta);
+        se_vec.push_back(se);
         gsl_matrix_set(Z,i,0,beta/se);
     }
 

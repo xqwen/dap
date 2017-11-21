@@ -96,7 +96,7 @@ void controller::print_dap_config(){
         }
 
         fprintf(logfd,"\t* LD control threshold [-ld_control]: %7.2f\n", ld_control_thresh);
-        fprintf(logfd,"\t* normalizing constant convergence threshold [-converg_thresh]: %7.2e\n", size_select_thresh);
+        fprintf(logfd,"\t* normalizing constant convergence threshold [-converg_thresh]: %7.2e (log10 scale)\n", size_select_thresh);
     }
 
     
@@ -269,6 +269,9 @@ void controller::run(){
             break;
         case 2:
             extract_ss();
+            break;
+        case 3:
+            extract_ss2();
             break;
         default:
             break;
@@ -880,6 +883,11 @@ void controller::scan(){
 
 void controller::extract_ss(){
 
+    if(use_ss){
+        fprintf(stderr, "Error: can't extract summary info without individual-level data\n");
+        exit(1);
+    }
+
     init();
     string z_file = "zval.dat";
     string R_file = "LD.dat";
@@ -903,8 +911,34 @@ void controller::extract_ss(){
 
 }
 
+void controller::extract_ss2(){
 
+    if(use_ss){
+        fprintf(stderr, "Error: can't extract summary info without individual-level data\n");
+        exit(1);
+    }
 
+    init();
+    string est_file = "est.dat";
+    string R_file = "LD.dat";
+
+    if(gene !=""){
+        est_file = gene+"."+est_file;
+        R_file = gene+"."+R_file;
+    }
+    mlr.extract_summary();
+    gsl_matrix * R = mlr.get_R();
+    FILE *fd = fopen(R_file.c_str(),"w");
+    mlr.print_matrix(R, p,p, fd);
+    fclose(fd);
+    fd = fopen(est_file.c_str(),"w");
+    for(int i=0;i<p;i++){
+        string name = pars.geno_map[i];
+        fprintf(fd,"%15s\t%7.3e\t%7.3e\n",name.c_str(), mlr.beta_vec[i], mlr.se_vec[i]);
+    }
+    fclose(fd);
+    mlr.get_summary();
+}
 
 
 double controller::compute_average_r2(const vector<int> & vec){
