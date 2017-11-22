@@ -18,7 +18,7 @@ dap -d data_file |  -d_z zvalue_file -d_ld ld_file | -d_est effect_estimate_file
 
 ## Important Tips
 
-Run adaptive DAP algorithm with multi-thread option (``-t nthread``) whenever possible! 
+Run adaptive DAP algorithm with multi-thread option (```-t nthread```) whenever possible! 
 
 ## Input Data Options
 
