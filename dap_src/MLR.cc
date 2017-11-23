@@ -42,15 +42,17 @@ void MLR::init(vector<double> &Y_in, vector<vector<double> >  &G_in){
     yty = 0;
     Y = gsl_matrix_calloc(n,1);
     for(int i=0;i<n;i++){
-        yty += pow(Y_in[i],2);
-        gsl_matrix_set(Y,i,0,Y_in[i]);
+        double val = Y_in[i];
+        yty += pow(val,2);
+        gsl_matrix_set(Y,i,0,val);
     }
 
     G = gsl_matrix_calloc(n,p);
-    for(int i=0;i<n;i++){
-        for(int j=0;j<p;j++){
-            gsl_matrix_set(G,i,j, G_in[j][i]);
-        }
+
+    for(int j=0;j<p;j++){
+        for(int i=0;i<n;i++){
+            gsl_matrix_set(G,i,j,G_in[j][i]);
+        }   
     }
 
     GtG = gsl_matrix_calloc(p,p);

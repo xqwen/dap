@@ -111,8 +111,8 @@ void controller::print_dap_config(){
             fprintf(logfd,"\n");
         }
 
-        fprintf(logfd,"\t* LD control threshold [-ld_control]: %7.2f\n", ld_control_thresh);
-        fprintf(logfd,"\t* normalizing constant convergence threshold [-converg_thresh]: %7.2e (log10 scale)\n", size_select_thresh);
+        fprintf(logfd,"\t* LD control threshold [-ld_control]: %.2f\n", ld_control_thresh);
+        fprintf(logfd,"\t* normalizing constant convergence threshold [-converg_thresh]: %.2e (log10 scale)\n", size_select_thresh);
     }
 
     
@@ -1008,7 +1008,7 @@ double controller::compute_average_r2(const vector<int> & vec1, const vector<int
 
 double controller::compute_r2(int i, int j){
     double r2;
-    if(!use_ss){
+    if(use_ss==0){
         double *gi = &pars.geno_vec[0][i][0];
         double *gj = &pars.geno_vec[0][j][0];
         r2 = pow(gsl_stats_correlation(gi,1,gj, 1, pars.geno_vec[0][i].size()),2);
