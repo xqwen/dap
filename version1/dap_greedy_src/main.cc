@@ -151,7 +151,7 @@ int main(int argc, char **argv){
     }
 
     
-    if(strcmp(argv[i], "-all")==0){
+    if(strcmp(argv[i], "--all")==0){
       output_all = 1;
       continue;
     }
