@@ -74,6 +74,17 @@ void MLR::copy(const MLR& mlr){
 }
 
 
+
+void MLR::copy(const MLR& mlr, vector<int> &indicator){
+    if(mlr.use_ss == 0)
+        copy_full(mlr, indicator);
+    else
+        copy_ss(mlr, indicator);
+}
+
+
+
+
 void MLR::copy_ss(const MLR & mlr){
 
     if(mlr.use_ss ==0)
@@ -95,6 +106,53 @@ void MLR::copy_ss(const MLR & mlr){
 
 
 }
+
+
+void MLR::copy_ss(const MLR & mlr, vector<int> & indicator){
+
+    if(mlr.use_ss == 0)
+        return;
+    use_ss = 1;
+    n = mlr.n;
+
+    int tp = mlr.p;
+    int ep = 0;
+    int count = 0;
+    std::map<int,int> imap;
+
+
+    for(int i=0;i<indicator.size();i++){
+        if(indicator[i]==1){
+            ep++;
+            imap[i] = count++;
+        }
+    }
+    
+    p = ep;
+
+    gsl_matrix *R = gsl_matrix_calloc(ep,ep);
+    gsl_matrix *Z = gsl_matrix_calloc(ep,1);
+
+
+    for(int i=0;i<tp;i++){
+        if(indicator[i] == 0)
+            continue;
+        gsl_matrix_set(Z, imap[i],0,gsl_matrix_get(mlr.Z,i,0));
+        for(int j=0;j<tp;j++){
+            if(indicator[j] == 1){
+
+                double val = gsl_matrix_get(mlr.R,i,j);
+                gsl_matrix_set(R,imap[i], imap[j],val);
+            }
+        }
+    }
+
+    phi2_vec = mlr.phi2_vec;
+
+
+
+}
+
 
 
 
@@ -130,6 +188,78 @@ void MLR::copy_full(const MLR& mlr){
     phi2_vec = mlr.phi2_vec;
 }
 
+void MLR::copy_full(const MLR & mlr, vector<int> & indicator){
+   
+    if(mlr.use_ss == 1)
+        return;
+
+    use_ss = 0;
+    n =  mlr.n;
+    yty = mlr.yty;
+
+    int tp = mlr.p;
+    int ep = 0;
+    int count = 0;
+    std::map<int,int> imap;
+
+
+    for(int i=0;i<indicator.size();i++){
+        if(indicator[i]==1){
+            ep++;
+            imap[i] = count++;
+        }
+    }
+    
+    p = ep;
+
+    if(mlr.GtG !=0){
+        GtG = gsl_matrix_calloc(p,p);
+        for(int i=0;i<tp;i++){
+            if(indicator[i] == 0)
+                continue;
+            for(int j=0;j<tp;j++){
+                if(indicator[j] == 1){
+                    double val = gsl_matrix_get(mlr.GtG,i,j);
+                    gsl_matrix_set(GtG,imap[i], imap[j],val);
+                }   
+            }   
+        }   
+    }
+
+    if(mlr.Gty!=0){
+        Gty = gsl_matrix_calloc(p,1);
+        for(int i=0;i<tp;i++){
+            if(indicator[i] == 0)
+                continue;
+            gsl_matrix_set(Gty, imap[i], 0, gsl_matrix_get(mlr.Gty, i,0));
+        }
+    }
+
+    if(mlr.G!=0){
+        G = gsl_matrix_calloc(n,p);
+        for(int i=0;i<tp;i++){
+            if(indicator[i] == 0)
+                continue;
+            for(int j=0;j<n;j++){
+                gsl_matrix_set(G, j,imap[i] , gsl_matrix_get(mlr.G, j,i));
+            }
+
+        }
+
+    }
+
+    if(mlr.Y!=0){
+        Y=gsl_matrix_calloc(n,1);
+        gsl_matrix_memcpy(Y,mlr.Y);
+    }
+
+    sigma_option = mlr.sigma_option;
+    phi2_vec = mlr.phi2_vec;
+
+}
+
+
+
 MLR::~MLR(){
     if(GtG!=0)
         gsl_matrix_free(GtG);
@@ -155,6 +285,14 @@ void MLR::set_effect_vec(vector<double> &phi2_vec_){
     phi2_vec = phi2_vec_;
 
 }
+
+
+double MLR::compute_log10_ABF(){
+   vector<int> indicator(p,1);
+   return(compute_log10_ABF(indicator));
+}
+
+
 
 double MLR::compute_log10_ABF(vector<int> & indicator){
 
@@ -378,11 +516,11 @@ double MLR::compute_log10_ABF_SS(vector<int> & indicator){
 
         double log_BF = -0.5*log_det + 0.5*gsl_matrix_get(t4,0,0);
         /*
-        double K = n*kappa;
-        double zs = gsl_matrix_get(Zm,0,0);
-        double log_BF2 = 0.5*log(1.0/(1+K))+0.5*(K/(1+K))*zs*zs;
-        printf("%f            %f  %f\n", K, log_BF, log_BF2);
-        */
+           double K = n*kappa;
+           double zs = gsl_matrix_get(Zm,0,0);
+           double log_BF2 = 0.5*log(1.0/(1+K))+0.5*(K/(1+K))*zs*zs;
+           printf("%f            %f  %f\n", K, log_BF, log_BF2);
+           */
         rstv.push_back(log_BF/log(10));
 
         gsl_matrix_free(t1);

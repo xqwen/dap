@@ -604,8 +604,8 @@ size_model controller::compute_post_model(int size, int use_abs_cutoff){
 
         MLR local_mlr;
 
-        local_mlr.copy(mlr);
-        double log10_abf  = local_mlr.compute_log10_ABF(mcfg);
+        local_mlr.copy(mlr,mcfg);
+        double log10_abf  = local_mlr.compute_log10_ABF();
         double log10_post =  log10_abf + compute_log10_prior(mcfg);
 #pragma omp critical 
         {

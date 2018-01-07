@@ -59,10 +59,11 @@ class MLR {
         void init(vector<double> &Y_in, vector<vector<double> >  &G_in);  
         void init_ss(const gsl_matrix *Z_, const gsl_matrix *R_);  
         void copy(const MLR &mlr);
-
+        void copy(const MLR &mlr, vector<int> & indicator);
         void copy_full(const MLR &mlr);
+        void copy_full(const MLR &mlr, vector<int> & indicator);
         void copy_ss(const MLR &mlr);
-
+        void copy_ss(const MLR &mlr, vector<int> & indicator);
         // options
         void set_effect_vec(vector<double> &phi2);
         void set_abf_option(double option){
@@ -72,6 +73,7 @@ class MLR {
 
         double log10_weighted_sum(vector<double> &vec, vector<double> &wts);
 
+        double compute_log10_ABF();
         double compute_log10_ABF(vector<int> &indicator);
         double compute_log10_ABF_FD(vector<int> &indicator);
         double compute_log10_ABF_SS(vector<int> &indicator);
