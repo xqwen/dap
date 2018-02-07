@@ -101,7 +101,7 @@ void MLR::copy_ss(const MLR & mlr){
         Z = gsl_matrix_calloc(p,1);
         gsl_matrix_memcpy(Z,mlr.Z);
     }
-
+    sigma_option = mlr.sigma_option;
     phi2_vec = mlr.phi2_vec;
 
 
@@ -109,7 +109,6 @@ void MLR::copy_ss(const MLR & mlr){
 
 
 void MLR::copy_ss(const MLR & mlr, vector<int> & indicator){
-
     if(mlr.use_ss == 0)
         return;
     use_ss = 1;
@@ -129,9 +128,8 @@ void MLR::copy_ss(const MLR & mlr, vector<int> & indicator){
     }
     
     p = ep;
-
-    gsl_matrix *R = gsl_matrix_calloc(ep,ep);
-    gsl_matrix *Z = gsl_matrix_calloc(ep,1);
+    R = gsl_matrix_calloc(ep,ep);
+    Z = gsl_matrix_calloc(ep,1);
 
 
     for(int i=0;i<tp;i++){
@@ -146,9 +144,8 @@ void MLR::copy_ss(const MLR & mlr, vector<int> & indicator){
             }
         }
     }
-
+    sigma_option = mlr.sigma_option;
     phi2_vec = mlr.phi2_vec;
-
 
 
 }
