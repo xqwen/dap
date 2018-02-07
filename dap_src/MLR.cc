@@ -580,11 +580,12 @@ void MLR::print_matrix(gsl_matrix *M, int a, int b, FILE *outfd){
     for(int i=0;i<a;i++){
         for(int j=0;j<b;j++){
             //printf("%f  ",gsl_matrix_get(M,i,j));
-            fprintf(outfd, "%e  ",gsl_matrix_get(M,i,j));
+            fprintf(outfd, "%f",gsl_matrix_get(M,i,j));
+            if(j!=b-1)
+                fprintf(outfd," ");  
         }
         fprintf(outfd,"\n");
     }
-    fprintf(outfd, "\n");
 }
 
 void MLR::extract_summary(){

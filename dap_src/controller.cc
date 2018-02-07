@@ -939,7 +939,9 @@ void controller::extract_ss(){
     fd = fopen(z_file.c_str(),"w");
     for(int i=0;i<p;i++){
         string name = pars.geno_map[i];
-        fprintf(fd,"%15s\t%7.3e\n",name.c_str(), gsl_matrix_get(Z,i,0));
+        //fprintf(fd,"%15s\t%7.3e\n",name.c_str(), gsl_matrix_get(Z,i,0));
+        fprintf(fd,"%s %f\n",name.c_str(), gsl_matrix_get(Z,i,0));
+        
     }
     fclose(fd);
 
