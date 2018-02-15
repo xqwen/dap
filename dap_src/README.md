@@ -1,4 +1,4 @@
-# C++ implementation of Adaptive DAP Algorithm
+# DAP-G: C++ implementation of Adaptive DAP Algorithm
 
 ## Compilation 
 
@@ -12,7 +12,7 @@ Simply run ``make`` to compile the executable named ``dap``
 
 ## Command-line Syntax
 ```
-dap -d data_file |  -d_z zvalue_file -d_ld ld_file | -d_est effect_estimate_file -d_ld ld_file -d_n sample_size -d_syy syy [-g grid_file] [-p prior_file] [-msize K] [-it value] [-st value] [-t nthread] [-o output_file] [-l log_file] [--output_all]
+dap-g -d data_file |  -d_z zvalue_file -d_ld ld_file | -d_est effect_estimate_file -d_ld ld_file -d_n sample_size -d_syy syy [-g grid_file] [-p prior_file] [-msize K] [-it value] [-st value] [-t nthread] [-o output_file] [-l log_file] [--output_all]
 ```
 
 
