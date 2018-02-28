@@ -123,7 +123,6 @@ void controller::print_dap_config(){
 
 
 void controller::load_grid(char *grid_file){
-
     ifstream gfile(grid_file);
     string line;
     istringstream ins;
@@ -134,7 +133,10 @@ void controller::load_grid(char *grid_file){
         ins.str(line);
         double omg;
         if(ins>>omg){
-            omg2_vec.push_back(pow(omg,2));
+            if(!use_ss)
+                omg2_vec.push_back(pow(omg,2));
+            else
+                kv_vec.push_back(omg);
         }
     }
     gfile.close();
