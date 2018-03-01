@@ -133,7 +133,7 @@ void controller::load_grid(char *grid_file){
         ins.str(line);
         double omg;
         if(ins>>omg){
-            if(!use_ss)
+            if(use_ss!=1)
                 omg2_vec.push_back(pow(omg,2));
             else
                 kv_vec.push_back(omg);
