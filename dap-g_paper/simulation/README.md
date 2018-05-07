@@ -24,6 +24,13 @@ Note: the input files for FINEMAP and DAP-G with z-scores are identical. For exa
 + Output from dap-g with sufficient summary statistics [download](http://www-personal.umich.edu/~xwen/dapg_sim/sim_data.dap_out.tgz)
 + Output from dap-g with z-scores [download](http://www-personal.umich.edu/~xwen/dapg_sim/sim_data.dap_z_out.tgz)
 
+## Evaluation of simulation results
+
+The following sub-directories contain code and results for the following analyses
+
++ Construction of ROC curves: ```ROC```
++ Calibration of SNP-level PIPs: ```calibration```
++ Signal-level FDR control: ```fdr```
 
 
 
