@@ -9,7 +9,7 @@ The genotype data ```data_generation``` and the Rscript used to generate the phe
 
 ## Running analysis
 
-+ Run DAP-G with sufficient summary stats: ```analysis_command/batch_dap_sss.cmd````
++ Run DAP-G with sufficient summary stats: ```analysis_command/batch_dap_sss.cmd```
 + Run DAP-G with z-scores: ```analysis_command/batch_dap_z.cmd```
 + Run FINEMAP with z-scores: ```analysis_command/batch_finemap.cmd```; required data description file ```analysis_command/data```
 
