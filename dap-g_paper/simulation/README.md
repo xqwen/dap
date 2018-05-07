@@ -4,7 +4,12 @@ This folder contains scripts/code, simulated data and outcomes from our simulati
 
 ## Data generation
 
-The genotype data ```data_generation``` and the Rscript used to generate the phenotype data are in the directory ```data_generation```.
+The genotype data ```sim.r.geno``` and the Rscript used to generate the phenotype data are in the directory ```data_generation```.
+
+We set up a simulation scenario mimickingcis-eQTL mapping in a practical setting. In particular, we use the real genotype data from 343 European individuals from the GUEVADIS project. 
+We artificially construct a genomic region of 1,001 SNPs. The region is divided into 91 LD blocks, and each block contains 11 SNPs.  All LD blocks are selected from chromosome 1, and the consecutive blocks are at least 1Mb apart. 
+With this construction scheme, the LD only presents within each block, and the SNP genotypes are mostly uncorrelated across blocks
+
 
 
 ## Running analysis
