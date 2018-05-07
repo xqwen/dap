@@ -1,4 +1,4 @@
-# GTEx Whole Blood eQTL Results (v60)
+# GTEx Whole Blood eQTL Results (v6p)
 
 The file ```gtex_v6p_signal_95_CS.summary``` contains information on eQTL signals from the GTEx whole blood data whose SPIP >= 0.95 (hence a 95% Bayesian credible set can be constructed). The format of the file is 
 
