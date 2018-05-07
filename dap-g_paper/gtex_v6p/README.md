@@ -1,5 +1,14 @@
 # GTEx Whole Blood eQTL Results (v6p)
 
+
+## Complete DAP-G results
+
+The complete DAP-G output files for 22,749 genes can be downloaded from [here](http://www-personal.umich.edu/~xwen/dapg_gtex_v6p/gtex_v6p.multi-SNP.dapg.tgz). Note that the file size is large (426Mb)
+
+
+
+## Summary of results
+
 The file ```gtex_v6p_signal_95_CS.summary``` contains information on eQTL signals from the GTEx whole blood data whose SPIP >= 0.95 (hence a 95% Bayesian credible set can be constructed). The format of the file is 
 
 ```
