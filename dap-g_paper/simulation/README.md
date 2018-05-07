@@ -13,6 +13,9 @@ The genotype data ```data_generation``` and the Rscript used to generate the phe
 + Run DAP-G with z-scores: ```analysis_command/batch_dap_z.cmd```
 + Run FINEMAP with z-scores: ```analysis_command/batch_finemap.cmd```; required data description file ```analysis_command/data```
 
+Note: the input files for FINEMAP and DAP-G with z-scores are identical. For example, ```finemap_data/region1.ld``` is a soft link to ```summary_data/sim.1.LD.dat``` and ```finemap_data/region1.z``` is a soft link to ```summary_data/sim.1.zval.dat```
+
+
 ## Download simulated data and results
 
 + Simulated individual-level data (in sbams format) and truth [download](http://www-personal.umich.edu/~xwen/dapg_sim/sim_data.sbams_truth.tgz)
