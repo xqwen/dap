@@ -147,19 +147,20 @@ A text file ``LD.dat`` containing correlation matrix and a tex file ``est.dat`` 
  
 ### 4.2 Prior specifications
 
-The following options are used to specify the exchangeable prior probability pi1, which specifies the odds of a SNP being the causal SNP. 
+The following options are used to specify the exchangeable prior probability that a candidate SNP being causally associated (denoted by pi1).
 
 + `` -ens expected_number_of_signal``: specify prior expected number of signals. Note that, pi1 = expected_number_of_signal/p
-+ `` -pi1 probability``: specify the exchangeable prior probability
++ `` -pi1 probability``: specify the exchangeable prior probability. 
 
-If no options explicitly specified in commaond line, dap-g uses ens = 1
+** By default, ``ens`` is set to 1``, or equivalently, pi1  = 1/p.
+
 
 To specify non-exchangeable prior, use a text file with 2 columns
 
 ```
 snp_name   prior_probability
 ```
-This option is best used if genomic annotation information is available. Program like ``torus`` can generate such output. 
+This option is best used if genomic annotation information is available. Program like ``[TORUS](https://github.com/xqwen/torus)`` can estimate such priors from data. 
 
 + ``-p prior_file``: specify the non-exchangeable prior 
   
