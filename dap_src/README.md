@@ -152,7 +152,7 @@ The following options are used to specify the exchangeable prior probability tha
 + `` -ens expected_number_of_signal``: specify prior expected number of signals. Note that, pi1 = expected_number_of_signal/p
 + `` -pi1 probability``: specify the exchangeable prior probability. 
 
-** By default, ``ens`` is set to 1``, or equivalently, pi1  = 1/p.
+** By default, ``ens`` is set to 1, or equivalently, pi1  = 1/p**.
 
 
 To specify non-exchangeable prior, use a text file with 2 columns
