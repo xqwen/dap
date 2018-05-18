@@ -30,9 +30,9 @@ Software distributed under the terms of the GNU General Public License as publis
 
 * ``version 1``: legacy code of the DAP implementation from version 1 
 
-## [Tutorial](https://github.com/xqwen/dap/wiki)
+## Tutorial 
 
-We provide a detailed tutorial wiki to demonstrate the usage of software in enrichment analysis, QTL discovery and multi-SNP fine-mapping. Sample data are provided when possible. 
+We are in the process of updating the tutorial for the new DAP-G. The tutorial for the old version can be found [here](https://github.com/xqwen/dap/wiki).
 
 
 
@@ -48,5 +48,5 @@ We provide a detailed tutorial wiki to demonstrate the usage of software in enri
 ## Citation
 
 * Wen, X., Lee, Y., Luca, F., Pique-Regi, R. [Efficient Integrative Multi-SNP Association Analysis using Deterministic Approximation of Posteriors.](http://biorxiv.org/content/early/2016/03/26/026450)  The American Journal of Human Genetics, 98(6), 1114-1129
-* Lee, Y, Luca, F, Pique-Regi, R,Wen, X. [Bayesian Multi-SNP Genetic Association Analysis: Control of FDR and Use of Summary Statistics](https://www.biorxiv.org/content/early/2018/05/08/316471) biRxiv:316471
+* Lee, Y, Luca, F, Pique-Regi, R,Wen, X. [Bayesian Multi-SNP Genetic Association Analysis: Control of FDR and Use of Summary Statistics](https://www.biorxiv.org/content/early/2018/05/08/316471) *bioRxiv*:316471
 
