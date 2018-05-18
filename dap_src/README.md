@@ -14,7 +14,7 @@ Run ``make static`` to complie an exectuble with static linked library.
 
 ## 2. Command-line Syntax
 ```
-dap-g -d data_file |  -d_z zvalue_file -d_ld ld_file | -d_est effect_estimate_file -d_ld ld_file -d_n sample_size -d_syy syy [-g grid_file] [-p prior_file] [-msize K] [-it value] [-st value] [-t nthread] [-o output_file] [-l log_file] [--output_all]
+dap-g -d data_file |  -d_z zvalue_file -d_ld ld_file | -d_est effect_estimate_file -d_ld ld_file -d_n sample_size -d_syy syy [-g grid_file] [-p prior_file] [-msize K] [-ld_control r2_threshe] [-converg_thresh thresh_value] [-t nthread] [-o output_file] [-l log_file] [--output_all]
 ```
 
 ***Important Tips***
@@ -138,14 +138,14 @@ A text file ``LD.dat`` containing correlation matrix and a tex file ``est.dat`` 
 
 ## 4. Command line option
 
-### 4.1 Input file option
+### 4.1 Input file options
 + `` -d sbams_file ``:  specify sbams file with individual-level phenotype and genotype data
 + `` -d_est effect_est_file``: specify effect size estimates file
 + `` -d_ld  LD_file``: specify file containing correlation matrix between SNPs
 + `` -d_n sample_size``: specify the sample size
 + `` -d_syy SST``: specify SST
  
-### 4.2 Prior specification
+### 4.2 Prior specifications
 
 The following options are used to specify the exchangeable prior probability pi1, which specifies the odds of a SNP being the causal SNP. 
 
@@ -163,6 +163,20 @@ This option is best used if genomic annotation information is available. Program
 
 + ``-p prior_file``: specify the non-exchangeable prior 
   
-### 4.3 Run option
+### 4.3 Run options
 
 + `` -t thread_number``: specify the number of parallel threads to run DAP algorithm 
++ `` -ld_control r2_threshold``: specify the LD threshold to be considered within a single signal cluster. SNPs within a signal cluster should be correlated, the threshold here determines how strong the genotype correlation between member SNPs in a signal cluster. If ``ld_control`` is set to 0, the behavor of the DAP-G algorithm is similiar to the previous version of DAP, where signal cluster is not rigorously defined. Higher threshold should typically reduce the size of inferred signal cluster and speed up the computation. **By default, the threshold is set to 0.25**. 
++ `` -msize maximum_model_size``: specify the maximum size of model dap-g explores. Valid maximum model size ranges from 1 to p. **By default, it is set to p**, i.e., there is no restriction on how large the true association model can be. If it is specified, the DAP-G runs DAP-K algorithm and stops at the specified maximum model size. 
++ `` -converg_thresh thresh_value``: specify the stopping condition for model exploration. DAP-G computes log10 normalizing constant up to the current model size, denoted by log10_NC(K). Exploration of larger model size ends if log10_NC(K) - log10_NC(K-1) is no greater than ``thresh_value`` and we consider the model is saturated. **By default, ``thresh_value = 0.01``.**
+
+### 4.4 Output options
+
++ ``-o output_file``: specify the output file name. **By default, the output goes to standard out, i.e., screen**.
++ ``-l log_file``: specify the log file name. **By defualt, the messages during the run output to standard error.**
++ ``--output_all` or ``--all``: Output information for  all SNPs and all signal clusters. **By default, only SNPs with PIP > 0.001 and signal clusters with SPIP > 0.25 are displayed** 
+
+### 4.5 Miscellaneous options
+
+
+
