@@ -40,7 +40,7 @@ int main(int argc, char **argv){
     double lambda = 0.5;
     double ld_control = -1;
 
-    int size_limit = 25;
+    int size_limit = -1;
 
     int sample_size = -1;
     double syy = -1;
@@ -53,7 +53,6 @@ int main(int argc, char **argv){
     int extract_ss = 0;
 
     int thread = 1;
-
 
 
 
@@ -185,6 +184,8 @@ int main(int argc, char **argv){
             continue;
         }
 
+
+
         // gene/locus name
         if(strcmp(argv[i], "-name")==0 || strcmp(argv[i], "-n")==0){
             strcpy(gene_name, argv[++i]);
@@ -267,20 +268,20 @@ int main(int argc, char **argv){
     if(size_select_thresh >=0)
         con.set_size_select_thresh(size_select_thresh);
 
-  
+
     con.run_option = 0;
 
     if(run_scan){
         con.run_option = 1;
     }
-    
+
     if(extract_ss==1){
         con.run_option =2;
     }
     if(extract_ss==2){
         con.run_option =3;
     }
- 
+
 
     // all done, print all configs
     con.print_dap_config();

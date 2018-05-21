@@ -1,6 +1,6 @@
 #  Integrative Genetic Association Analysis using Deterministic Approximation of Posteriors (DAP)
 
-The current implementation is DAP-G!
+***The current implementation is DAP-G!***
 
 This repository contains the software implementations for a suite of statistical methods to perform genetic association analysis integrating genomic annotations. These methods are designed to perform rigorous enrichment analysis, QTL discovery and multi-SNP fine-mapping analysis in a highly efficient way. The statistical model and the key algorithm, Deterministic Approximation of Posteriors (DAP), are described in this [manuscript](http://biorxiv.org/content/early/2016/03/26/026450) and this [preprint](https://www.biorxiv.org/content/early/2018/05/08/316471)
 
@@ -32,7 +32,7 @@ Software distributed under the terms of the GNU General Public License as publis
 
 ## Tutorial 
 
-We are in the process of updating the tutorial for the new DAP-G. The tutorial for the old version can be found [here](https://github.com/xqwen/dap/wiki).
+We are in the process of updating the tutorial for the new DAP-G. The tutorial for the old version of DAP can be found [here](https://github.com/xqwen/dap/wiki).
 
 
 

@@ -17,9 +17,7 @@ Run ``make static`` to complie an exectuble with static linked library.
 dap-g -d data_file |  -d_z zvalue_file -d_ld ld_file | -d_est effect_estimate_file -d_ld ld_file -d_n sample_size -d_syy syy [-g grid_file] [-p prior_file] [-msize K] [-ld_control r2_threshe] [-converg_thresh thresh_value] [-t nthread] [-o output_file] [-l log_file] [--output_all]
 ```
 
-***Important Tips***
-
-Run adaptive DAP algorithm with multi-thread option (```-t nthread```) whenever possible! It will significantly speed up the computation.
+***Important Tip***: Run adaptive DAP algorithm with multi-thread option (```-t nthread```) whenever possible! It will significantly speed up the computation.
 
 ## 3. Input Data Options
 
@@ -178,6 +176,9 @@ This option is best used if genomic annotation information is available. Program
 + ``--output_all` or ``--all``: Output information for  all SNPs and all signal clusters. **By default, only SNPs with PIP > 0.001 and signal clusters with SPIP > 0.25 are displayed** 
 
 ### 4.5 Miscellaneous options
+We do not recommend users to change the following setting, but these options may be usful for specific situations (e.g., customized applications, speeding up computation).
 
++ ``-g grid_file``: spefiy the text file containing effect size priors to be integrated out. By default, the marginal likelihood/Bayes factor is computed by averaging over a default grid of prior effect sizes. The default prior size is typically sufficient for both QTL mapping and GWAS analysis. User can specify an alternative set of effect size priors (in terms of squared expected effect sizes) in a text file with a single column, and each line represent a unique prior expected squared effect size.
++ ``-size_limit maximum_cluster_member_size``: specify the maximum number of variants allowed in a signal cluster. By defualt, there is no constraint and the size of each signal cluster is completely data determined. Setting a small number of  maximum_cluster_member_size forces DAP-G to cap the number of variants into each cluster and reduces computation.
 
 
