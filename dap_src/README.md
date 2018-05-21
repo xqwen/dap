@@ -29,7 +29,7 @@ DAP-G accepts three different types of input data:
 
 
 
-### 3.1 Individual-level Data 
+### 3.1. Individual-level Data 
 
 The input data file for phenotype-genotype data are in "sbams" format. It is a text file originally designed to represent data from a meta-analytic setting including data from multi
 ple subgroups. Note that, the *current* implementation of the DAP algorithm only supports a single subgroup (the multi-group feature is maintained in [version 1](../version1/)). We will add the multi-group feature back in the near feature.
@@ -61,7 +61,7 @@ Use command line option ``-d sbams_data_file`` to inform dap-g that inidividual-
 dap-g -d sample_data/sim.1.sbams.dat 
 ```
 
-### 3.2 Sufficient Summary Statistics
+### 3.2. Sufficient Summary Statistics
 
 The sufficient summary statistics refer to the following information
 
@@ -93,7 +93,7 @@ dap-g -d_est sample_data/sim.1.est.dat -d_ld sample_data/sim.1.LD.dat -d_n 343 -
 
 Note that the using sufficient summary statistics and individual-level should yield the same results (except small numerical difference).
 
-### 3.3 z-statistics and LD information
+### 3.3. Z-statistics and LD Information
 
 DAP-G also accepts input in the format of z-scores (from single-SNP testing) and LD matrix. In particular, two input files are required for this format
 
@@ -115,7 +115,7 @@ dap-g -d_z sample_data/sim.1.zval.dat -d_ld sample_data/sim.1.LD.dat
 Note the output from this type of input will differ from the other two input types, and the corresponding results are typically more conservative.
 
 
-### 3.4 Extracting summary statistics from sbams file
+### 3.4. Extracting Summary Statistics from sbams File
 
 Both types of summary satistics can be extracted from the sbmas-format individual-level data, if it is already available.
 
@@ -134,16 +134,16 @@ A text file ``LD.dat`` containing correlation matrix and a tex file ``est.dat`` 
 
 
 
-## 4. Command line option
+## 4. Command-line Arguments
 
-### 4.1 Input file options
+### 4.1. Input File Options
 + `` -d sbams_file ``:  specify sbams file with individual-level phenotype and genotype data
 + `` -d_est effect_est_file``: specify effect size estimates file
 + `` -d_ld  LD_file``: specify file containing correlation matrix between SNPs
 + `` -d_n sample_size``: specify the sample size
 + `` -d_syy SST``: specify SST
  
-### 4.2 Prior specifications
+### 4.2. Prior Specifications
 
 The following options are used to specify the exchangeable prior probability that a candidate SNP being causally associated (denoted by pi1).
 
@@ -162,23 +162,37 @@ This option is best used if genomic annotation information is available. Program
 
 + ``-p prior_file``: specify the non-exchangeable prior 
   
-### 4.3 Run options
+### 4.3. Run Options
 
 + `` -t thread_number``: specify the number of parallel threads to run DAP algorithm 
 + `` -ld_control r2_threshold``: specify the LD threshold to be considered within a single signal cluster. SNPs within a signal cluster should be correlated, the threshold here determines how strong the genotype correlation between member SNPs in a signal cluster. If ``ld_control`` is set to 0, the behavor of the DAP-G algorithm is similiar to the previous version of DAP, where signal cluster is not rigorously defined. Higher threshold should typically reduce the size of inferred signal cluster and speed up the computation. **By default, the threshold is set to 0.25**. 
 + `` -msize maximum_model_size``: specify the maximum size of model dap-g explores. Valid maximum model size ranges from 1 to p. **By default, it is set to p**, i.e., there is no restriction on how large the true association model can be. If it is specified, the DAP-G runs DAP-K algorithm and stops at the specified maximum model size. 
 + `` -converg_thresh thresh_value``: specify the stopping condition for model exploration. DAP-G computes log10 normalizing constant up to the current model size, denoted by log10_NC(K). Exploration of larger model size ends if log10_NC(K) - log10_NC(K-1) is no greater than ``thresh_value`` and we consider the model is saturated. **By default, ``thresh_value = 0.01``.**
 
-### 4.4 Output options
+### 4.4. Output Options
 
 + ``-o output_file``: specify the output file name. **By default, the output goes to standard out, i.e., screen**.
 + ``-l log_file``: specify the log file name. **By defualt, the messages during the run output to standard error.**
 + ``--output_all` or ``--all``: Output information for  all SNPs and all signal clusters. **By default, only SNPs with PIP > 0.001 and signal clusters with SPIP > 0.25 are displayed** 
 
-### 4.5 Miscellaneous options
+### 4.5. Miscellaneous Options
+
 We do not recommend users to change the following setting, but these options may be usful for specific situations (e.g., customized applications, speeding up computation).
 
 + ``-g grid_file``: spefiy the text file containing effect size priors to be integrated out. By default, the marginal likelihood/Bayes factor is computed by averaging over a default grid of prior effect sizes. The default prior size is typically sufficient for both QTL mapping and GWAS analysis. User can specify an alternative set of effect size priors (in terms of squared expected effect sizes) in a text file with a single column, and each line represent a unique prior expected squared effect size.
 + ``-size_limit maximum_cluster_member_size``: specify the maximum number of variants allowed in a signal cluster. By defualt, there is no constraint and the size of each signal cluster is completely data determined. Setting a small number of  maximum_cluster_member_size forces DAP-G to cap the number of variants into each cluster and reduces computation.
+
+
+DAP-G can also be used to perform following data processing tasks besides multi-SNP association analysis
+
++ ``--scan``: perform single-SNP analysis (instead of multi-SNP analysis) for the given data. log10 Bayes factors for all candidate SNPs are computed and output.
++ ``--dump_summary``: extract z-scores and LD correlation matrix from the individual-level data. Must use with ``-d sbams_file`` option.
++ ``-dump_summary2``: extract effect size estimates (b_i and se(b_i)) for each candidate SNP along with LD correlation matrix, sample size and SST information. Must use with ``-d sbams_file`` option.
+
+
+
+## 5. Output Format
+
+
 
 
