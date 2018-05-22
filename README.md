@@ -30,6 +30,10 @@ Software distributed under the terms of the GNU General Public License as publis
 
 * ``version 1``: legacy code of the DAP implementation from version 1 
 
+## User manual
+
+User manual for DAP-G is available in [pdf](DAPG_manual.pdf) and in [html](https://github.com/xqwen/dap/tree/master/dap_src#dap-g-c-implementation-of-adaptive-dap-algorithm)
+
 ## Tutorial 
 
 We are in the process of updating the tutorial for the new DAP-G. The tutorial for the old version of DAP can be found [here](https://github.com/xqwen/dap/wiki).
