@@ -9,7 +9,7 @@ The following C/C++ libraries are required for compiling the source code
 
 Simply run ``make`` to compile the executable named ``dap``.
 
-Run ``make static`` to complie an exectuble with static linked library. 
+Run ``make static`` to compile an executable with static linked library. 
 
 
 ## 2. Command-line Syntax
@@ -165,22 +165,22 @@ This option is best used if genomic annotation information is available. Program
 ### 4.3. Run Options
 
 + `` -t thread_number``: specify the number of parallel threads to run DAP algorithm 
-+ `` -ld_control r2_threshold``: specify the LD threshold to be considered within a single signal cluster. SNPs within a signal cluster should be correlated, the threshold here determines how strong the genotype correlation between member SNPs in a signal cluster. If ``ld_control`` is set to 0, the behavor of the DAP-G algorithm is similiar to the previous version of DAP, where signal cluster is not rigorously defined. Higher threshold should typically reduce the size of inferred signal cluster and speed up the computation. **By default, the threshold is set to 0.25**. 
++ `` -ld_control r2_threshold``: specify the LD threshold to be considered within a single signal cluster. SNPs within a signal cluster should be correlated, the threshold here determines how strong the genotype correlation between member SNPs in a signal cluster. If ``ld_control`` is set to 0, the behavior of the DAP-G algorithm is similiar to the previous version of DAP, where signal cluster is not rigorously defined. Higher threshold should typically reduce the size of inferred signal cluster and speed up the computation. **By default, the threshold is set to 0.25**. 
 + `` -msize maximum_model_size``: specify the maximum size of model dap-g explores. Valid maximum model size ranges from 1 to p. **By default, it is set to p**, i.e., there is no restriction on how large the true association model can be. If it is specified, the DAP-G runs DAP-K algorithm and stops at the specified maximum model size. 
 + `` -converg_thresh thresh_value``: specify the stopping condition for model exploration. DAP-G computes log10 normalizing constant up to the current model size, denoted by log10_NC(K). Exploration of larger model size ends if log10_NC(K) - log10_NC(K-1) is no greater than ``thresh_value`` and we consider the model is saturated. **By default, ``thresh_value = 0.01``.**
 
 ### 4.4. Output Options
 
 + ``-o output_file``: specify the output file name. **By default, the output goes to standard out, i.e., screen**.
-+ ``-l log_file``: specify the log file name. **By defualt, the messages during the run output to standard error.**
++ ``-l log_file``: specify the log file name. **By default, the messages during the run output to standard error.**
 + ``--output_all` or ``--all``: Output information for  all SNPs and all signal clusters. **By default, only SNPs with PIP > 0.001 and signal clusters with SPIP > 0.25 are displayed** 
 
 ### 4.5. Miscellaneous Options
 
-We do not recommend users to change the following setting, but these options may be usful for specific situations (e.g., customized applications, speeding up computation).
+We do not recommend users to change the following setting, but these options may be useful for specific situations (e.g., customized applications, speeding up computation).
 
-+ ``-g grid_file``: spefiy the text file containing effect size priors to be integrated out. By default, the marginal likelihood/Bayes factor is computed by averaging over a default grid of prior effect sizes. The default prior size is typically sufficient for both QTL mapping and GWAS analysis. User can specify an alternative set of effect size priors (in terms of squared expected effect sizes) in a text file with a single column, and each line represent a unique prior expected squared effect size.
-+ ``-size_limit maximum_cluster_member_size``: specify the maximum number of variants allowed in a signal cluster. By defualt, there is no constraint and the size of each signal cluster is completely data determined. Setting a small number of  maximum_cluster_member_size forces DAP-G to cap the number of variants into each cluster and reduces computation.
++ ``-g grid_file``: specify the text file containing effect size priors to be integrated out. By default, the marginal likelihood/Bayes factor is computed by averaging over a default grid of prior effect sizes. The default prior size is typically sufficient for both QTL mapping and GWAS analysis. User can specify an alternative set of effect size priors (in terms of squared expected effect sizes) in a text file with a single column, and each line represent a unique prior expected squared effect size.
++ ``-size_limit maximum_cluster_member_size``: specify the maximum number of variants allowed in a signal cluster. By default, there is no constraint and the size of each signal cluster is completely data determined. Setting a small number of  maximum_cluster_member_size forces DAP-G to cap the number of variants into each cluster and reduces computation.
 
 
 DAP-G can also be used to perform following data processing tasks besides multi-SNP association analysis
@@ -193,7 +193,7 @@ DAP-G can also be used to perform following data processing tasks besides multi-
 
 ## 5. Output Format
 
-There are roughly three sections in the DAP-G output. They correspond to the summaries of association modles, inividual SNPs and signal clusters, respectively. 
+There are roughly three sections in the DAP-G output. They correspond to the summaries of association models, individual SNPs and signal clusters, respectively. 
 
 ### 5.1.  Model Summary
 
