@@ -186,12 +186,67 @@ We do not recommend users to change the following setting, but these options may
 DAP-G can also be used to perform following data processing tasks besides multi-SNP association analysis
 
 + ``--scan``: perform single-SNP analysis (instead of multi-SNP analysis) for the given data. log10 Bayes factors for all candidate SNPs are computed and output.
-+ ``--dump_summary``: extract z-scores and LD correlation matrix from the individual-level data. Must use with ``-d sbams_file`` option.
++ ``--dump_summary``: extract z-scores and LD correlation matrix from the individual-level data. Must use with ``-d sbams_file`` option./output
 + ``-dump_summary2``: extract effect size estimates (b_i and se(b_i)) for each candidate SNP along with LD correlation matrix, sample size and SST information. Must use with ``-d sbams_file`` option.
 
 
 
 ## 5. Output Format
+
+There are roughly three sections in the DAP-G output. They correspond to the summaries of association modles, inividual SNPs and signal clusters, respectively. 
+
+### 5.1.  Model Summary
+
+An example line from model summary section is shown below:
+
+```
+    1   4.1846e-02    3     10.938   [rs54] [rs927] [rs986]
+```
+Specifically, the first column denotes the rank of the model; the second column shows the posterior probability of the corresponding model; the third column indicates the size (i.e., the number of SNPs) of the model; the fourth column shows the unnormalized posterior score of the model (defined as log10[model prior]+log10[BF]); and the last column gives the exact configuration of the model.
+
+To extract the model summary portion of the output, use the following command 
+
+``` 
+grep "\[" dap_output_file
+```
+
+### 5.2. SNP Summary
+
+An example line from SNP summary section is shown below:
+
+```
+((1))              rs54 5.74985e-01   8.167 1
+```
+Specifically, the first column denotes the rank of the SNP (measured by PIP); the second column indicates the SNP name; the third column shows the corresponding posterior inclusion probability (PIP); and the last column provides the corresponding signal cluster ID ("-1" is shown if a SNP is not considered a member of any signal cluster).
+
+To extract the SNP summary portion of the output, use the following command
+
+```
+grep "((" dap_output_file
+```
+
+
+### 5.3. Signal Cluster Summary
+
+An sample output for signal cluster summary is shown below
+
+```
+cluster     member_snp  cluster_pip      average_r2
+   {1}          4        9.964e-01      0.934             0.934   0.003   0.003
+   {2}          7        9.964e-01      0.915             0.003   0.915   0.001
+   {3}         10        9.943e-01      0.855             0.003   0.001   0.855
+```
+
+The last three columns represent the average LD measures (r^2) for SNPs within a cluster and between clusters.
+
+To extract the cluster summary portion of the output, use the following command
+
+```
+grep "{" dap_output_file
+```
+
+
+
 
 
 
