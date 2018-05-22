@@ -17,7 +17,9 @@ Run ``make static`` to compile an executable with static linked library.
 dap-g -d data_file |  -d_z zvalue_file -d_ld ld_file | -d_est effect_estimate_file -d_ld ld_file -d_n sample_size -d_syy syy [-g grid_file] [-p prior_file] [-msize K] [-ld_control r2_threshe] [-converg_thresh thresh_value] [-t nthread] [-o output_file] [-l log_file] [--output_all]
 ```
 
-***Important Tip***: Run adaptive DAP algorithm with multi-thread option (```-t nthread```) whenever possible! It will significantly speed up the computation.
+***Important Tip 1***: Run adaptive DAP algorithm with multi-thread option (```-t nthread```) whenever possible! It will significantly speed up the computation.
+
+***Important Tip 2***: DAP-G now includes a set of default effect size prior, ``-g grid_file`` is no longer required (this option is mandatory in the previous release). In case a customized grid file is desired, note that the format of the grid file has been changed from the previous version: see Section 4.5 for details.
 
 ## 3. Input Data Options
 
