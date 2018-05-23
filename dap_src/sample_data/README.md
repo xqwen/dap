@@ -1,7 +1,7 @@
 # Running sample data
 
 
-All runs using 4 parallel thresds.
+All runs using 4 parallel threads.
 
 ## Running with individual-level data
 
