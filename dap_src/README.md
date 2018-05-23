@@ -188,7 +188,7 @@ We do not recommend users to change the following setting, but these options may
 DAP-G can also be used to perform following data processing tasks besides multi-SNP association analysis
 
 + ``--scan``: perform single-SNP analysis (instead of multi-SNP analysis) for the given data. log10 Bayes factors for all candidate SNPs are computed and output.
-+ ``--dump_summary``: extract z-scores and LD correlation matrix from the individual-level data. Must use with ``-d sbams_file`` option./output
++ ``--dump_summary``: extract z-scores and LD correlation matrix from the individual-level data. Must use with ``-d sbams_file`` option.
 + ``-dump_summary2``: extract effect size estimates (b_i and se(b_i)) for each candidate SNP along with LD correlation matrix, sample size and SST information. Must use with ``-d sbams_file`` option.
 
 
