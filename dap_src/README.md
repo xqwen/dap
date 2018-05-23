@@ -175,7 +175,7 @@ This option is best used if genomic annotation information is available. Program
 
 + ``-o output_file``: specify the output file name. **By default, the output goes to standard out, i.e., screen**.
 + ``-l log_file``: specify the log file name. **By default, the messages during the run output to standard error.**
-+ ``--output_all` or ``--all``: Output information for  all SNPs and all signal clusters. **By default, only SNPs with PIP > 0.001 and signal clusters with SPIP > 0.25 are displayed** 
++ ``--output_all`` or ``--all``: Output information for  all SNPs and all signal clusters. **By default, only SNPs with PIP > 0.001 and signal clusters with SPIP > 0.25 are displayed** 
 
 ### 4.5. Miscellaneous Options
 
