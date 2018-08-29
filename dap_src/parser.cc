@@ -9,7 +9,7 @@ using namespace std;
 #include <gsl/gsl_blas.h>
 
 
-void parser::process_summary_data2(char *effect_file, char *ld_file, int sample_size, double syy){
+void parser::process_summary_data2(char *effect_file, char *ld_file, int sample_size, double syy, int ld_format){
 
     ifstream infile(effect_file);
     string line;
@@ -36,25 +36,74 @@ void parser::process_summary_data2(char *effect_file, char *ld_file, int sample_
             counter++;
         }
     }
-    int p = gty_vec.size();
 
+    int p = gty_vec.size();
     ld_matrix = gsl_matrix_calloc(p,p);
     ifstream infile2(ld_file);
-    int row = 0;
-    while(getline(infile2,line)){
-        stringstream ins(line);
-        double val;
-        int col = 0;
-        while(ins>>val){
-            gsl_matrix_set(ld_matrix,row,col,val);
-            col++;
+
+    if(ld_format == 1){
+        int row = 0;
+        while(getline(infile2,line)){
+            stringstream ins(line);
+            double val;
+            int col = 0;
+            while(ins>>val){
+                gsl_matrix_set(ld_matrix,row,col,val);
+                col++;
+            }
+            row++;
         }
-        row++;
     }
- 
+    if(ld_format == 2){
+        while(getline(infile2,line)){
+            stringstream ins(line);
+            string snp1;
+            string snp2;
+            double val;
+            ins>>snp1>>snp2>>val;
+            if(geno_rmap.find(snp1) == geno_rmap.end() || geno_rmap.find(snp2) == geno_rmap.end())
+                continue;
+            int i1 = geno_rmap[snp1];
+            int i2 = geno_rmap[snp2];
+            gsl_matrix_set(ld_matrix,i1,i2,val);
+            if(i1 != i2){
+                gsl_matrix_set(ld_matrix,i2,i1,val);
+            }
+        }
+
+        vector<double> dvec;
+        vector<string> mvec;
+        for(int i=0;i<p;i++){
+            double val = gsl_matrix_get(ld_matrix,i,i);
+            if(val == 0){
+                mvec.push_back(geno_map[i]);
+            }
+            dvec.push_back(val);
+        }
+        if(mvec.size()!=0){
+                fprintf(stderr, "No LD information for the following SNPs:\n");
+                for(int i=0;i<mvec.size();i++){
+                    fprintf(stderr, "%s\n",mvec[i].c_str());
+                }
+                fprintf(stderr,"\nExit\n");
+                exit(1);
+        }
+
+
+        for(int i=0;i<p;i++){
+            for(int j=0;j<=i;j++){
+                double val = gsl_matrix_get(ld_matrix,i,j)/sqrt(dvec[i]*dvec[j]);
+                gsl_matrix_set(ld_matrix,i,j,val);
+                if(i!=j){
+                    gsl_matrix_set(ld_matrix,j,i,val);
+                }
+            }
+        }
+    }
+
 }
 
-void parser::process_summary_data(char *zval_file, char *ld_file){
+void parser::process_summary_data(char *zval_file, char *ld_file, int sample_size, int ld_format){
     // reading data file
     ifstream infile(zval_file);
     string line;
@@ -68,6 +117,12 @@ void parser::process_summary_data(char *zval_file, char *ld_file){
         if(ins>>snp>>zval){
             geno_map[counter] = snp;
             geno_rmap[snp] = counter;
+            // for small sample correction
+            if(sample_size>0){
+                double h2 = zval*zval/(zval*zval+sample_size);
+                double factor = sqrt(0.5*(1+1/(1-h2)));
+                zval = zval/factor;
+            }
             zvec.push_back(zval);
             counter++;
         }
@@ -79,18 +134,66 @@ void parser::process_summary_data(char *zval_file, char *ld_file){
     }
     ld_matrix = gsl_matrix_calloc(p,p);
     ifstream infile2(ld_file);
-    int row = 0;
-    while(getline(infile2,line)){
-        stringstream ins(line);
-        double val;
-        int col = 0;
-        while(ins>>val){
-            gsl_matrix_set(ld_matrix,row,col,val);
-            col++;
+    if(ld_format == 1){
+
+        int row = 0;
+        while(getline(infile2,line)){
+            stringstream ins(line);
+            double val;
+            int col = 0;
+            while(ins>>val){
+                gsl_matrix_set(ld_matrix,row,col,val);
+                col++;
+            }
+            row++;
         }
-        row++;
     }
-     
+    if(ld_format == 2){
+        ld_matrix = gsl_matrix_calloc(p,p);
+        while(getline(infile2,line)){
+            stringstream ins(line);
+            string snp1;
+            string snp2;
+            double val;
+            ins>>snp1>>snp2>>val;
+            if(geno_rmap.find(snp1) == geno_rmap.end() || geno_rmap.find(snp2) == geno_rmap.end())
+                continue;
+            int i1 = geno_rmap[snp1];
+            int i2 = geno_rmap[snp2];
+            gsl_matrix_set(ld_matrix,i1,i2,val);
+            if(i1 != i2){
+                gsl_matrix_set(ld_matrix,i2,i1,val);
+            }
+        }
+
+        vector<double> dvec;
+        vector<string> mvec;
+        for(int i=0;i<p;i++){
+            double val = gsl_matrix_get(ld_matrix,i,i);
+            if(val == 0){
+                mvec.push_back(geno_map[i]);
+            }
+            dvec.push_back(val);
+        }
+        if(mvec.size()!=0){
+            fprintf(stderr, "No LD information for the following SNPs:\n");
+            for(int i=0;i<mvec.size();i++){
+                fprintf(stderr, "%s\n",mvec[i].c_str());
+            }
+            fprintf(stderr,"\nExit\n");
+            exit(1);
+        }
+
+        for(int i=0;i<p;i++){
+            for(int j=0;j<=i;j++){
+                double val = gsl_matrix_get(ld_matrix,i,j)/sqrt(dvec[i]*dvec[j]);
+                gsl_matrix_set(ld_matrix,i,j,val);
+                if(i!=j){
+                    gsl_matrix_set(ld_matrix,j,i,val);
+                }
+            }
+        }
+    }
 
 }
 
@@ -108,15 +211,15 @@ void parser::process_data(char *filename){
     //output();
     for(int i=0;i<pheno_vec.size();i++){
         //if(covar_vec[i].size()>0)	  
-            regress_cov(pheno_vec[i], covar_vec[i], geno_vec[i]);
+        regress_cov(pheno_vec[i], covar_vec[i], geno_vec[i]);
     } 
     // keep covar for bookkeeping 
     /*  
-    for(int i=0;i<covar_vec.size();i++){
+        for(int i=0;i<covar_vec.size();i++){
         if(covar_vec[i].size()>0)
-            covar_vec[i].clear();
-    } 
-    */
+        covar_vec[i].clear();
+        } 
+        */
 }
 
 void parser::process_line(string line){

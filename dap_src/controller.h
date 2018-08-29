@@ -92,6 +92,7 @@ class controller {
   // output pip for all SNPs default only output those > 0.001
   int output_all;
   
+  
   // log10 normalizing constant
   double log10_pnorm;
   
@@ -121,9 +122,9 @@ class controller {
   
   // public interface
   int run_option; 
-  void initialize(char *effect_file, char *ld_file, char *grid_file, int sample_size, double syy_);
+  void initialize(char *effect_file, char *ld_file, char *grid_file, int sample_size, double syy_, int ld_format);
   void initialize(char *data_file, char *grid_file);
-  void initialize(char *zval_file, char *ld_file, char *grid_file);
+  void initialize(char *zval_file, char *ld_file, char *grid_file,int sample_size, int ld_format);
  
   void run();
 
@@ -181,6 +182,7 @@ class controller {
     cluster_pip_thresh = -1;
     
   }
+
   
   void set_thread(int thread){
     nthread = thread;

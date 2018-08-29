@@ -30,8 +30,8 @@ class parser {
   vector<double> sxx_vec;
 
   void process_data(char *filename);
-  void process_summary_data(char *zval_file, char *ld_file);
-  void process_summary_data2(char *effect_file, char *ld_file, int sample_size, double syy);
+  void process_summary_data(char *zval_file, char *ld_file, int sample_size = -1, int ld_format=1);
+  void process_summary_data2(char *effect_file, char *ld_file, int sample_size, double syy,int ld_format=1);
   void output();
   
   

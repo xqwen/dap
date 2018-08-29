@@ -14,7 +14,7 @@ using namespace std;
 #include <gsl/gsl_sf_gamma.h>
 #include <omp.h>
 
-void controller::initialize(char *effect_file, char *ld_file, char *grid_file, int sample_size, double syy_){
+void controller::initialize(char *effect_file, char *ld_file, char *grid_file, int sample_size, double syy_, int ld_format){
     
     use_ss = 2;
 
@@ -26,12 +26,12 @@ void controller::initialize(char *effect_file, char *ld_file, char *grid_file, i
     else
         load_grid(grid_file);
     
-    pars.process_summary_data2(effect_file, ld_file,sample_size, syy);;
+    pars.process_summary_data2(effect_file, ld_file,sample_size, syy, ld_format);
     p = pars.ld_matrix->size1;
     set_default_options();
 }
 
-void controller::initialize(char *zval_file, char *ld_file, char *grid_file){
+void controller::initialize(char *zval_file, char *ld_file, char *grid_file, int sample_size, int ld_format){
 
     use_ss = 1;
     
@@ -39,7 +39,7 @@ void controller::initialize(char *zval_file, char *ld_file, char *grid_file){
         set_default_grid();  
     else
         load_grid(grid_file);
-    pars.process_summary_data(zval_file, ld_file);
+    pars.process_summary_data(zval_file, ld_file, sample_size, ld_format);
     p = pars.ld_matrix->size1;
     set_default_options();
 }

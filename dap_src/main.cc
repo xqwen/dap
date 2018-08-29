@@ -28,6 +28,10 @@ int main(int argc, char **argv){
 
     memset(prior_file,0,128);
 
+
+    int ld_format = 1; // for correlation matrix
+
+
     double abf_option = 0.5;
     int abf_prior_option = 1;
 
@@ -81,7 +85,12 @@ int main(int argc, char **argv){
             continue;
         }
 
-        
+        if(strcmp(argv[i], "-d_ld2")==0 || strcmp(argv[i], "-data_ld")==0){
+            strcpy(ld_file,argv[++i]);
+            ld_format = 2;
+            continue;
+        }
+
         if(strcmp(argv[i], "-d_est")==0){ 
             strcpy(est_file,argv[++i]);
             continue;
@@ -220,9 +229,9 @@ int main(int argc, char **argv){
     if(strlen(data_file)!=0){
         con.initialize(data_file,grid_file);
     }else if(strlen(zval_file)!=0 && strlen(ld_file)!=0 ){
-        con.initialize(zval_file, ld_file, grid_file);
+        con.initialize(zval_file, ld_file, grid_file,sample_size, ld_format);
     }else if(strlen(ld_file)!=0 && strlen(est_file)!=0 && sample_size >0 && syy>0){
-        con.initialize(est_file, ld_file, grid_file, sample_size, syy);
+        con.initialize(est_file, ld_file, grid_file, sample_size, syy,ld_format);
     }else{
         fprintf(stderr, "Error: no suitable input data specified \n");
         exit(1);
