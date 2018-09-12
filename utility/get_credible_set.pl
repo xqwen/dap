@@ -12,6 +12,11 @@ for $i  (0..$#ARGV){
         $prob = $ARGV[++$i];
         next;
     }
+
+    if($ARGV[$i] eq "-g"){
+        $gene = $ARGV[++$i];
+        next;
+    }
 }
 
 
@@ -57,7 +62,7 @@ while(<FILE>){
 foreach $c (sort {$a <=> $b} keys %sig){
     
     foreach $snp (sort {$sig{$c}->{$b} <=> $sig{$c}->{$a}} keys %{$sig{$c}}){
-        printf "%2d\t%10s\t%7.3e\n",$c, $snp, $sig{$c}->{$snp}
+        printf "%15s\t%2d\t%10s\t%7.3e\n",$gene,$c, $snp, $sig{$c}->{$snp}
     }
 }
 
