@@ -3,6 +3,7 @@
 #include <sstream>
 #include <map>
 #include <vector>
+#include <cmath>
 #include <string.h>
 #include <gsl/gsl_matrix.h>
 
