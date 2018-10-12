@@ -135,6 +135,7 @@ void parser::process_summary_data(char *zval_file, char *ld_file, int sample_siz
     }
     ld_matrix = gsl_matrix_calloc(p,p);
     ifstream infile2(ld_file);
+
     if(ld_format == 1){
 
         int row = 0;
@@ -149,6 +150,7 @@ void parser::process_summary_data(char *zval_file, char *ld_file, int sample_siz
             row++;
         }
     }
+
     if(ld_format == 2){
         ld_matrix = gsl_matrix_calloc(p,p);
         while(getline(infile2,line)){

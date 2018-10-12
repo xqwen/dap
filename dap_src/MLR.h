@@ -94,6 +94,7 @@ class MLR {
         vector<double> beta_vec;
         vector<double> se_vec;
         void print_matrix(gsl_matrix *M, int a, int b, FILE *outfd = 0);
+        void get_single_SNP_stats();
 };
 
 

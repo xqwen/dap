@@ -521,7 +521,6 @@ size_model controller::compute_post_model_single(vector<int>& bm){
     }
 
 
-
     vector<double> wv(post_vec.size(),1.0);
     smod.log10_sum_post = mlr.log10_weighted_sum(post_vec,wv);
 
@@ -906,11 +905,15 @@ double *controller::get_weights(vector<double>& vec){
 void controller::scan(){
 
     init();
+    mlr.get_single_SNP_stats();
     for(int i=0;i<p;i++){
 
         vector<int>  mcfg = null_config;
         mcfg[i] = 1;
-        fprintf(outfd,"%25s  %9.3f\n" , pars.geno_map[i].c_str(),  mlr.compute_log10_ABF(mcfg));
+        double bhat = mlr.beta_vec[i];
+        double se = mlr.se_vec[i];
+        double zval = bhat/se;
+        fprintf(outfd,"%25s  %9.3f        %12.3e %12.3e   %12.3e\n" , pars.geno_map[i].c_str(),  mlr.compute_log10_ABF(mcfg),bhat, se, zval);
 
     }  
 

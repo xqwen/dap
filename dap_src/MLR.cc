@@ -617,4 +617,19 @@ void MLR::extract_summary(){
 }
 
 
+void MLR::get_single_SNP_stats(){
+    double Syy = yty;
+    for(int i=0;i<p;i++){
+        double Sxx = gsl_matrix_get(GtG, i,i);
+        double Sxy = gsl_matrix_get(Gty, i,0);
+        double s2 = (Syy - Sxy*Sxy/Sxx)/(n-2);
+        double beta = Sxy/Sxx;
+        double se = sqrt(s2/Sxx);
+        beta_vec.push_back(beta);
+        se_vec.push_back(se);
+    }
+    return;
+}
+
+
 
