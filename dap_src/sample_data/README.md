@@ -7,7 +7,7 @@ All runs using 4 parallel threads.
 
 
 ```
-dap-g -d sim.1.sbamds.dat -t 4 -o output.sbams -l log.sbams
+dap-g -d sim.1.sbams.dat -t 4 -o output.sbams -l log.sbams
 ```
 
 ## Running with sufficient summary statistics
