@@ -23,7 +23,7 @@ Note: the input files for FINEMAP and DAP-G with z-scores are identical. For exa
 
 ## Download simulated data and results
 
-+ Simulated individual-level data (in sbams format) and truth [download](http://www-personal.umich.edu/~xwen/dapg_sim/sim_data.sbams_truth.tgz)
++ Simulated individual-level data (in sbams format) and truth \[[download](http://www-personal.umich.edu/~xwen/dapg_sim/sim_data.sbams_truth.tgz)\]
 + Additional simulation data (individual-level data in sbams format) and truth [download](https://drive.google.com/open?id=1bJHvXgA0W35gv-QPbQVJLDDxzPVmkIWz)
 + Output from FINEMAP (v1.1) [original simulation](http://www-personal.umich.edu/~xwen/dapg_sim/sim_data.finemap_out.tgz)
 + Output from FINEMAP (v1.3) [original simulation](https://drive.google.com/open?id=1XYn0NU8mTWyJCSpZdfhYTDIhsBLLIICJ)
