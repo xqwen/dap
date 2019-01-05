@@ -23,12 +23,12 @@ Note: the input files for FINEMAP and DAP-G with z-scores are identical. For exa
 
 ## Download simulated data and results
 
-+ Simulated individual-level data (in sbams format) and truth \[[download](http://www-personal.umich.edu/~xwen/dapg_sim/sim_data.sbams_truth.tgz)\]
++ Simulated individual-level data (in sbams format) and truth [download](http://www-personal.umich.edu/~xwen/dapg_sim/sim_data.sbams_truth.tgz)
 + Additional simulation data (individual-level data in sbams format) and truth [download](https://drive.google.com/open?id=1bJHvXgA0W35gv-QPbQVJLDDxzPVmkIWz)
 + Output from FINEMAP (v1.1) [original simulation](http://www-personal.umich.edu/~xwen/dapg_sim/sim_data.finemap_out.tgz)
 + Output from FINEMAP (v1.3) [original simulation](https://drive.google.com/open?id=1XYn0NU8mTWyJCSpZdfhYTDIhsBLLIICJ)
-+ Output from dap-g with sufficient summary statistics [original simulation](http://www-personal.umich.edu/~xwen/dapg_sim/sim_data.dap_out.tgz) [additional simulation](http://www-personal.umich.edu/~xwen/dapg_sim/additional_sim_data.dap_out.tgz)
-+ Output from dap-g with z-scores [original simulation](http://www-personal.umich.edu/~xwen/dapg_sim/sim_data.dap_z_out.tgz) [additional simulation](http://www-personal.umich.edu/~xwen/dapg_sim/additional_sim_data.dap_z_out.tgz)
++ Output from dap-g with sufficient summary statistics [original simulation](https://drive.google.com/open?id=1-lFC12GX5yilRm8x5C3-21u6nh5HMTgM) [additional simulation](https://drive.google.com/open?id=1wjNRm6XGQtccMnX5VgAck1Tfw_NqINbk)
++ Output from dap-g with z-scores [original simulation](https://drive.google.com/open?id=15NIZIFBftNUSmreiwNI_1bAPMgBBrcAi) [additional simulation](https://drive.google.com/open?id=1RHZpp1VWusb53Por4_uEGrSw1K4F8aTX)
 
 ## Extract summary statistics from individual level data
 
