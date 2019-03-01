@@ -293,9 +293,12 @@ double MLR::compute_log10_ABF(){
 
 double MLR::compute_log10_ABF(vector<int> & indicator){
 
-    if(!use_ss)
-        return compute_log10_ABF_FD(indicator);
-    else
+    if(!use_ss){
+        if(sigma_option>=0 && sigma_option <=1)
+            return compute_log10_ABF_FD(indicator);
+        else
+            return compute_log10_BF_FD(indicator);
+    }else
         return compute_log10_ABF_SS(indicator);
 
 
@@ -303,6 +306,111 @@ double MLR::compute_log10_ABF(vector<int> & indicator){
 
 
 
+
+
+double MLR::compute_log10_BF_FD(vector<int> & indicator){
+
+    vector<double> rstv;
+    vector<double> wv;
+
+
+    int ep = 0;
+    int count = 0;
+    std::map<int,int> imap;
+
+
+    for(int i=0;i<indicator.size();i++){
+        if(indicator[i]==1){
+            ep++;
+            imap[i] = count++;
+        }
+    }
+
+    gsl_matrix *XtX = gsl_matrix_calloc(ep,ep);
+    gsl_matrix *Xty = gsl_matrix_calloc(ep,1);
+
+
+    for(int i=0;i<p;i++){
+        if(indicator[i] == 0)
+            continue;
+        gsl_matrix_set(Xty, imap[i],0,gsl_matrix_get(Gty,i,0));
+        for(int j=0;j<p;j++){
+            if(indicator[j] == 1){
+
+                double val = gsl_matrix_get(GtG,i,j);
+                gsl_matrix_set(XtX,imap[i], imap[j],val);
+            }
+        }
+    }
+
+    // SV decomp of XtX
+    gsl_matrix *V = gsl_matrix_calloc(ep,ep);
+    gsl_vector *S = gsl_vector_calloc(ep);
+    gsl_vector *work = gsl_vector_calloc(ep);
+    gsl_linalg_SV_decomp (XtX, V, S,work);
+
+    for(int i=0;i<phi2_vec.size();i++){
+        double det = 1;
+        double phi2 = phi2_vec[i];
+
+        gsl_matrix *tt1 = gsl_matrix_calloc(ep,ep);
+
+        for(int j=0;j<ep;j++){
+            det = det*(1+phi2*gsl_vector_get(S,j));
+
+            double v = gsl_vector_get(S,j)+1.0/phi2_vec[i];
+            if(v>1e-8){
+                gsl_matrix_set(tt1,j,j,1.0/v);
+            }
+        }
+
+
+
+        gsl_matrix *tt2 = gsl_matrix_calloc(ep,ep);
+        gsl_blas_dgemm(CblasNoTrans,CblasNoTrans,1,V,tt1,0,tt2);
+
+        gsl_matrix *IWV = gsl_matrix_calloc(ep,ep);
+        gsl_blas_dgemm(CblasNoTrans,CblasTrans,1,tt2,V,0,IWV);
+
+
+        gsl_matrix *tt3 = gsl_matrix_calloc(ep,1);
+        gsl_blas_dgemm(CblasNoTrans,CblasNoTrans,1,IWV,Xty,0,tt3);
+
+        gsl_matrix *tt4 = gsl_matrix_calloc(1,1);
+        gsl_blas_dgemm(CblasTrans,CblasNoTrans,1,Xty,tt3,0,tt4);
+
+        double b_rss = gsl_matrix_get(tt4,0,0);
+        double log10BF = -0.5*log10(fabs(det)) - 0.5*n*log10(1 - b_rss/yty);
+
+        rstv.push_back(log10BF);
+        wv.push_back(1.0/phi2_vec.size());
+
+
+        gsl_matrix_free(tt1);
+        gsl_matrix_free(tt2);
+        gsl_matrix_free(IWV);
+        gsl_matrix_free(tt3);
+        gsl_matrix_free(tt4);
+
+
+    }
+
+    gsl_matrix_free(V);
+    gsl_vector_free(S);
+    gsl_vector_free(work);
+
+    gsl_matrix_free(XtX);
+    gsl_matrix_free(Xty);
+
+
+    double rst =  log10_weighted_sum(rstv,wv);
+
+    return rst;
+
+}
+
+
+// ABF with full data
 double MLR::compute_log10_ABF_FD(vector<int> & indicator){
 
 

@@ -17,7 +17,6 @@ using namespace std;
 void controller::initialize(char *effect_file, char *ld_file, char *grid_file, int sample_size, double syy_, int ld_format){
     
     use_ss = 2;
-
     N = sample_size;
     syy = syy_;
 
@@ -34,7 +33,6 @@ void controller::initialize(char *effect_file, char *ld_file, char *grid_file, i
 void controller::initialize(char *zval_file, char *ld_file, char *grid_file, int sample_size, int ld_format){
 
     use_ss = 1;
-    
     if(strlen(grid_file) == 0)
         set_default_grid();  
     else
@@ -48,7 +46,7 @@ void controller::initialize(char *zval_file, char *ld_file, char *grid_file, int
 void controller::initialize(char *data_file, char *grid_file){
 
     use_ss = 0;
-
+   
     if(strlen(grid_file) == 0)
         set_default_grid();
     else
@@ -262,6 +260,7 @@ void controller::init(){
         }
         mlr.init(syy, GtG, Gty, N);
         mlr.set_abf_option(abf_sigma_option);
+        
         mlr.set_effect_vec(omg2_vec);
     }
 

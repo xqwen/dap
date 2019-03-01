@@ -32,8 +32,7 @@ int main(int argc, char **argv){
     int ld_format = 1; // for correlation matrix
 
 
-    double abf_option = 0.5;
-    int abf_prior_option = 1;
+    double abf_option = -1;
 
     int msize =-1;
 
@@ -140,11 +139,11 @@ int main(int argc, char **argv){
             continue;
         }
 
-        // abf option
         if(strcmp(argv[i],"-abf")==0){
             abf_option = atof(argv[++i]);
             continue;
         }
+
 
 
         // thresholds
@@ -226,6 +225,8 @@ int main(int argc, char **argv){
     }
 
     controller con;
+
+
     if(strlen(data_file)!=0){
         con.initialize(data_file,grid_file);
     }else if(strlen(zval_file)!=0 && strlen(ld_file)!=0 ){

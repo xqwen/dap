@@ -137,7 +137,6 @@ class controller {
 
         // options
 
-
         void set_abf_option(double sigma_option){
             abf_sigma_option= sigma_option;
         }

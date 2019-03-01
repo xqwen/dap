@@ -44,7 +44,7 @@ class MLR {
         // interface
         // empty constructor, assign default options
         MLR(){
-            sigma_option = 0.0; 
+            sigma_option = -1; 
             GtG= Gty = 0;
             G = Y = 0;
             Z = R = 0;
@@ -76,6 +76,7 @@ class MLR {
         double compute_log10_ABF();
         double compute_log10_ABF(vector<int> &indicator);
         double compute_log10_ABF_FD(vector<int> &indicator);
+        double compute_log10_BF_FD(vector<int> &indicator);
         double compute_log10_ABF_SS(vector<int> &indicator);
 
         void extract_summary();
