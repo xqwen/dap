@@ -806,7 +806,12 @@ void controller::summarize_approx_posterior(){
 
     fprintf(outfd,"\nPosterior inclusion probability\n\n");
 
+    // use last cluster pip to set min pip output
+    double min_pip = cluster_pip[cluster_pip.size()-1]/p;
+
     for(int i=0;i<nsnp_vec_sort.size();i++){
+        if(nsnp_vec_sort[i].incl_prob < min_pip)
+            nsnp_vec_sort[i].incl_prob = min_pip;
         if(nsnp_vec_sort[i].incl_prob<1e-3&&!output_all)
             break;
         if(nsnp_vec_sort[i].cluster==-1&&!output_all)
