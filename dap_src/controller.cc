@@ -776,10 +776,13 @@ void controller::summarize_approx_posterior(){
                 continue;
             int index = snp2index[sname];
             double prob = nsnp_vec_sort[index].incl_prob;  
-            member_vec.push_back(snp);
-            nsnp_vec_sort[index].cluster = i+1;
-            //printf ("%2d   %15s  %8.5e\n",i+1,sname.c_str(), prob);
-            cluster_prob += prob;      
+            // ensure pip > min_pip
+            if(prob >= min_pip){
+                member_vec.push_back(snp);
+                nsnp_vec_sort[index].cluster = i+1;
+                //printf ("%2d   %15s  %8.5e\n",i+1,sname.c_str(), prob);
+                cluster_prob += prob;
+            }
         }
         cluster_r2.push_back(compute_average_r2(member_vec));
         cluster_count.push_back(member_vec.size());
