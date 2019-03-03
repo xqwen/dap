@@ -39,6 +39,11 @@ void controller::initialize(char *zval_file, char *ld_file, char *grid_file, int
         load_grid(grid_file);
     pars.process_summary_data(zval_file, ld_file, sample_size, ld_format);
     p = pars.ld_matrix->size1;
+    N = sample_size;
+    // set an approximate smaple size to avoid errors
+    if(sample_size <= 0)
+        sample_size = 1000;
+
     set_default_options();
 }
 
@@ -692,6 +697,7 @@ void controller::summarize_approx_posterior(){
     Nmodel nm;
     nm.id = "NULL";
     nm.prob = pow(10, log10_pmass_vec[0]-log10_pnorm);
+    double null_prob = nm.prob;
     nm.size = 0;
     nm.post_score = log10_pmass_vec[0];
     nmodel_vec.push_back(nm);
@@ -759,7 +765,12 @@ void controller::summarize_approx_posterior(){
         snp2index[nsnp_vec_sort[i].name] = i;
     }
     // estimate min_pip from BIC approximation
-    double min_pip = nsnp_vec_sort[0].incl_prob*prior_ratio/sqrt(N);
+    //double min_pip = nsnp_vec_sort[0].incl_prob*prior_ratio/sqrt(N);
+    //double min_pip = cluster_pip[cluster_pip.size()-1]/p;
+    double min_pip = (1-null_prob)*prior_ratio/sqrt(N);
+    //printf("min pip = %7.3e %7.3e\n", min_pip, nsnp_vec_sort[0].incl_prob*prior_ratio/sqrt(N));
+    
+    fprintf(outfd, "\nMinimum PIP is estimated at %7.3e (N = %d)\n", min_pip, N);
 
     vector<double> cluster_pip;
     vector<double> cluster_r2;
@@ -809,8 +820,6 @@ void controller::summarize_approx_posterior(){
 
     fprintf(outfd,"\nPosterior inclusion probability\n\n");
 
-    // use last cluster pip to set min pip output
-    //double min_pip = cluster_pip[cluster_pip.size()-1]/p;
 
     for(int i=0;i<nsnp_vec_sort.size();i++){
         if(nsnp_vec_sort[i].incl_prob < min_pip)
