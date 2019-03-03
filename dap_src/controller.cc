@@ -54,8 +54,8 @@ void controller::initialize(char *data_file, char *grid_file){
 
     pars.process_data(data_file);
 
-
     p = pars.geno_vec[0].size();
+    N = pars.geno_vec[0][0].size();   
 
     // default maximum model size
     set_default_options();
@@ -695,7 +695,7 @@ void controller::summarize_approx_posterior(){
     nm.size = 0;
     nm.post_score = log10_pmass_vec[0];
     nmodel_vec.push_back(nm);
-
+    
 
     for(int i=0;i<szm_vec.size();i++){
         map<string, double>::iterator iter;
@@ -758,8 +758,8 @@ void controller::summarize_approx_posterior(){
         nsnp_vec_sort[i].cluster = -1;
         snp2index[nsnp_vec_sort[i].name] = i;
     }
-
-
+    // estimate min_pip from BIC approximation
+    double min_pip = nsnp_vec_sort[0].incl_prob*prior_ratio/sqrt(N);
 
     vector<double> cluster_pip;
     vector<double> cluster_r2;
@@ -807,7 +807,7 @@ void controller::summarize_approx_posterior(){
     fprintf(outfd,"\nPosterior inclusion probability\n\n");
 
     // use last cluster pip to set min pip output
-    double min_pip = cluster_pip[cluster_pip.size()-1]/p;
+    //double min_pip = cluster_pip[cluster_pip.size()-1]/p;
 
     for(int i=0;i<nsnp_vec_sort.size();i++){
         if(nsnp_vec_sort[i].incl_prob < min_pip)
