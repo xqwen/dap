@@ -7,7 +7,7 @@ using namespace std;
 #include <algorithm>
 #include <gsl/gsl_randist.h>
 #include <gsl/gsl_statistics.h>
-#include <string.h>
+#include <string>
 #include <sys/types.h>
 #include <unistd.h>
 #include <gsl/gsl_combination.h>
@@ -323,6 +323,12 @@ void controller::fine_map(){
 
     init();
 
+    // initialize snp2cluster_map
+    for(int i=0;i<p;i++){
+        snp2cluster_map[i] = -1;
+    }
+
+
     vector<double> log10_pmass_vec;
 
 
@@ -341,7 +347,6 @@ void controller::fine_map(){
     vector<double> wv(log10_pmass_vec.size(),1.0);
     double val = log10_weighted_sum(log10_pmass_vec,wv);
     int total_snp = szm_vec[0].mvec.size();
-
     fprintf(logfd,  "\t %4d \t \t %4d \t \t %9.3f\n",1,total_snp,val);
 
     double prev_val = val;
@@ -350,40 +355,80 @@ void controller::fine_map(){
     double increment;
 
     while(1){
-        double log10_abf = conditional_est(bm);
-        /*
-           printf("%7.3f: [", log10_abf);
-           for(int i=0;i<bm.size();i++){
-           printf("%d::",bm[i]);
-           }
-           printf("]\n");
-           */
+
+        // if already at allowed max size, quit search
+        if(bm.size() == max_size)
+            break;
+
+        // attempt to add one more variable
+        double log10_post = conditional_est(bm);
+
+        // if no more variable to add, then quit search
         if(size == bm.size())
             break;
-        size++;
+        else
+            size++;
 
-        if(size > max_size)
-            break;
+        
+        // perform backwards checking, see if can eliminate one variable 
+        int elim_index = -1;
+        if(size >= 3){
+            elim_index = backward_checking(bm, log10_post);
+            if(elim_index !=-1){
+                size--;
+            }
+        }
+
 
         fprintf(logfd,"\t %4d \t \t ",size);
         fflush(logfd);
 
+        size_model szm;
+
         double cps = szm_vec[szm_vec.size()-1].log10_sum_post;
-        int use_abs_cutoff = 0;
-        if(increment > 1 || size == 2)
-            use_abs_cutoff = 1;
+        // append an equal size model to correct for necessary backward checking
+        if(elim_index != -1){
+            
+            map<int, int> black_list;
+            for(int i=0;i<szm_vec[elim_index].snp_cluster.size();i++){
+                int snp = szm_vec[elim_index].snp_cluster[i];
+                black_list[snp] = 100;
+            }
+            szm = append_post_model(size, black_list); 
+            
+            szm.snp_cluster = cand_set;
+            szm_vec.push_back(szm);
+            for(int i=0;i<cand_set.size();i++){
+                snp2cluster_map[cand_set[i]] = szm_vec.size();
+            }
+            log10_pmass_vec.push_back(szm.log10_sum_post);      
+            // update log10(NC)
+            vector<double> nwv(log10_pmass_vec.size(),1.0);
+            val = log10_weighted_sum(log10_pmass_vec,nwv);
+            total_snp += cand_set.size();
+            fprintf(logfd,  "%4d \t \t %9.3f\t*\n",total_snp,val);
 
-        size_model szm = compute_post_model(size, use_abs_cutoff);
-        szm.snp_cluster = cand_set;
-        szm_vec.push_back(szm);
 
-        log10_pmass_vec.push_back(szm.log10_sum_post);
-        // update log10(NC)
-        vector<double> nwv(log10_pmass_vec.size(),1.0);
-        val = log10_weighted_sum(log10_pmass_vec,nwv);
-        total_snp += cand_set.size();
-        fprintf(logfd,  "%4d \t \t %9.3f\n",total_snp,val);
+        }else{
+            // append a size 
+            int use_abs_cutoff = 0;
+            if(increment > 1 || size == 2)
+                use_abs_cutoff = 1;
 
+
+            szm = compute_post_model(size, use_abs_cutoff);
+            szm.snp_cluster = cand_set;
+            szm_vec.push_back(szm);
+            for(int i=0;i<cand_set.size();i++){
+                snp2cluster_map[cand_set[i]] = szm_vec.size();
+            }
+            log10_pmass_vec.push_back(szm.log10_sum_post);      
+            // update log10(NC)
+            vector<double> nwv(log10_pmass_vec.size(),1.0);
+            val = log10_weighted_sum(log10_pmass_vec,nwv);
+            total_snp += cand_set.size();
+            fprintf(logfd,  "%4d \t \t %9.3f\n",total_snp,val);
+        }
 
 
 
@@ -430,9 +475,9 @@ double controller::conditional_est(vector<int>& bm){
         int index = bm[i];
         mcfg[index] = 1;
     }
+    
 
     vector<double> post_vec;
-    //vector<double> abf_vec;
 
     int max_id;
     for(int i=0;i<p;i++){
@@ -489,6 +534,154 @@ double controller::conditional_est(vector<int>& bm){
 }
 
 
+// backwards elimination checking
+int controller::backward_checking(vector<int>& bm, double log10_post){
+
+
+    double max = -99999;
+    int max_snp = -1;
+    int max_id = -1;
+
+
+    for(int i=0; i<bm.size()-2; i++){
+        vector<int> tm = bm;
+        tm.erase(tm.begin()+i);
+
+        vector<int> mcfg = null_config;
+
+        for(int j=0;j<tm.size();j++){
+            int index = tm[j];
+            mcfg[index] = 1;
+        }
+
+        double rst =  mlr.compute_log10_ABF(mcfg) + compute_log10_prior(mcfg);
+        if(rst > max){
+            max= rst;
+            max_snp = bm[i];
+            max_id=i;
+        }
+
+    }
+
+    if(max-log10_post>0){
+        bm.erase(bm.begin()+max_id);
+        return snp2cluster_map[max_snp];
+    }
+
+
+    return -1;
+
+}
+
+size_model controller::append_post_model(int size, map<int, int> &black_list){
+
+    size_model smod;
+    smod.size = size;
+    smod.log10_sum_post = 0;
+
+    vector<vector<int> > & model_vec = szm_vec[szm_vec.size()-1].mvec;
+    vector<vector<int> > mc_vec;
+
+    map<string, int> saved_model_string_map;
+
+    for(int i=0; i<model_vec.size(); i++){
+        for(int j=0;j<cand_set.size();j++){
+            vector<int> cm = model_vec[i];
+
+            for(int k=0;k<cm.size();k++){
+                if(black_list[cm[k]] == 100){
+                    cm.erase(cm.begin()+k);
+                    break;
+                }
+            }
+            if(cm.size()==size-1){
+
+                cm.push_back(cand_set[j]);
+
+                stringstream mstream;
+                
+                for(int k=0;k<cm.size();k++){
+                    mstream<< cm[k]<<":";
+                }
+
+                string model_string = mstream.str(); 
+                if(saved_model_string_map[model_string] != 100){;
+                    mc_vec.push_back(cm);
+                    saved_model_string_map[model_string] = 100;
+                }
+
+            }
+        }
+    }
+
+    vector<double> post_vec(mc_vec.size());
+    int ms = mc_vec.size();
+
+    map<string, double> post_map;
+    vector<string> name_vec(ms);
+
+#pragma omp parallel for num_threads(nthread)  
+    for(int i=0;i<ms;i++){
+
+        // empty sets to start
+        vector<int>  mcfg = null_config;
+        vector<int> cm = mc_vec[i];
+
+        string name ="";
+        for(int j=0;j<size;j++){
+            int index = cm[j];
+            name += pars.geno_map[index];
+            if(j!=size-1){
+                name += "&";
+            }
+
+            mcfg[index]=1;
+        }
+
+
+
+        MLR local_mlr;
+
+        local_mlr.copy(mlr,mcfg);
+        double log10_abf  = local_mlr.compute_log10_ABF();
+        double log10_post =  log10_abf + compute_log10_prior(mcfg);
+#pragma omp critical 
+        {
+            post_vec[i] = log10_post;
+            name_vec[i] = name;
+            post_map[name] = log10_post;
+        }
+    }
+
+
+    vector<double> rst_post_vec;
+    map<string, double> rst_post_map;
+    vector<vector<int> > rst_mc_vec;
+
+    vector<double> post_vec_sort = post_vec;
+    sort(post_vec_sort.rbegin(), post_vec_sort.rend());
+
+    double cutoff = post_vec_sort[0] - 2;
+
+    for(int i=0;i<post_vec.size();i++){
+        if(post_vec[i]>= cutoff){
+            rst_post_vec.push_back(post_vec[i]);
+            rst_mc_vec.push_back(mc_vec[i]);
+            rst_post_map[name_vec[i]] = post_vec[i];
+        }
+    }
+
+    vector<double> wv(rst_post_vec.size(),1.0);
+    smod.log10_sum_post = mlr.log10_weighted_sum(rst_post_vec,wv);
+    smod.post_map = rst_post_map;
+    smod.mvec = rst_mc_vec;
+
+    return smod;
+
+
+
+
+}
 
 // single SNP model, required to run 
 size_model controller::compute_post_model_single(vector<int>& bm){
@@ -545,7 +738,7 @@ size_model controller::compute_post_model_single(vector<int>& bm){
             smod.mvec.push_back(mv);
             cand_set.push_back(i);
             cand_map[i] = 1;
-
+            snp2cluster_map[i]=0;
         }
     }
 
@@ -553,7 +746,7 @@ size_model controller::compute_post_model_single(vector<int>& bm){
     smod.snp_cluster = cand_set;
     bm.push_back(max_id);
     return smod;
-   
+
 }
 
 
@@ -617,7 +810,6 @@ size_model controller::compute_post_model(int size, int use_abs_cutoff){
             post_vec[i] = log10_post;
             name_vec[i] = name;
             post_map[name] = log10_post;
-            //printf("\n eval %d  %s  %7.3f %7.3f %7.3f\n", i, name.c_str(), log10_abf, compute_log10_prior(mcfg_map),log10_post);   
         }
     }
 
@@ -664,6 +856,12 @@ void controller::summarize_approx_posterior(){
 
     for(int i=0;i<szm_vec.size();i++){
         log10_pmass_vec.push_back(szm_vec[i].log10_sum_post);
+        //printf("szm %d cluster: ", i); 
+        //for(int k=0;k<szm_vec[i].snp_cluster.size();k++){
+        //    printf("%d ", szm_vec[i].snp_cluster[k]);
+        //}
+        
+       //printf("\n");
     }
 
     vector<double> wv1(log10_pmass_vec.size(),1.0);
@@ -673,9 +871,9 @@ void controller::summarize_approx_posterior(){
 
     double sum = 0;
     double ratio = 1;
-
+    int max_model_size = szm_vec[szm_vec.size()-1].size;
     if(max_size == p){
-        for(int k=log10_pmass_vec.size()+1;k<=p;k++){
+        for(int k=max_model_size+1;k<=p;k++){
             ratio *= (p-k+1)*prior_ratio/k;
             sum += ratio;
         }
@@ -686,13 +884,6 @@ void controller::summarize_approx_posterior(){
     vector<double> wv(log10_pmass_vec.size(),1.0);
     log10_pnorm  = mlr.log10_weighted_sum(log10_pmass_vec,wv);
 
-    /*
-       printf("log10_pnorm = %7.3f\n", log10_pnorm);
-       for(int i=0;i<wv.size();i++){
-       printf("%d:  %7.3f\n", i, log10_pmass_vec[i]);
-       }
-       */
-
 
     Nmodel nm;
     nm.id = "NULL";
@@ -701,16 +892,16 @@ void controller::summarize_approx_posterior(){
     nm.size = 0;
     nm.post_score = log10_pmass_vec[0];
     nmodel_vec.push_back(nm);
-    
 
     for(int i=0;i<szm_vec.size();i++){
+
         map<string, double>::iterator iter;
         for(iter = szm_vec[i].post_map.begin(); iter != szm_vec[i].post_map.end(); iter++){
             Nmodel nm;
             nm.id = iter->first;
             nm.post_score = iter->second;
             nm.prob = pow(10, iter->second-log10_pnorm);
-            nm.size = i+1;
+            nm.size = szm_vec[i].size;
             nmodel_vec.push_back(nm);
             parse_nmodel(nm);
         }
@@ -759,27 +950,27 @@ void controller::summarize_approx_posterior(){
 
     map<string, int> snp2index;
     for(int i=0;i<nsnp_vec_sort.size();i++){
-        if(nsnp_vec_sort[i].incl_prob<1e-3&&!output_all)
-            break;
+        //if(nsnp_vec_sort[i].incl_prob<1e-3&&!output_all)
+        //    break;
         nsnp_vec_sort[i].cluster = -1;
         snp2index[nsnp_vec_sort[i].name] = i;
     }
     // estimate min_pip from BIC approximation
-    //double min_pip = nsnp_vec_sort[0].incl_prob*prior_ratio/sqrt(N);
-    //double min_pip = cluster_pip[cluster_pip.size()-1]/p;
     double min_pip = (1-null_prob)*prior_ratio/sqrt(N);
-    //printf("min pip = %7.3e %7.3e\n", min_pip, nsnp_vec_sort[0].incl_prob*prior_ratio/sqrt(N));
-    
     fprintf(outfd, "\nMinimum PIP is estimated at %7.3e (N = %d)\n", min_pip, N);
 
     vector<double> cluster_pip;
     vector<double> cluster_r2;
     vector<int> cluster_count;
+    vector<int> cluster_id;
     vector<vector<int> > grp_vec;
     map<int,int> grpr2_map;
+    int cluster_index = 1;
     for(int i=0;i<szm_vec.size();i++){
+
         double cluster_prob = 0;
         vector<int> member_vec;
+
         for(int j=0;j<szm_vec[i].snp_cluster.size();j++){
             int snp = szm_vec[i].snp_cluster[j];
             string sname = pars.geno_map[szm_vec[i].snp_cluster[j]];
@@ -787,24 +978,28 @@ void controller::summarize_approx_posterior(){
                 continue;
             int index = snp2index[sname];
             double prob = nsnp_vec_sort[index].incl_prob;  
-            // ensure pip > min_pip
-            if(prob >= min_pip){
+            // we don't consider a SNP as a noteworthy cluster memeber if its pip < min_pip
+            if(prob > min_pip){
                 member_vec.push_back(snp);
-                nsnp_vec_sort[index].cluster = i+1;
-                //printf ("%2d   %15s  %8.5e\n",i+1,sname.c_str(), prob);
                 cluster_prob += prob;
+                nsnp_vec_sort[index].cluster = cluster_index;
             }
         }
-        cluster_r2.push_back(compute_average_r2(member_vec));
-        cluster_count.push_back(member_vec.size());
-        cluster_pip.push_back(cluster_prob);
-        if(cluster_prob >= cluster_pip_thresh){
-            grp_vec.push_back(member_vec);
-            grpr2_map[i] = grp_vec.size()-1;
-        }
-        //printf("cluster %d:  %7.3f\n\n", i+1, cluster_prob);
-    }
+        if(member_vec.size()>0){
+            
+            cluster_r2.push_back(compute_average_r2(member_vec));
+            cluster_count.push_back(member_vec.size());
+            cluster_pip.push_back(cluster_prob);
+            cluster_id.push_back(cluster_index);
 
+            if(cluster_prob >= cluster_pip_thresh){
+                grp_vec.push_back(member_vec);
+                grpr2_map[cluster_count.size()-1] = grp_vec.size()-1;
+            }
+            cluster_index++;
+        }
+
+    }       
 
     map<string, double> grp_r2;
     if(grp_vec.size()>1){
@@ -962,7 +1157,7 @@ void controller::extract_ss(){
         string name = pars.geno_map[i];
         //fprintf(fd,"%15s\t%7.3e\n",name.c_str(), gsl_matrix_get(Z,i,0));
         fprintf(fd,"%s %f\n",name.c_str(), gsl_matrix_get(Z,i,0));
-        
+
     }
     fclose(fd);
 
@@ -1043,20 +1238,6 @@ double controller::compute_r2(int i, int j){
 
 
 
-
-void size_model::update(){
-
-    map<string, double>::iterator iter;
-
-    vector<double> postv;
-    for(iter = post_map.begin(); iter != post_map.end(); iter++){
-        postv.push_back(iter->second);
-    }
-
-    vector<double> wv(postv.size(),1.0);
-    log10_sum_post = log10_weighted_sum(postv,wv);
-
-}
 
 
 

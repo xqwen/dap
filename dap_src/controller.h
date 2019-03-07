@@ -36,10 +36,9 @@ class size_model {
 
     public:
         int size;
-        map<string, double> post_map;
         double log10_sum_post;
+        map<string, double> post_map;
         vector<vector<int> > mvec; // models to be expanded for the next round
-        void update();
         vector<int> snp_cluster;
 };
 
@@ -80,7 +79,7 @@ class controller {
         //candidate set/map of SNPs
         vector<int> cand_set;  // candidate SNP set for higher order models
         map<int, int> cand_map;
-
+        map<int, int> snp2cluster_map;
 
         // for reporting
         map<string,int> nsnp_map;
@@ -206,8 +205,8 @@ class controller {
         size_model compute_post_model(int size, int use_abs_cutoff);
         double conditional_est(vector<int> &control_set);
 
-        void backward_check(vector<int> & best_model);
-
+        int  backward_checking(vector<int>& bm, double log10_post);
+        size_model append_post_model(int size, map<int, int> &black_list);
 
         // reporting
         void summarize_approx_posterior();
