@@ -351,7 +351,7 @@ void controller::fine_map(){
 
     double prev_val = val;
     int size = 1;
-
+    int no_bc = 0;
     double increment;
 
     while(1){
@@ -372,7 +372,7 @@ void controller::fine_map(){
         
         // perform backwards checking, see if can eliminate one variable 
         int elim_index = -1;
-        if(size >= 3){
+        if(size >= 3 && !no_bc){
             elim_index = backward_checking(bm, log10_post);
             if(elim_index !=-1){
                 size--;
@@ -407,9 +407,16 @@ void controller::fine_map(){
             val = log10_weighted_sum(log10_pmass_vec,nwv);
             total_snp += cand_set.size();
             fprintf(logfd,  "%4d \t \t %9.3f\t*\n",total_snp,val);
-
+            //  stop continuous backward checking for tiny improvement
+            printf("val vs pre_val: %f %f\n", val, prev_val);
+            if(val - prev_val < size_select_thresh)
+                no_bc = 1;  
 
         }else{
+            //allow backward checking if adding a new variable    
+            if(no_bc)
+                no_bc = 0;
+
             // append a size 
             int use_abs_cutoff = 0;
             if(increment > 1 || size == 2)
@@ -439,9 +446,11 @@ void controller::fine_map(){
 
         // expected contribution of next size partition, assuming model is saturated 
         double project_ratio = (p-cs+1)*prior_ratio/cs;
-        if(project_ratio > 1)
+        if(project_ratio > 1){
+            increment = val - prev_val;
+            prev_val = val;
             continue;
-
+        }
         // else check stopping point
         double ncps = szm.log10_sum_post;
         double rb = log10(double(p)-cs+1)+log10(prior_ratio) + cps;
