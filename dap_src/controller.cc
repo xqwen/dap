@@ -408,7 +408,6 @@ void controller::fine_map(){
             total_snp += cand_set.size();
             fprintf(logfd,  "%4d \t \t %9.3f\t*\n",total_snp,val);
             //  stop continuous backward checking for tiny improvement
-            printf("val vs pre_val: %f %f\n", val, prev_val);
             if(val - prev_val < size_select_thresh)
                 no_bc = 1;  
 
