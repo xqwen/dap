@@ -2,12 +2,14 @@
 
 ## 1. Compilation 
 
-The following C/C++ libraries are required for compiling the source code
+The following C/C++ library is required for compiling the source code
 
 * GNU [GSL](http://www.gnu.org/software/gsl/) library 
+
+The following C/C++ library is optional but recommended 
 * [OpenMP](http://openmp.org/wp/openmp-compilers/) compiler (many popular compilers are compatible)
 
-Simply run ``make`` to compile the executable named ``dap``.
+Simply run ``cmake .`` and ``make`` to compile the executable named ``dap-g``.
 
 Run ``make static`` to compile an executable with static linked library. 
 
