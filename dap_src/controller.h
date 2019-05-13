@@ -184,7 +184,10 @@ class controller {
 
 
         void set_thread(int thread){
-            nthread = thread;
+            #ifdef _OPENMP
+                nthread = thread;
+                omp_set_num_threads(thread);
+            #endif
         }
 
 

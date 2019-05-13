@@ -10,7 +10,9 @@
 #include <unistd.h>
 #include <gsl/gsl_combination.h>
 #include <gsl/gsl_sf_gamma.h>
+#ifdef _OPENMP
 #include <omp.h>
+#endif
 
 void controller::initialize(char *effect_file, char *ld_file, char *grid_file, int sample_size, double syy_, int ld_format){
     
@@ -114,6 +116,11 @@ void controller::print_dap_config(){
 
         fprintf(logfd,"\t* LD control threshold [-ld_control]: %.2f\n", ld_control_thresh);
         fprintf(logfd,"\t* normalizing constant convergence threshold [-converg_thresh]: %.2e (log10 scale)\n", size_select_thresh);
+        #ifdef _OPENMP
+            fprintf(logfd,"\t* number of parallel threads [-t]: %d\n", nthread);
+        #else
+            fprintf(logfd,"\t* number of parallel threads [-t]: 1 (OpenMP not available)\n");
+        #endif
     }
 
     
@@ -626,7 +633,7 @@ size_model controller::append_post_model(int size, map<int, int> &black_list){
     map<string, double> post_map;
     vector<string> name_vec(ms);
 
-#pragma omp parallel for num_threads(nthread)  
+#pragma omp parallel for  
     for(int i=0;i<ms;i++){
 
         // empty sets to start
@@ -786,7 +793,7 @@ size_model controller::compute_post_model(int size, int use_abs_cutoff){
     map<string, double> post_map;
     vector<string> name_vec(ms);
 
-#pragma omp parallel for num_threads(nthread)  
+#pragma omp parallel for 
     for(int i=0;i<ms;i++){
 
         // empty sets to start
