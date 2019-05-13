@@ -224,8 +224,6 @@ int main(int argc, char **argv){
 
     controller con;
 
-//    // remember to delete the following line
-//    con.set_for_r();
 
     if(strlen(data_file)!=0){
         con.initialize(data_file,grid_file);
@@ -237,6 +235,9 @@ int main(int argc, char **argv){
         fprintf(stderr, "Error: no suitable input data specified \n");
         exit(1);
     }
+
+//    // remember to delete the following line
+//    con.set_for_r();
 
     con.set_outfile(out_file, log_file);
 

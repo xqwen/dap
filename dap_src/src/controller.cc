@@ -174,6 +174,7 @@ void controller::set_default_grid(){
 void controller::set_outfile(char *outfile, char *logfile){
     if(run_in_r){
         fclose(stdout);
+        fclose(stderr);
         return;
     }
 
