@@ -7,6 +7,8 @@
 #include <string.h>
 #include <gsl/gsl_matrix.h>
 
+using namespace std;
+
 class parser {
 
 

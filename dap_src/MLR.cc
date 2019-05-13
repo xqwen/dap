@@ -1,4 +1,3 @@
-using namespace std;
 #include "MLR.h"
 #include <math.h>
 #include <gsl/gsl_blas.h>

@@ -1,5 +1,3 @@
-using namespace std;
-
 #include "controller.h"
 #include <stdlib.h>
 

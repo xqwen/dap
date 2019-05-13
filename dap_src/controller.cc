@@ -1,5 +1,3 @@
-using namespace std;
-
 #include "controller.h"
 #include <math.h>
 #include <fstream>
@@ -1014,7 +1012,7 @@ void controller::summarize_approx_posterior(){
 
         for(int i=0;i<grp_vec.size();i++){
             for(int j=i+1;j<grp_vec.size();j++){
-                string id(i +":"+j);
+                string id(to_string(i) +":"+ to_string(j));
                 double r2 = compute_average_r2(grp_vec[i], grp_vec[j]);
                 grp_r2[id] = r2;
             }
@@ -1056,9 +1054,9 @@ void controller::summarize_approx_posterior(){
                     continue;
                 }
                 if(countk<counti)
-                    id = countk+ ":"+counti;
+                    id = to_string(countk)+ ":"+to_string(counti);
                 if(countk>counti)
-                    id = counti+":"+countk;
+                    id = to_string(counti)+":"+to_string(countk);
                 fprintf(outfd,"%7.3f\t",grp_r2[id]);
 
             }
