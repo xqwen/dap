@@ -84,6 +84,11 @@ void controller::set_default_options(){
     log10_bf_thresh = 2;
 
     ld_control_thresh = 0.25; // by default  ld control with r^2 = 0.25
+
+
+    run_in_r = false;
+    outfd = stdout;
+    logfd = stderr;
 }
 
 
@@ -167,16 +172,16 @@ void controller::set_default_grid(){
 
 
 void controller::set_outfile(char *outfile, char *logfile){
+    if(run_in_r){
+        fclose(stdout);
+        return;
+    }
 
-    if(strlen(outfile)==0)
-        outfd = stdout;
-    else
+    if(strlen(outfile)>0)
         outfd = fopen(outfile,"w");
 
     
-    if(strlen(logfile)==0)
-        logfd = stderr;
-    else
+    if(strlen(logfile)>0)
         logfd = fopen(logfile,"w");
 }
 

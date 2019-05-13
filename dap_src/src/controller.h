@@ -117,6 +117,9 @@ class controller {
         int nthread;
         int use_ss;
 
+        // run in R
+        bool run_in_r;
+
     public:
 
         // public interface
@@ -188,6 +191,10 @@ class controller {
                 nthread = thread;
                 omp_set_num_threads(thread);
             #endif
+        }
+
+        void set_for_r(){
+            run_in_r = true;
         }
 
 

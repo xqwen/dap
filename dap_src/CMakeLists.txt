@@ -16,10 +16,10 @@ endif()
 find_package(GSL REQUIRED)
 
 add_executable(dap-g 
-    main.cc 
-    MLR.h MLR.cc 
-    parser.h parser.cc 
-    controller.h controller.cc
+    src/main.cc 
+    src/MLR.h src/MLR.cc 
+    src/parser.h src/parser.cc 
+    src/controller.h src/controller.cc
 )
 
 target_link_libraries(dap-g PUBLIC GSL::gsl GSL::gslcblas)

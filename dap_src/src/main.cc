@@ -38,7 +38,7 @@ int main(int argc, char **argv){
 
     double pes = 1.0;
     double pi1 = -1;
-    double lambda = 0.5;
+//    double lambda = 0.5;
     double ld_control = -1;
 
     int size_limit = -1;
@@ -224,6 +224,8 @@ int main(int argc, char **argv){
 
     controller con;
 
+//    // remember to delete the following line
+//    con.set_for_r();
 
     if(strlen(data_file)!=0){
         con.initialize(data_file,grid_file);
