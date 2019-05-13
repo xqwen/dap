@@ -9,9 +9,7 @@ The following C/C++ library is required for compiling the source code
 The following C/C++ library is optional but recommended 
 * [OpenMP](http://openmp.org/wp/openmp-compilers/) compiler (many popular compilers are compatible)
 
-Simply run ``cmake .`` and ``make`` to compile the executable named ``dap-g``.
-
-Run ``make static`` to compile an executable with static linked library. 
+Simply run ``bash install.sh`` to compile the executable named ``dap-g`` in folder ``bin``.
 
 
 ## 2. Command-line Syntax
