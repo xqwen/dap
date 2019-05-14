@@ -15,7 +15,7 @@
 #endif
 
 void controller::initialize(char *effect_file, char *ld_file, char *grid_file, int sample_size, double syy_, int ld_format){
-
+    
     use_ss = 2;
     N = sample_size;
     syy = syy_;
@@ -24,7 +24,7 @@ void controller::initialize(char *effect_file, char *ld_file, char *grid_file, i
         set_default_grid();
     else
         load_grid(grid_file);
-
+    
     pars.process_summary_data2(effect_file, ld_file,sample_size, syy, ld_format);
     p = pars.ld_matrix->size1;
     set_default_options();
@@ -34,7 +34,7 @@ void controller::initialize(char *zval_file, char *ld_file, char *grid_file, int
 
     use_ss = 1;
     if(strlen(grid_file) == 0)
-        set_default_grid();
+        set_default_grid();  
     else
         load_grid(grid_file);
     pars.process_summary_data(zval_file, ld_file, sample_size, ld_format);
@@ -51,7 +51,7 @@ void controller::initialize(char *zval_file, char *ld_file, char *grid_file, int
 void controller::initialize(char *data_file, char *grid_file){
 
     use_ss = 0;
-
+   
     if(strlen(grid_file) == 0)
         set_default_grid();
     else
@@ -60,7 +60,7 @@ void controller::initialize(char *data_file, char *grid_file){
     pars.process_data(data_file);
 
     p = pars.geno_vec[0].size();
-    N = pars.geno_vec[0][0].size();
+    N = pars.geno_vec[0][0].size();   
 
     // default maximum model size
     set_default_options();
@@ -71,7 +71,7 @@ void controller::initialize(char *data_file, char *grid_file){
 void controller::set_default_options(){
 
     max_size = p;
-    // default thread
+    // default thread 
     nthread = 1;
 
     output_all = 0;
@@ -108,9 +108,9 @@ void controller::print_dap_config(){
         fprintf(logfd,"\t* number of covariates: %d\n", int(pars.covar_vec[0].size()));
     }
     fprintf(logfd,"\n");
-
+    
     fprintf(logfd, "PROGRAM OPTIONS\n\n");
-
+    
     if(run_option==0){
         fprintf(logfd,"\t* maximum model size allowed [-msize]: %d ",max_size);
         if(max_size ==p){
@@ -128,7 +128,7 @@ void controller::print_dap_config(){
         #endif
     }
 
-
+    
    if(run_option==0)
        fprintf(logfd,"\nRUN LOG\n");
 }
@@ -180,7 +180,7 @@ void controller::set_outfile(char *outfile, char *logfile){
     if(strlen(outfile)>0)
         outfd = fopen(outfile,"w");
 
-
+    
     if(strlen(logfile)>0)
         logfd = fopen(logfile,"w");
 }
@@ -239,7 +239,7 @@ void controller::set_prior(char *prior_file){
 }
 
 
-void controller::init(){
+void controller::init(){  
     if(use_ss==0){
         vector<vector<vector<double> > > Xgv;
 
@@ -248,12 +248,12 @@ void controller::init(){
         if(Xgv.size() == 0)
             exit(0);
         // set SSLR parameters and options
-        mlr.set_abf_option(abf_sigma_option);
+        mlr.set_abf_option(abf_sigma_option); 
         mlr.init(pars.pheno_vec[0],Xgv[0]);
 
         //sslr.set_prior_option(sslr_prior_option);
         mlr.set_effect_vec(omg2_vec);
-
+        
     }else if(use_ss==1){
         mlr.init_ss(pars.zval_matrix, pars.ld_matrix);
         mlr.set_effect_vec(kv_vec);
@@ -275,11 +275,11 @@ void controller::init(){
         }
         mlr.init(syy, GtG, Gty, N);
         mlr.set_abf_option(abf_sigma_option);
-
+        
         mlr.set_effect_vec(omg2_vec);
     }
 
-    null_config = vector<int>(p,0);
+    null_config = vector<int>(p,0);  
     //start with empty table
 
     double sum = 0;
@@ -298,7 +298,7 @@ double controller::compute_log10_prior(vector<int> &mcfg){
 
     double lp=0;
     for(int i=0;i<p;i++){
-        if(mcfg[i]==0)
+        if(mcfg[i]==0) 	 
             lp += log(1-pi_vec[i]);
         else
             lp += log(pi_vec[i]);
@@ -348,7 +348,7 @@ void controller::fine_map(){
 
 
     fprintf(logfd, "\n\n\tModel_Size \tcandidates \t  log10(NC)\n");
-
+   
     // record best model
     vector<int> bm;
     // single SNP scan, label candidate SNPs for higher order models
@@ -379,8 +379,8 @@ void controller::fine_map(){
         else
             size++;
 
-
-        // perform backwards checking, see if can eliminate one variable
+        
+        // perform backwards checking, see if can eliminate one variable 
         int elim_index = -1;
         if(size >= 3 && !no_bc){
             elim_index = backward_checking(bm, log10_post);
@@ -398,20 +398,20 @@ void controller::fine_map(){
         double cps = szm_vec[szm_vec.size()-1].log10_sum_post;
         // append an equal size model to correct for necessary backward checking
         if(elim_index != -1){
-
+            
             map<int, int> black_list;
             for(int i=0;i<szm_vec[elim_index].snp_cluster.size();i++){
                 int snp = szm_vec[elim_index].snp_cluster[i];
                 black_list[snp] = 100;
             }
-            szm = append_post_model(size, black_list);
-
+            szm = append_post_model(size, black_list); 
+            
             szm.snp_cluster = cand_set;
             szm_vec.push_back(szm);
             for(int i=0;i<cand_set.size();i++){
                 snp2cluster_map[cand_set[i]] = szm_vec.size();
             }
-            log10_pmass_vec.push_back(szm.log10_sum_post);
+            log10_pmass_vec.push_back(szm.log10_sum_post);      
             // update log10(NC)
             vector<double> nwv(log10_pmass_vec.size(),1.0);
             val = log10_weighted_sum(log10_pmass_vec,nwv);
@@ -419,14 +419,14 @@ void controller::fine_map(){
             fprintf(logfd,  "%4d \t \t %9.3f\t*\n",total_snp,val);
             //  stop continuous backward checking for tiny improvement
             if(val - prev_val < size_select_thresh)
-                no_bc = 1;
+                no_bc = 1;  
 
         }else{
-            //allow backward checking if adding a new variable
+            //allow backward checking if adding a new variable    
             if(no_bc)
                 no_bc = 0;
 
-            // append a size
+            // append a size 
             int use_abs_cutoff = 0;
             if(increment > 1 || size == 2)
                 use_abs_cutoff = 1;
@@ -438,7 +438,7 @@ void controller::fine_map(){
             for(int i=0;i<cand_set.size();i++){
                 snp2cluster_map[cand_set[i]] = szm_vec.size();
             }
-            log10_pmass_vec.push_back(szm.log10_sum_post);
+            log10_pmass_vec.push_back(szm.log10_sum_post);      
             // update log10(NC)
             vector<double> nwv(log10_pmass_vec.size(),1.0);
             val = log10_weighted_sum(log10_pmass_vec,nwv);
@@ -453,7 +453,7 @@ void controller::fine_map(){
         int cs = size;
         // if the prior expectation is high for number of signals, carry on
 
-        // expected contribution of next size partition, assuming model is saturated
+        // expected contribution of next size partition, assuming model is saturated 
         double project_ratio = (p-cs+1)*prior_ratio/cs;
         if(project_ratio > 1){
             increment = val - prev_val;
@@ -463,7 +463,7 @@ void controller::fine_map(){
         // else check stopping point
         double ncps = szm.log10_sum_post;
         double rb = log10(double(p)-cs+1)+log10(prior_ratio) + cps;
-        // double lb = log10(double(p-2*cs+2)/cs) + log10(prior_ratio) + cps;
+//        double lb = log10(double(p-2*cs+2)/cs) + log10(prior_ratio) + cps;
         if( ncps <= rb && val - prev_val <= size_select_thresh){
             break;
         }
@@ -494,7 +494,7 @@ double controller::conditional_est(vector<int>& bm){
         int index = bm[i];
         mcfg[index] = 1;
     }
-
+    
 
     vector<double> post_vec;
 
@@ -618,12 +618,12 @@ size_model controller::append_post_model(int size, map<int, int> &black_list){
                 cm.push_back(cand_set[j]);
 
                 stringstream mstream;
-
+                
                 for(int k=0;k<cm.size();k++){
                     mstream<< cm[k]<<":";
                 }
 
-                string model_string = mstream.str();
+                string model_string = mstream.str(); 
                 if(saved_model_string_map[model_string] != 100){;
                     mc_vec.push_back(cm);
                     saved_model_string_map[model_string] = 100;
@@ -639,7 +639,7 @@ size_model controller::append_post_model(int size, map<int, int> &black_list){
     map<string, double> post_map;
     vector<string> name_vec(ms);
 
-#pragma omp parallel for
+#pragma omp parallel for  
     for(int i=0;i<ms;i++){
 
         // empty sets to start
@@ -664,7 +664,7 @@ size_model controller::append_post_model(int size, map<int, int> &black_list){
         local_mlr.copy(mlr,mcfg);
         double log10_abf  = local_mlr.compute_log10_ABF();
         double log10_post =  log10_abf + compute_log10_prior(mcfg);
-#pragma omp critical
+#pragma omp critical 
         {
             post_vec[i] = log10_post;
             name_vec[i] = name;
@@ -702,7 +702,7 @@ size_model controller::append_post_model(int size, map<int, int> &black_list){
 
 }
 
-// single SNP model, required to run
+// single SNP model, required to run 
 size_model controller::compute_post_model_single(vector<int>& bm){
 
 
@@ -714,7 +714,7 @@ size_model controller::compute_post_model_single(vector<int>& bm){
     vector<double> post_vec;
     vector<double> abf_vec;
 
-    // double max_log10_abf = -9999;
+//    double max_log10_abf = -9999;
     double max_log10_post = -9999;
     int max_id = -1;
     for(int index=0;index<p;index++){
@@ -722,7 +722,7 @@ size_model controller::compute_post_model_single(vector<int>& bm){
         string name = pars.geno_map[index];
         vector<int>  mcfg = null_config;
         mcfg[index]=1;
-        double log10_abf = mlr.compute_log10_ABF(mcfg);
+        double log10_abf = mlr.compute_log10_ABF(mcfg); 
         single_log10_abfv[name] = log10_abf;
         abf_vec.push_back(log10_abf);
         double log10_post =  log10_abf + compute_log10_prior(mcfg);
@@ -774,7 +774,7 @@ size_model controller::compute_post_model(int size, int use_abs_cutoff){
 
     size_model smod;
     smod.size = size;
-    smod.log10_sum_post = 0;
+    smod.log10_sum_post = 0; 
 
 
     vector<vector<int> > & model_vec = szm_vec[szm_vec.size()-1].mvec;
@@ -799,7 +799,7 @@ size_model controller::compute_post_model(int size, int use_abs_cutoff){
     map<string, double> post_map;
     vector<string> name_vec(ms);
 
-#pragma omp parallel for
+#pragma omp parallel for 
     for(int i=0;i<ms;i++){
 
         // empty sets to start
@@ -824,7 +824,7 @@ size_model controller::compute_post_model(int size, int use_abs_cutoff){
         local_mlr.copy(mlr,mcfg);
         double log10_abf  = local_mlr.compute_log10_ABF();
         double log10_post =  log10_abf + compute_log10_prior(mcfg);
-#pragma omp critical
+#pragma omp critical 
         {
             post_vec[i] = log10_post;
             name_vec[i] = name;
@@ -875,11 +875,11 @@ void controller::summarize_approx_posterior(){
 
     for(int i=0;i<szm_vec.size();i++){
         log10_pmass_vec.push_back(szm_vec[i].log10_sum_post);
-        //printf("szm %d cluster: ", i);
+        //printf("szm %d cluster: ", i); 
         //for(int k=0;k<szm_vec[i].snp_cluster.size();k++){
         //    printf("%d ", szm_vec[i].snp_cluster[k]);
         //}
-
+        
        //printf("\n");
     }
 
@@ -977,21 +977,32 @@ void controller::summarize_approx_posterior(){
                 nsnp_vec[index].cluster = cluster_index;
             }
         }
-        if(member_vec.size()>0){
+//        if(member_vec.size()>0){
+//
+//            cluster_r2.push_back(compute_average_r2(member_vec));
+//            cluster_count.push_back(member_vec.size());
+//            cluster_pip.push_back(cluster_prob);
+//            cluster_id.push_back(cluster_index);
+//
+//            if(cluster_prob >= cluster_pip_thresh){
+//                grp_vec.push_back(member_vec);
+//                grpr2_map[cluster_count.size()-1] = grp_vec.size()-1;
+//            }
+//            cluster_index++;
+//        }
+        if(member_vec.size()>0 && cluster_prob >= cluster_pip_thresh){
 
             cluster_r2.push_back(compute_average_r2(member_vec));
             cluster_count.push_back(member_vec.size());
             cluster_pip.push_back(cluster_prob);
             cluster_id.push_back(cluster_index);
 
-            if(cluster_prob >= cluster_pip_thresh){
-                grp_vec.push_back(member_vec);
-                grpr2_map[cluster_count.size()-1] = grp_vec.size()-1;
-            }
+            grp_vec.push_back(member_vec);
+            grpr2_map[cluster_count.size()-1] = grp_vec.size()-1;
             cluster_index++;
         }
 
-    }
+    }       
 
     if(grp_vec.size()>1){
 
@@ -1048,8 +1059,8 @@ void controller::summary_output() {
 
 
         for(int i=0;i<cluster_count.size();i++){
-            if(cluster_pip[i]<cluster_pip_thresh)
-                continue;
+//            if(cluster_pip[i]<cluster_pip_thresh)
+//                continue;
             fprintf(outfd,"\t   {%d}\t\t  %3d\t\t %7.3e \t  %7.3f    \t\t",i+1,cluster_count[i],cluster_pip[i],cluster_r2[i]);
             int counti = grpr2_map[i];
 
@@ -1139,7 +1150,7 @@ void controller::scan(){
         double zval = bhat/se;
         fprintf(outfd,"%25s  %9.3f        %12.3e %12.3e   %12.3e\n" , pars.geno_map[i].c_str(),  mlr.compute_log10_ABF(mcfg),bhat, se, zval);
 
-    }
+    }  
 
 }
 

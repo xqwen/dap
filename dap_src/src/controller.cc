@@ -977,17 +977,28 @@ void controller::summarize_approx_posterior(){
                 nsnp_vec[index].cluster = cluster_index;
             }
         }
-        if(member_vec.size()>0){
-            
+//        if(member_vec.size()>0){
+//
+//            cluster_r2.push_back(compute_average_r2(member_vec));
+//            cluster_count.push_back(member_vec.size());
+//            cluster_pip.push_back(cluster_prob);
+//            cluster_id.push_back(cluster_index);
+//
+//            if(cluster_prob >= cluster_pip_thresh){
+//                grp_vec.push_back(member_vec);
+//                grpr2_map[cluster_count.size()-1] = grp_vec.size()-1;
+//            }
+//            cluster_index++;
+//        }
+        if(member_vec.size()>0 && cluster_prob >= cluster_pip_thresh){
+
             cluster_r2.push_back(compute_average_r2(member_vec));
             cluster_count.push_back(member_vec.size());
             cluster_pip.push_back(cluster_prob);
             cluster_id.push_back(cluster_index);
 
-            if(cluster_prob >= cluster_pip_thresh){
-                grp_vec.push_back(member_vec);
-                grpr2_map[cluster_count.size()-1] = grp_vec.size()-1;
-            }
+            grp_vec.push_back(member_vec);
+            grpr2_map[cluster_count.size()-1] = grp_vec.size()-1;
             cluster_index++;
         }
 
@@ -1048,8 +1059,8 @@ void controller::summary_output() {
 
 
         for(int i=0;i<cluster_count.size();i++){
-            if(cluster_pip[i]<cluster_pip_thresh)
-                continue;
+//            if(cluster_pip[i]<cluster_pip_thresh)
+//                continue;
             fprintf(outfd,"\t   {%d}\t\t  %3d\t\t %7.3e \t  %7.3f    \t\t",i+1,cluster_count[i],cluster_pip[i],cluster_r2[i]);
             int counti = grpr2_map[i];
 

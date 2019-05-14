@@ -95,7 +95,7 @@ class controller {
         double log10_pnorm;
 
 
-        map<string,double> single_log10_abfv;
+
 
         // threshold 
         double snp_select_thresh;   // conditional inclusion prob.
@@ -134,6 +134,7 @@ class controller {
         vector<vector<int> > grp_vec;
         map<int,int> grpr2_map;
         map<string, double> grp_r2;
+        map<string,double> single_log10_abfv;
 
         // public interface
         int run_option; 
@@ -231,6 +232,10 @@ class controller {
 
         int get_N(){
             return N;
+        }
+
+        int get_output_all(){
+            return output_all;
         }
 
 

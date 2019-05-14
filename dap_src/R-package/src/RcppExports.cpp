@@ -6,7 +6,7 @@
 using namespace Rcpp;
 
 // dap
-int dap(List arg);
+List dap(List arg);
 RcppExport SEXP _dap_dap(SEXP argSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;

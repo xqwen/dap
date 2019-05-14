@@ -7,9 +7,10 @@
 using namespace Rcpp;
 using namespace std;
 
+List summary_option_0(controller& con);
 
 // [[Rcpp::export]]
-int dap(List arg) {
+List dap(List arg) {
   char grid_file[128];
   char data_file[128];
   char zval_file[128];
@@ -279,10 +280,78 @@ int dap(List arg) {
   con.print_dap_config();
 
   con.run();
-  return 0;
+  return summary_option_0(con);
 
 }
 
+List summary_option_0(controller& con){
+  int n_nmodel = con.nmodel_vec.size();
+  NumericVector   nmodel_prob, nmodel_post;
+  IntegerVector   nmodel_size;
+  CharacterVector nmodel_name;
+
+  for(int i=0;i<n_nmodel;i++){
+    Nmodel& nm = con.nmodel_vec[i];
+
+    nmodel_prob.push_back(nm.prob);
+    nmodel_size.push_back(nm.size);
+    nmodel_post.push_back(nm.post_score);
+    nmodel_name.push_back(nm.id);
+  }
+
+  DataFrame nmodel = DataFrame::create(Named("posterior")     = nmodel_prob,
+                                       Named("size")          = nmodel_size,
+                                       Named("score")         = nmodel_post,
+                                       Named("configuration") = nmodel_name);
+  NumericVector msize = NumericVector::create(Named("mean")=con.get_msize_mean(), Named("sd")=con.get_msize_sd());
+
+
+  double min_pip    = con.get_min_pip();
+  int    output_all = con.get_output_all();
+  int    n_snp      = con.nsnp_vec.size();
+
+  CharacterVector nsnp_name;
+  NumericVector   nsnp_prob, nsnp_abfv;
+  IntegerVector   nsnp_cluster;
+
+  for(int i=0;i<n_snp;i++){
+    NSNP& nsnp = con.nsnp_vec[i];
+
+    if(nsnp.incl_prob < min_pip)
+      nsnp.incl_prob = min_pip;
+    if(nsnp.incl_prob<1e-3&&!output_all)
+      break;
+    if(nsnp.cluster==-1&&!output_all)
+      continue;
+    nsnp_name.push_back(nsnp.name);
+    nsnp_prob.push_back(nsnp.incl_prob);
+    nsnp_abfv.push_back(con.single_log10_abfv[nsnp.name]);
+    nsnp_cluster.push_back(nsnp.cluster);
+  }
+
+  DataFrame SNP = DataFrame::create(Named("snp")=nsnp_name,
+                                    Named("pip")=nsnp_prob,
+                                    Named("log10abf")=nsnp_abfv,
+                                    Named("cluster") =nsnp_cluster);
+
+
+
+  // IntegerVector cluster_count = wrap(con.cluster_count);
+  DataFrame cluster = DataFrame::create(Named("n.snp") = wrap(con.cluster_count),
+                                        Named("cluster.pip") = wrap(con.cluster_pip),
+                                        Named("average.r2")  = wrap(con.cluster_r2));
+  // int n_cluster = cluster_count.size();
+
+
+
+  return List::create(Named("snp") = SNP,
+                      Named("cluster") = cluster,
+                      Named("model") = nmodel,
+                      Named("model.size") = msize,
+                      Named("log10NC") = con.get_log10_pnorm(),
+                      Named("PIP.min") = min_pip,
+                      Named("N") = con.get_N());
+}
 
 
 
