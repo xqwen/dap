@@ -5,3 +5,7 @@ dap_main <- function(arg) {
     .Call(`_dap_dap_main`, arg)
 }
 
+read_sbams <- function(data_file) {
+    .Call(`_dap_read_sbams`, data_file)
+}
+

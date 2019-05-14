@@ -11,7 +11,7 @@ dap(file, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_thresh=0.01, all=FAL
 
 \item{ens}{(optional) prior expected number of signals, \code{ens=1} by default.}
 
-\item{pi1}{(optional) the exchangeable prior probability, values \code{0<pi1<1} accepted. By default -1, \code{pi1=ens/p}, where \code{p} is number of genes in the input file.}
+\item{pi1}{(optional) the exchangeable prior probability, values \code{0<pi1<1} accepted. By default -1, \code{pi1=ens/p}, where \code{p} is number of SNPs in the input file.}
 
 \item{ld_control}{(optional) the LD threshold to be considered within a single signal cluster. By default, the threshold is set to 0.25.}
 

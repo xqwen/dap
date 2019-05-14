@@ -16,9 +16,21 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// read_sbams
+List read_sbams(const char * data_file);
+RcppExport SEXP _dap_read_sbams(SEXP data_fileSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const char * >::type data_file(data_fileSEXP);
+    rcpp_result_gen = Rcpp::wrap(read_sbams(data_file));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_dap_dap_main", (DL_FUNC) &_dap_dap_main, 1},
+    {"_dap_read_sbams", (DL_FUNC) &_dap_read_sbams, 1},
     {NULL, NULL, 0}
 };
 
