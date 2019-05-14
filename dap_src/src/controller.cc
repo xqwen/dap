@@ -945,15 +945,14 @@ void controller::summarize_approx_posterior(){
     std::sort(nmodel_vec.begin(),nmodel_vec.end(),sort_nmodel_dec);
 
 
-    nsnp_vec_sort = nsnp_vec;
-    std::sort(nsnp_vec_sort.begin(),nsnp_vec_sort.end(),sort_nsnp_dec_by_ip);
+    std::sort(nsnp_vec.begin(),nsnp_vec.end(),sort_nsnp_dec_by_ip);
 
     map<string, int> snp2index;
-    for(int i=0;i<nsnp_vec_sort.size();i++){
+    for(int i=0;i<nsnp_vec.size();i++){
         //if(nsnp_vec_sort[i].incl_prob<1e-3&&!output_all)
         //    break;
-        nsnp_vec_sort[i].cluster = -1;
-        snp2index[nsnp_vec_sort[i].name] = i;
+        nsnp_vec[i].cluster = -1;
+        snp2index[nsnp_vec[i].name] = i;
     }
     // estimate min_pip from BIC approximation
     min_pip = (1-null_prob)*prior_ratio/sqrt(N);
@@ -970,12 +969,12 @@ void controller::summarize_approx_posterior(){
             if(snp2index.find(sname) == snp2index.end())
                 continue;
             int index = snp2index[sname];
-            double prob = nsnp_vec_sort[index].incl_prob;  
+            double prob = nsnp_vec[index].incl_prob;
             // we don't consider a SNP as a noteworthy cluster memeber if its pip < min_pip
             if(prob > min_pip){
                 member_vec.push_back(snp);
                 cluster_prob += prob;
-                nsnp_vec_sort[index].cluster = cluster_index;
+                nsnp_vec[index].cluster = cluster_index;
             }
         }
         if(member_vec.size()>0){
@@ -1032,14 +1031,14 @@ void controller::summary_output() {
     fprintf(outfd,"\nPosterior inclusion probability\n\n");
 
 
-    for(int i=0;i<nsnp_vec_sort.size();i++){
-        if(nsnp_vec_sort[i].incl_prob < min_pip)
-            nsnp_vec_sort[i].incl_prob = min_pip;
-        if(nsnp_vec_sort[i].incl_prob<1e-3&&!output_all)
+    for(int i=0;i<nsnp_vec.size();i++){
+        if(nsnp_vec[i].incl_prob < min_pip)
+            nsnp_vec[i].incl_prob = min_pip;
+        if(nsnp_vec[i].incl_prob<1e-3&&!output_all)
             break;
-        if(nsnp_vec_sort[i].cluster==-1&&!output_all)
+        if(nsnp_vec[i].cluster==-1&&!output_all)
             continue;
-        fprintf(outfd,"((%d))\t%15s\t%8.5e\t%7.3f\t%d\n",i+1, nsnp_vec_sort[i].name.c_str(), nsnp_vec_sort[i].incl_prob, single_log10_abfv[nsnp_vec_sort[i].name], nsnp_vec_sort[i].cluster);
+        fprintf(outfd,"((%d))\t%15s\t%8.5e\t%7.3f\t%d\n",i+1, nsnp_vec[i].name.c_str(), nsnp_vec[i].incl_prob, single_log10_abfv[nsnp_vec[i].name], nsnp_vec[i].cluster);
     }
 
 

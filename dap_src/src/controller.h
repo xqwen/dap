@@ -84,7 +84,7 @@ class controller {
         // for reporting
         map<string,int> nsnp_map;
 
-        vector<NSNP> nsnp_vec;
+
 
 
         // output pip for all SNPs default only output those > 0.001
@@ -122,11 +122,10 @@ class controller {
     public:
         // for reporting
         vector<Nmodel> nmodel_vec;
+        vector<NSNP> nsnp_vec;
         double msize_mean;
         double msize_var;
         double min_pip;
-
-        vector<NSNP> nsnp_vec_sort;
 
         vector<double> cluster_pip;
         vector<double> cluster_r2;

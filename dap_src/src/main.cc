@@ -237,7 +237,7 @@ int main(int argc, char **argv){
     }
 
     // remember to delete the following line
-    con.set_for_r();
+//    con.set_for_r();
 
     con.set_outfile(out_file, log_file);
 
