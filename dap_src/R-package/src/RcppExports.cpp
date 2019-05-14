@@ -5,20 +5,20 @@
 
 using namespace Rcpp;
 
-// dap
-List dap(List arg);
-RcppExport SEXP _dap_dap(SEXP argSEXP) {
+// dap_main
+List dap_main(List arg);
+RcppExport SEXP _dap_dap_main(SEXP argSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type arg(argSEXP);
-    rcpp_result_gen = Rcpp::wrap(dap(arg));
+    rcpp_result_gen = Rcpp::wrap(dap_main(arg));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_dap_dap", (DL_FUNC) &_dap_dap, 1},
+    {"_dap_dap_main", (DL_FUNC) &_dap_dap_main, 1},
     {NULL, NULL, 0}
 };
 

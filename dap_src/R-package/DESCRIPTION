@@ -1,13 +1,15 @@
 Package: dap
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Integrative Genetic Association Analysis using Deterministic Approximation of Posteriors
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Author: Ketian Yu, William Wen
+Maintainer: Ketian Yu <yukt@umich.edu>
+Description: Interface for reading and analyzing sbams file.
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
-Imports: Rcpp (>= 1.0.0)
-LinkingTo: Rcpp
+LinkingTo: 
+    Rcpp
+Imports: 
+    Rcpp
+RoxygenNote: 6.1.1

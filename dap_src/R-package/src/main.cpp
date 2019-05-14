@@ -10,7 +10,7 @@ using namespace std;
 List summary_option_0(controller& con);
 
 // [[Rcpp::export]]
-List dap(List arg) {
+List dap_main(List arg) {
   char grid_file[128];
   char data_file[128];
   char zval_file[128];
@@ -334,23 +334,42 @@ List summary_option_0(controller& con){
                                     Named("log10abf")=nsnp_abfv,
                                     Named("cluster") =nsnp_cluster);
 
+  List result = List::create(Named("snp") = SNP,
+                             Named("model") = nmodel,
+                             Named("model.size") = msize,
+                             Named("log10NC") = con.get_log10_pnorm(),
+                             Named("PIP.min") = min_pip,
+                             Named("N") = con.get_N());
 
+  if(con.grp_vec.size() > 0){
+    DataFrame cluster = DataFrame::create(Named("n.snp") = wrap(con.cluster_count),
+                                          Named("cluster.pip") = wrap(con.cluster_pip),
+                                          Named("average.r2")  = wrap(con.cluster_r2));
 
-  // IntegerVector cluster_count = wrap(con.cluster_count);
-  DataFrame cluster = DataFrame::create(Named("n.snp") = wrap(con.cluster_count),
-                                        Named("cluster.pip") = wrap(con.cluster_pip),
-                                        Named("average.r2")  = wrap(con.cluster_r2));
-  // int n_cluster = cluster_count.size();
+    int n_cluster = con.cluster_count.size();
+    NumericMatrix r2 (n_cluster);
+    for(int i=0; i<n_cluster; i++){
+      r2(i,i) = con.cluster_r2[i];
+      int counti = con.grpr2_map[i];
+      for(int k=i+1; k<n_cluster; k++){
+        int countk = con.grpr2_map[k];
+        string id;
+        if(countk<counti)
+          id = to_string(countk)+ ":"+to_string(counti);
+        if(countk>counti)
+          id = to_string(counti)+":"+to_string(countk);
+        r2(i,k) = con.grp_r2[id];
+        r2(k,i) = r2(i,k);
+      }
+    }
+    rownames(r2) = wrap(con.cluster_id);
+    colnames(r2) = rownames(r2);
 
+    result.push_front(r2, "cluster.r2");
+    result.push_front(cluster, "cluster");
+  }
 
-
-  return List::create(Named("snp") = SNP,
-                      Named("cluster") = cluster,
-                      Named("model") = nmodel,
-                      Named("model.size") = msize,
-                      Named("log10NC") = con.get_log10_pnorm(),
-                      Named("PIP.min") = min_pip,
-                      Named("N") = con.get_N());
+  return result;
 }
 
 
