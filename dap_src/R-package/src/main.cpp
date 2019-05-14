@@ -66,7 +66,6 @@ List dap_main(List arg) {
 
   vector< string > mystrings =  arg.attr("names");
 
-  strcpy(out_file, "output.dap");
   for(int i=0; i<arg.size(); i++)
   {
     // required data files and additional info

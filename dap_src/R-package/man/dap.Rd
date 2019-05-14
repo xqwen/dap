@@ -2,35 +2,33 @@
 % Please edit documentation in R/main.R
 \name{dap}
 \alias{dap}
-\title{Integrative Genetic Association Analysis using Deterministic Approximation of Posteriors}
+\title{DAP}
 \usage{
-dap(file="/path/to/sbams/file")
-dap(sbams=a.sbams.object)
-dap(ld="/path/to/ld/file", est="/path/to/est/file", n, syy)
+dap(file, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_thresh=0.01, all=FALSE, size_limit=-1, thread=1)
 }
 \arguments{
 \item{file}{file path to a sbams file}
 
-\item{sbams}{a sbams object}
+\item{ens}{(optional) prior expected number of signals, \code{ens=1} by default.}
 
-\item{ld}{file path to a ld file}
+\item{pi1}{(optional) the exchangeable prior probability, values \code{0<pi1<1} accepted. By default -1, \code{pi1=ens/p}, where \code{p} is number of genes in the input file.}
 
-\item{est}{file path to a est file}
+\item{ld_control}{(optional) the LD threshold to be considered within a single signal cluster. By default, the threshold is set to 0.25.}
 
-\item{n}{an integer indicating the sample size}
+\item{msize}{(optional) the maximum size of model dap-g explores. Valid maximum model size ranges from \code{1} to \code{p}. By default -1, it is set to \code{p}, i.e., there is no restriction on how large the true association model can be. If it is specified, the DAP-G runs DAP-K algorithm and stops at the specified maximum model size.}
 
-\item{syy}{a float number indicating the total sum of squares for the quantitative trait}
+\item{converg_thresh}{(optional)  the stopping condition for model exploration. By default, \code{converg_thresh=0.01}.}
+
+\item{all}{(optional) If TRUE, dap will output information for all SNPs and all signal clusters. By default, only SNPs with \code{PIP > 0.001} and signal clusters with \code{SPIP > 0.25} are output.}
+
+\item{thread}{(optional) the number of parallel threads to run DAP algorithm, 1 by default. OpenMP is required for multi-thread option.}
 }
 \value{
 a dap object including model summary, SNP summary and signal cluster summary
 }
 \description{
-The \code{dap} function accepts two different sets of inputs.
-\enumerate{
-\item sbams (either file path or object)
-\item summary statistics (ld, est, n, syy)
-}
+Integrative Genetic Association Analysis using Deterministic Approximation of Posteriors
 }
 \details{
-The summary statistics can be obtained by \code{summary(a.sbams.object)}.
+Please refer to \url{https://github.com/xqwen/dap/tree/master/dap_src} for more details.
 }
