@@ -85,7 +85,6 @@ class controller {
         map<string,int> nsnp_map;
 
         vector<NSNP> nsnp_vec;
-        vector<Nmodel> nmodel_vec;
 
 
         // output pip for all SNPs default only output those > 0.001
@@ -121,6 +120,21 @@ class controller {
         bool run_in_r;
 
     public:
+        // for reporting
+        vector<Nmodel> nmodel_vec;
+        double msize_mean;
+        double msize_var;
+        double min_pip;
+
+        vector<NSNP> nsnp_vec_sort;
+
+        vector<double> cluster_pip;
+        vector<double> cluster_r2;
+        vector<int> cluster_count;
+        vector<int> cluster_id;
+        vector<vector<int> > grp_vec;
+        map<int,int> grpr2_map;
+        map<string, double> grp_r2;
 
         // public interface
         int run_option; 
@@ -193,8 +207,31 @@ class controller {
             #endif
         }
 
+
+        // for R use
+
         void set_for_r(){
             run_in_r = true;
+        }
+
+        double get_msize_mean(){
+            return msize_mean;
+        }
+
+        double get_msize_sd(){
+            return sqrt(msize_var);
+        }
+
+        double get_log10_pnorm(){
+            return log10_pnorm;
+        }
+
+        double get_min_pip(){
+            return min_pip;
+        }
+
+        int get_N(){
+            return N;
         }
 
 
@@ -220,6 +257,7 @@ class controller {
 
         // reporting
         void summarize_approx_posterior();
+        void summary_output();
 
 
         // utility

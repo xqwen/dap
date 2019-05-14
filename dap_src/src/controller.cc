@@ -174,8 +174,6 @@ void controller::set_default_grid(){
 void controller::set_outfile(char *outfile, char *logfile){
     if(run_in_r){
         logfd = stdout;
-        outfd = stderr;
-        fclose(stderr);
         return;
     }
 
@@ -476,6 +474,7 @@ void controller::fine_map(){
 
     }
     summarize_approx_posterior();
+    if(not run_in_r) summary_output();
 
 }
 
@@ -915,8 +914,8 @@ void controller::summarize_approx_posterior(){
 
     double cump = nm.prob;
 
-    double msize_mean = 0;
-    double msize_var = 0;
+    msize_mean = 0;
+    msize_var = 0;
 
     for(int i=0;i<szm_vec.size();i++){
 
@@ -946,26 +945,7 @@ void controller::summarize_approx_posterior(){
     std::sort(nmodel_vec.begin(),nmodel_vec.end(),sort_nmodel_dec);
 
 
-    for(int i=0;i<nmodel_vec.size();i++){
-
-        string name = nmodel_vec[i].id;
-
-        size_t start_pos = 0;
-        while((start_pos = name.find("&", start_pos)) != std::string::npos) {
-            name.replace(start_pos, 1 , "] [");
-            start_pos += 3; 
-        }
-
-        fprintf(outfd, "%5d   %7.4e    %d    %7.3f   [%s]\n",i+1, nmodel_vec[i].prob, nmodel_vec[i].size, nmodel_vec[i].post_score, name.c_str());
-
-    }
-
-
-    fprintf(outfd, "\nPosterior expected model size: %.3f (sd = %.3f)\n", msize_mean, sqrt(msize_var));
-    fprintf(outfd, "LogNC = %.5f ( Log10NC = %.3f )", log10_pnorm/log10(exp(1)), log10_pnorm);
-
-
-    vector<NSNP> nsnp_vec_sort = nsnp_vec;
+    nsnp_vec_sort = nsnp_vec;
     std::sort(nsnp_vec_sort.begin(),nsnp_vec_sort.end(),sort_nsnp_dec_by_ip);
 
     map<string, int> snp2index;
@@ -976,15 +956,8 @@ void controller::summarize_approx_posterior(){
         snp2index[nsnp_vec_sort[i].name] = i;
     }
     // estimate min_pip from BIC approximation
-    double min_pip = (1-null_prob)*prior_ratio/sqrt(N);
-    fprintf(outfd, "\nMinimum PIP is estimated at %7.3e (N = %d)\n", min_pip, N);
+    min_pip = (1-null_prob)*prior_ratio/sqrt(N);
 
-    vector<double> cluster_pip;
-    vector<double> cluster_r2;
-    vector<int> cluster_count;
-    vector<int> cluster_id;
-    vector<vector<int> > grp_vec;
-    map<int,int> grpr2_map;
     int cluster_index = 1;
     for(int i=0;i<szm_vec.size();i++){
 
@@ -1021,7 +994,6 @@ void controller::summarize_approx_posterior(){
 
     }       
 
-    map<string, double> grp_r2;
     if(grp_vec.size()>1){
 
         for(int i=0;i<grp_vec.size();i++){
@@ -1032,6 +1004,30 @@ void controller::summarize_approx_posterior(){
             }
         }
     }
+
+
+}
+
+void controller::summary_output() {
+    for(int i=0;i<nmodel_vec.size();i++){
+
+        string name = nmodel_vec[i].id;
+
+        size_t start_pos = 0;
+        while((start_pos = name.find("&", start_pos)) != std::string::npos) {
+            name.replace(start_pos, 1 , "] [");
+            start_pos += 3;
+        }
+
+        fprintf(outfd, "%5d   %7.4e    %d    %7.3f   [%s]\n",i+1, nmodel_vec[i].prob, nmodel_vec[i].size, nmodel_vec[i].post_score, name.c_str());
+
+    }
+
+
+    fprintf(outfd, "\nPosterior expected model size: %.3f (sd = %.3f)\n", msize_mean, sqrt(msize_var));
+    fprintf(outfd, "LogNC = %.5f ( Log10NC = %.3f )", log10_pnorm/log10(exp(1)), log10_pnorm);
+
+    fprintf(outfd, "\nMinimum PIP is estimated at %7.3e (N = %d)\n", min_pip, N);
 
     fprintf(outfd,"\nPosterior inclusion probability\n\n");
 
@@ -1062,7 +1058,7 @@ void controller::summarize_approx_posterior(){
                 if(grpr2_map.find(k) == grpr2_map.end())
                     continue;
                 int countk = grpr2_map[k];
-                string id; 
+                string id;
                 if(countk == counti){
                     fprintf(outfd,"%7.3f\t",cluster_r2[counti]);
                     continue;
@@ -1075,10 +1071,8 @@ void controller::summarize_approx_posterior(){
 
             }
             fprintf(outfd,"\n");
-            counti++;
         }
     }
-
 }
 
 
