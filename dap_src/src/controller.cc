@@ -885,7 +885,7 @@ void controller::summarize_approx_posterior(){
     }
 
     vector<double> wv1(log10_pmass_vec.size(),1.0);
-    double log10_pip_NC = mlr.log10_weighted_sum(log10_pmass_vec,wv1);
+//    double log10_pip_NC = mlr.log10_weighted_sum(log10_pmass_vec,wv1);
 
     double val = log10_pmass_vec[log10_pmass_vec.size()-1];
 
@@ -913,6 +913,11 @@ void controller::summarize_approx_posterior(){
     nm.post_score = log10_pmass_vec[0];
     nmodel_vec.push_back(nm);
 
+    double cump = nm.prob;
+
+    double msize_mean = 0;
+    double msize_var = 0;
+
     for(int i=0;i<szm_vec.size();i++){
 
         map<string, double>::iterator iter;
@@ -922,16 +927,23 @@ void controller::summarize_approx_posterior(){
             nm.post_score = iter->second;
             nm.prob = pow(10, iter->second-log10_pnorm);
             nm.size = szm_vec[i].size;
-            nmodel_vec.push_back(nm);
+            if(nm.prob >= 1e-5)
+                nmodel_vec.push_back(nm);
             parse_nmodel(nm);
+
+            cump += nm.prob;
+            msize_mean += nm.prob*nm.size;
+            msize_var  += nm.prob*pow(nm.size,2);
+
         }
     }
 
-    std::sort(nmodel_vec.begin(),nmodel_vec.end(),sort_nmodel_dec);
-    double cump = 0;
+    msize_var -= pow(msize_mean,2.0);
+    if(msize_var < 0){
+        msize_var = 0;
+    }
 
-    double msize_mean = 0;
-    double msize_var = 0;
+    std::sort(nmodel_vec.begin(),nmodel_vec.end(),sort_nmodel_dec);
 
 
     for(int i=0;i<nmodel_vec.size();i++){
@@ -944,20 +956,8 @@ void controller::summarize_approx_posterior(){
             start_pos += 3; 
         }
 
-        if( nmodel_vec[i].prob >= 1e-5 || name == "NULL"){
-            fprintf(outfd, "%5d   %7.4e    %d    %7.3f   [%s]\n",i+1, nmodel_vec[i].prob, nmodel_vec[i].size, nmodel_vec[i].post_score, name.c_str());
-        }
-        cump += nmodel_vec[i].prob;
-        msize_mean += nmodel_vec[i].prob*nmodel_vec[i].size;
-        msize_var  += nmodel_vec[i].prob*pow(nmodel_vec[i].size,2);
+        fprintf(outfd, "%5d   %7.4e    %d    %7.3f   [%s]\n",i+1, nmodel_vec[i].prob, nmodel_vec[i].size, nmodel_vec[i].post_score, name.c_str());
 
-    }
-
-
-
-    msize_var -= pow(msize_mean,2.0);
-    if(msize_var < 0){
-        msize_var = 0;
     }
 
 
