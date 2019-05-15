@@ -235,8 +235,28 @@ class controller {
             return N;
         }
 
+        int get_p(){
+            return p;
+        }
+
         int get_output_all(){
             return output_all;
+        }
+
+        int get_max_size(){
+            return max_size;
+        }
+
+        double get_ld_control_thresh(){
+            return ld_control_thresh;
+        }
+
+        double get_size_select_thresh(){
+            return size_select_thresh;
+        }
+
+        int get_nthread(){
+            return nthread;
         }
 
 

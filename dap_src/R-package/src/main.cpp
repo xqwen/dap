@@ -8,6 +8,7 @@ using namespace Rcpp;
 using namespace std;
 
 List summary_option_0(controller& con);
+void print_dap_config(controller& con);
 
 // [[Rcpp::export]]
 List dap_main(List arg) {
@@ -500,8 +501,8 @@ List dap_sbams(NumericMatrix& x, NumericVector& y, int normalize, List arg){
 
 
   // all done, print all configs
-  con.print_dap_config();
-
+  // con.print_dap_config();
+  print_dap_config(con);
   con.run();
   return summary_option_0(con);
 }
@@ -598,5 +599,31 @@ List summary_option_0(controller& con){
   return result;
 }
 
+void print_dap_config(controller& con){
+  Rcout << "\n============ DAP Configuration ============\n\n";
+  Rcout << "INPUT\n\n";
+
+  Rcout << "\t* individual-level data\n";
+  Rprintf("\t* number of candidate predictors: %i\n", con.get_p());
+  Rprintf("\t* sample size: %i\n\n", con.get_N());
+
+  Rcout << "PROGRAM OPTIONS\n\n";
+  Rprintf("\t* maximum model size allowed [ msize = %i ] ", con.get_max_size());
+  if(con.get_max_size()==con.get_p())
+    Rcout << "(no restriction)\n";
+  else
+    Rcout << "\n";
+
+  Rprintf("\t* LD control threshold [ ld_control = %.2f ]\n", con.get_ld_control_thresh());
+  Rprintf("\t* normalizing constant convergence threshold [ converg_thresh = %.2e ] (log10 scale)\n", con.get_size_select_thresh());
+
+  #ifdef _OPENMP
+    Rprintf("\t* number of parallel threads [ thread = %i ]\n", con.get_nthread());
+  #else
+    Rcout << "\t* number of parallel threads [ thread = 1 ] (OpenMP not available)\n";
+  #endif
+
+  Rcout << "\n===========================================\n";
+}
 
 

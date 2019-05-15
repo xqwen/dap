@@ -41,7 +41,7 @@ dap = function(formula, data, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_
   if(class(ens)=="numeric" & ens > 0)       params$ens=ens
   if(class(pi1)=="numeric" & pi1>0 & pi1<1) params$pi1=pi1
   if(class(ld_control)=="numeric" & ld_control>=0 & ld_control<1) params$ld_control=ld_control
-  if(class(msize)=="numeric" & msize >= 1)  params$msize=msize
+  if(class(msize)=="numeric" & as.integer(msize) >= 1)  params$msize=as.integer(msize)
   if(class(converg_thresh)=="numeric" & converg_thresh>=0) params$converg_thresh=converg_thresh
   if(class(all)=="logical" & all) params$all=1
   if(class(size_limit)=="numeric" & size_limit>=1) params$size_limit=size_limit
@@ -79,7 +79,7 @@ dap.sbams <- function(file, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_th
   if(class(ens)=="numeric" & ens > 0)       params$ens=ens
   if(class(pi1)=="numeric" & pi1>0 & pi1<1) params$pi1=pi1
   if(class(ld_control)=="numeric" & ld_control>=0 & ld_control<1) params$ld_control=ld_control
-  if(class(msize)=="numeric" & msize >= 1)  params$msize=msize
+  if(class(msize)=="numeric" & as.integer(msize) >= 1)  params$msize=as.integer(msize)
   if(class(converg_thresh)=="numeric" & converg_thresh>=0) params$converg_thresh=converg_thresh
   if(class(all)=="logical" & all) params$all=1
   if(class(size_limit)=="numeric" & size_limit>=1) params$size_limit=size_limit
