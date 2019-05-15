@@ -36,6 +36,9 @@ class parser {
   void process_summary_data(char *zval_file, char *ld_file, int sample_size = -1, int ld_format=1);
   void process_summary_data2(char *effect_file, char *ld_file, int sample_size, double syy,int ld_format=1);
   void output();
+
+  // for R use only
+  void process_data(vector<double>& pheno, vector<vector<double> >& geno, string grp, string name, vector<string>& geno_name, bool regress);
   
   
 

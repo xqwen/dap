@@ -223,6 +223,31 @@ void parser::process_data(char *filename){
         */
 }
 
+void parser::process_data(vector<double>& pheno, vector<vector<double> >& geno, string grp, string name, vector<string>& geno_name, bool regress){
+    // Notice: do not support multi-group!
+    // Does not support controlled variates for now.
+
+    covar_vec.resize(1);
+
+    pheno_vec.resize(1);
+    pheno_name = name;
+    pheno_vec[0] = pheno;
+    pheno_map[0] = grp;
+    pheno_index[string(grp)] = 0;
+
+    geno_vec.resize(1);
+    geno_vec[0] = geno;
+    for(int i=0; i<geno_name.size(); i++){
+        string gname = geno_name[i];
+        geno_map[i] = gname;
+        geno_rmap[gname] = i;
+    }
+
+    if(regress)
+        regress_cov(pheno_vec[0], covar_vec[0], geno_vec[0]);
+}
+
+
 void parser::process_line(string line){
 
     // parsing

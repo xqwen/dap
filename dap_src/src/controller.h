@@ -209,6 +209,7 @@ class controller {
 
 
         // for R use
+        void initialize(vector<double>& pheno, vector<vector<double> >& geno, vector<string>& geno_name, char *grid_file, bool regress);
 
         void set_for_r(){
             run_in_r = true;

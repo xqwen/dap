@@ -283,6 +283,230 @@ List dap_main(List arg) {
 
 }
 
+// [[Rcpp::export]]
+List dap_sbams(NumericMatrix& x, NumericVector& y, int normalize, List arg){
+
+  char grid_file[128];
+  char out_file[128];
+  char log_file[128];
+  char gene_name[64];
+  char prior_file[128];
+
+  memset(grid_file,0,128);
+  memset(out_file,0,128);
+  memset(log_file,0,128);
+  memset(gene_name,0,64);
+  memset(prior_file,0,128);
+
+
+  double abf_option = -1;
+
+  int msize =-1;
+
+  int output_all = 0;
+
+  double pes = 1.0;
+  double pi1 = -1;
+
+  double ld_control = -1;
+
+  int size_limit = -1;
+
+  int sample_size = -1;
+  double syy = -1;
+
+  double snp_select_thresh = -1;
+  double size_select_thresh = -1;
+
+  // alternative non-fm running options
+  int run_scan = 0;
+
+  int thread = 1;
+
+
+  vector< string > mystrings =  arg.attr("names");
+
+  for(int i=0; i<arg.size(); i++)
+  {
+    // required data files and additional info
+    if(mystrings[i]=="grid")
+    {
+      strcpy(grid_file, arg[i]);
+      continue;
+    }
+
+    if(mystrings[i]=="n")
+    {
+      sample_size = arg[i];
+      continue;
+    }
+    if(mystrings[i]=="syy")
+    {
+      syy = arg[i];
+      continue;
+    }
+
+
+    // prior file
+    if(mystrings[i]=="prior")
+    {
+      strcpy(prior_file, arg[i]);
+      continue;
+    }
+
+    // prior options
+
+    if(mystrings[i]=="ens"){
+      pes = arg[i];
+      continue;
+    }
+
+
+    if(mystrings[i]=="pi1"){
+      pi1 = arg[i];
+      continue;
+    }
+
+    if(mystrings[i]=="abf"){
+      abf_option = arg[i];
+      continue;
+    }
+
+    // thresholds
+
+    if(mystrings[i]=="converg_thresh"){
+      size_select_thresh = arg[i];
+      continue;
+    }
+
+    if(mystrings[i]=="size_limit"){
+      size_limit = arg[i];
+      continue;
+    }
+
+    if(mystrings[i]=="no_size_limit"){
+      size_limit = -1;
+      continue;
+    }
+
+
+    if(mystrings[i]=="ld_control"){
+      ld_control = arg[i];
+      continue;
+    }
+
+    // msize option  for DAP-K
+    if(mystrings[i]=="msize" || mystrings[i]=="dapk"){
+      msize = arg[i];
+      continue;
+    }
+
+
+    // openmp threads
+
+    if(mystrings[i]=="t"){
+      thread = arg[i];
+      continue;
+    }
+
+
+    // output option
+    if(mystrings[i]=="all"){
+      output_all = 1;
+      continue;
+    }
+
+    // gene/locus name
+    if(mystrings[i]=="name"){
+      strcpy(gene_name, arg[i]);
+      continue;
+    }
+
+    // no finemapping, just single SNP analysis
+    if(mystrings[i]=="scan"){
+      run_scan = 1;
+      continue;
+    }
+
+    stop("Unknow option ", mystrings[i]);
+  }
+
+  bool regress = true;
+  if(normalize==0) regress = false;
+
+  int n_gene = x.ncol(), n_ind = x.nrow();
+  vector<string> genonames = as<vector<string>>(colnames(x));
+  vector<double> pheno = as<vector<double>>(y);
+  vector<vector<double>> geno;
+  geno.resize(n_gene);
+  for(int i=0; i<n_gene; i++){
+    NumericVector v = x(_,i);
+    geno[i] = as<vector<double>>(v);
+    geno[i].resize(n_ind);
+  }
+
+
+  controller con;
+
+  con.initialize(pheno, geno, genonames, grid_file, regress);
+
+  con.set_for_r();
+
+  con.set_outfile(out_file, log_file);
+
+  con.set_gene(gene_name);
+  con.set_abf_option(abf_option);
+  con.set_thread(thread);
+
+  con.set_size_limit(size_limit);
+
+  if(ld_control>=0)
+    con.set_ld_control(ld_control);
+
+  if(msize>=1){
+    con.set_max_size(msize);
+  }
+
+
+  if(strlen(prior_file)==0){
+    if(pi1 != -1){
+      if(0<pi1 && pi1 <1){
+        con.set_prior(pi1);
+      }else{
+        warning("Warning: pi1 specification is outside the range, ignored...\n");
+        con.set_prior_exp(pes);
+      }
+    }else{
+      // default
+      con.set_prior_exp(pes);
+    }
+  }else
+    con.set_prior(prior_file);
+
+  if(output_all == 1)
+    con.set_output_all();
+
+  if(snp_select_thresh>=0)
+    con.set_snp_select_thresh(snp_select_thresh);
+
+  if(size_select_thresh >=0)
+    con.set_size_select_thresh(size_select_thresh);
+
+  con.run_option = 0;
+
+  if(run_scan){
+    con.run_option = 1;
+  }
+
+
+  // all done, print all configs
+  con.print_dap_config();
+
+  con.run();
+  return summary_option_0(con);
+}
+
+
 List summary_option_0(controller& con){
   int n_nmodel = con.nmodel_vec.size();
   NumericVector   nmodel_prob, nmodel_post;
@@ -328,20 +552,23 @@ List summary_option_0(controller& con){
     nsnp_cluster.push_back(nsnp.cluster);
   }
 
-  DataFrame SNP = DataFrame::create(Named("snp")=nsnp_name,
+  DataFrame SNP = DataFrame::create(Named("predictor")=nsnp_name,
                                     Named("pip")=nsnp_prob,
                                     Named("log10abf")=nsnp_abfv,
                                     Named("cluster") =nsnp_cluster);
 
-  List result = List::create(Named("snp") = SNP,
+  List info = List::create(Named("model.size") = msize,
+                           Named("log10NC") = con.get_log10_pnorm(),
+                           Named("PIP.min") = min_pip,
+                           Named("N") = con.get_N());
+
+
+  List result = List::create(Named("signal") = SNP,
                              Named("model") = nmodel,
-                             Named("model.size") = msize,
-                             Named("log10NC") = con.get_log10_pnorm(),
-                             Named("PIP.min") = min_pip,
-                             Named("N") = con.get_N());
+                             Named("summary") = info);
 
   if(con.grp_vec.size() > 0){
-    DataFrame cluster = DataFrame::create(Named("n.snp") = wrap(con.cluster_count),
+    DataFrame cluster = DataFrame::create(Named("cluster.size") = wrap(con.cluster_count),
                                           Named("cluster.pip") = wrap(con.cluster_pip),
                                           Named("average.r2")  = wrap(con.cluster_r2));
 

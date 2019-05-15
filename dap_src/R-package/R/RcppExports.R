@@ -5,6 +5,10 @@ dap_main <- function(arg) {
     .Call(`_dap_dap_main`, arg)
 }
 
+dap_sbams <- function(x, y, normalize, arg) {
+    .Call(`_dap_dap_sbams`, x, y, normalize, arg)
+}
+
 read_sbams <- function(data_file) {
     .Call(`_dap_read_sbams`, data_file)
 }
