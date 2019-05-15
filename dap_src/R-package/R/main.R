@@ -71,6 +71,12 @@ print.dap = function(object, digits = max(3L, getOption("digits") - 3L)){
     cat("\nNo Independent Association Signal Clusters.\n")
   }
 
+  cat("\nOne of the best models is:\n")
+  cat("\t", strsplit(strsplit(deparse(object$call), "~")[[1]][1], "\"")[[1]][2],"~", gsub("&", " + ", object$model$configuration[1]), "\n\n")
+
+  cat("Please refer to <dap.object>$signal for PIP of top predictors,\n")
+  cat("       and <dap.object>$model for configuration of top models.\n")
+
   cat("\n")
   invisible(object)
 }
@@ -80,6 +86,10 @@ summary.dap = function(object){
     warning("calling summary.dap(<fake-dap-object>) ...")
   ans = object[c("call", "info")]
   ans$call = object$call
+
+  n_top_model = min(5, nrow(object$model))
+  model = sapply(1:n_top_model, function(i) gsub("&", " + ", object$model$configuration[i]))
+  ans$top.models = data.frame(model, object$model[1:n_top_model,c(2,1,3)])
 
   if(length(object$cluster)){
     ncluster = nrow(object$cluster)
@@ -104,6 +114,11 @@ print.summary.dap = function(object, digits = max(5L, getOption("digits") - 3L))
   cat("LogNC =", format(object$info$log10NC/log10(exp(1)), digits=digits), "( Log10NC =", format(object$info$log10NC, digits=digits), ")\n")
   cat("Minimum PIP is estimated at", format(object$info$PIP.min, digits=digits), "( N =", format(object$info$N, digits=digits), ")\n")
 
+  cat("\nTop Models:\n")
+  print(format(object$top.models, digits=digits), print.gap=2L, quote=FALSE)
+  cat("\n")
+
+
   if(length(object$clusters)){
     cat("\nIndependent Association Signal Clusters:\n")
     print(format(object$clusters, digits=digits), print.gap=2L, quote=FALSE)
@@ -119,7 +134,7 @@ print.summary.dap = function(object, digits = max(5L, getOption("digits") - 3L))
     cat("\nNo Independent Association Signal Clusters.\n")
   }
 
-  cat("Please refer to <dap.object>$signal for pip of top predictors,\n")
+  cat("Please refer to <dap.object>$signal for PIP of top predictors,\n")
   cat("       and <dap.object>$model for configuration of top models.\n")
 
   cat("\n")
