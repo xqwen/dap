@@ -119,7 +119,8 @@ print.summary.dap = function(object, digits = max(5L, getOption("digits") - 3L))
     cat("\nNo Independent Association Signal Clusters.\n")
   }
 
-  cat("please refer to ", deparse(substitute(object)), "$signal for pip of top predictors.\n", sep="")
+  cat("Please refer to <dap.object>$signal for pip of top predictors,\n")
+  cat("       and <dap.object>$model for configuration of top models.\n")
 
   cat("\n")
   invisible(object)
