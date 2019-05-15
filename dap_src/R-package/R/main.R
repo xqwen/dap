@@ -49,7 +49,78 @@ dap = function(formula, data, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_
 
   result = .Call(`_dap_dap_sbams`, PACKAGE = 'dap', x, y, 1, params)
 
+  result$call = cl
+
+  class(result) = "dap"
   return(result)
+}
+
+print.dap = function(object, digits = max(3L, getOption("digits") - 3L)){
+  cat("\nCall:\n",
+      paste(deparse(object$call), sep = "\n", collapse = "\n"), "\n\n", sep = "")
+
+  cat("Posterior expected model size:", format(object$info$model.size[1], digits=digits), "( sd =", format(object$info$model.size[2], digits=digits), ")\n")
+  cat("LogNC =", format(object$info$log10NC/log10(exp(1)), digits=digits), "( Log10NC =", format(object$info$log10NC, digits=digits), ")\n")
+  cat("Minimum PIP is estimated at", format(object$info$PIP.min, digits=digits), "( N =", format(object$info$N, digits=digits), ")\n")
+
+  if(length(object$cluster)){
+    cat("\nIndependent Association Signal Clusters:\n")
+    signals = sapply(1:nrow(object$cluster), function(t) paste(sort(object$signal[test1$signal$cluster==t,"predictor"]), collapse =" "))
+    print(format(data.frame(object$cluster, member.predictors=signals), digits=digits), print.gap=2L, quote=FALSE)
+  }else{
+    cat("\nNo Independent Association Signal Clusters.\n")
+  }
+
+  cat("\n")
+  invisible(object)
+}
+
+summary.dap = function(object){
+  if(!inherits(object, "dap"))
+    warning("calling summary.dap(<fake-dap-object>) ...")
+  ans = object[c("call", "info")]
+  ans$call = object$call
+
+  if(length(object$cluster)){
+    ncluster = nrow(object$cluster)
+    ans$clusters = data.frame(object$cluster[,-3], object$cluster.r2)
+    names(ans$clusters) = c(names(ans$clusters)[1:2], "r2 matrix", rep("", ncluster-1))
+
+    for(i in 1:ncluster){
+      ans$signals[[i]] = object$signal[object$signal$cluster==i,-4]
+      row.names(ans$signals[[i]]) = 1:nrow(ans$signals[[i]])
+    }
+  }
+
+  class(ans) = "summary.dap"
+  return(ans)
+}
+
+print.summary.dap = function(object, digits = max(5L, getOption("digits") - 3L)){
+  cat("\nCall:\n",
+     paste(deparse(object$call), sep = "\n", collapse = "\n"), "\n\n", sep = "")
+
+  cat("Posterior expected model size:", format(object$info$model.size[1], digits=digits), "( sd =", format(object$info$model.size[2], digits=digits), ")\n")
+  cat("LogNC =", format(object$info$log10NC/log10(exp(1)), digits=digits), "( Log10NC =", format(object$info$log10NC, digits=digits), ")\n")
+  cat("Minimum PIP is estimated at", format(object$info$PIP.min, digits=digits), "( N =", format(object$info$N, digits=digits), ")\n")
+
+  if(length(object$clusters)){
+    cat("\nIndependent Association Signal Clusters:\n")
+    print(format(object$clusters, digits=digits), print.gap=2L, quote=FALSE)
+
+    cat("\n")
+    for(i in 1:length(object$signals)){
+      cat("Cluster",i,":\n")
+      print(format(object$signals[[i]], digits=digits), print.gap=2L, quote=FALSE)
+      cat("\n")
+    }
+
+  }else{
+    cat("\nNo Independent Association Signal Clusters.\n")
+  }
+
+  cat("\n")
+  invisible(object)
 }
 
 
@@ -86,5 +157,8 @@ dap.sbams <- function(file, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_th
   if(class(thread)=="numeric" & as.integer(thread)>1) params$t=as.integer(thread)
 
   result = .Call(`_dap_dap_main`, PACKAGE = 'dap', params)
+  cl = match.call()
+  result$call = cl
+  class(result) = "dap"
   return(result)
 }

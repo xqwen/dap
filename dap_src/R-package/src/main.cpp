@@ -277,7 +277,7 @@ List dap_main(List arg) {
 
 
   // all done, print all configs
-  con.print_dap_config();
+  print_dap_config(con);
 
   con.run();
   return summary_option_0(con);
@@ -566,7 +566,7 @@ List summary_option_0(controller& con){
 
   List result = List::create(Named("signal") = SNP,
                              Named("model") = nmodel,
-                             Named("summary") = info);
+                             Named("info") = info);
 
   if(con.grp_vec.size() > 0){
     DataFrame cluster = DataFrame::create(Named("cluster.size") = wrap(con.cluster_count),
