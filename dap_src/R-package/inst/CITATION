@@ -17,7 +17,7 @@ citEntry(entry = "Article",
   paste("Wen, X., Lee, Y., Luca, F., & Pique-Regi, R. (2016).",
         "Efficient integrative multi-SNP association analysis via deterministic approximation of posteriors.",
         "The American Journal of Human Genetics, 98(6), 1114-1129.",
-        "URL https://doi.org/10.1016/j.ajhg.2016.03.029")
+        "https://doi.org/10.1016/j.ajhg.2016.03.029")
 )
 
 citEntry(entry = "Article",
@@ -35,5 +35,5 @@ citEntry(entry = "Article",
   paste("Lee, Y., Francesca, L., Pique-Regi, R., & Wen, X. (2018).",
         "Bayesian Multi-SNP Genetic Association Analysis: Control of FDR and Use of Summary Statistics.",
         "bioRxiv, 316471.",
-        "URL https://doi.org/10.1101/316471")
+        "https://doi.org/10.1101/316471")
 )

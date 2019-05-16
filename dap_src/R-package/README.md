@@ -1,5 +1,5 @@
-dap: An R package for Bayesian model selection via DAP algorithm
-================================================================
+dap: An R package for Bayesian model selection via DAP
+======================================================
 
 This package is designed for structured Bayesian model selection via adaptive deterministic approximation of posteriors (DAP) algorithm. Applications include genetic association analysis integrating genomic annotations. These methods are designed to perform rigorous enrichment analysis, QTL discovery and multi-SNP fine-mapping analysis in a highly efficient way.
 
@@ -135,7 +135,7 @@ summary(test.dap)
     ## Please refer to <dap.object>$signal for PIP of top predictors,
     ##        and <dap.object>$model for configuration of top models.
 
-### Support of sbams-format file
+### SBAMS-Format File Support
 
 The sbams format is designed for to represent data from a meta-analytic setting including data from multiple subgroups. The file contains a phenotype section and a genotype section. This package implements an interface `read.sbams` which reading the sbams-format file into a standard R data.frame, which can be seamlessly passed into the `dap` function:
 
@@ -167,14 +167,16 @@ citation("dap")
     ##   Wen, X., Lee, Y., Luca, F., & Pique-Regi, R. (2016). Efficient
     ##   integrative multi-SNP association analysis via deterministic
     ##   approximation of posteriors. The American Journal of Human
-    ##   Genetics, 98(6), 1114-1129. URL
+    ##   Genetics, 98(6), 1114-1129.
     ##   https://doi.org/10.1016/j.ajhg.2016.03.029
     ## 
     ##   Lee, Y., Francesca, L., Pique-Regi, R., & Wen, X. (2018).
     ##   Bayesian Multi-SNP Genetic Association Analysis: Control of FDR
-    ##   and Use of Summary Statistics. bioRxiv, 316471. URL
+    ##   and Use of Summary Statistics. bioRxiv, 316471.
     ##   https://doi.org/10.1101/316471
     ## 
     ## To see these entries in BibTeX format, use 'print(<citation>,
     ## bibtex=TRUE)', 'toBibtex(.)', or set
     ## 'options(citation.bibtex.max=999)'.
+
+You can get citation information in BibTeX format via `print("dap", bibtex=TRUE)`.
