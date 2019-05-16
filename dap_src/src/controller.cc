@@ -107,7 +107,7 @@ void controller::set_default_options(){
     ld_control_thresh = 0.25; // by default  ld control with r^2 = 0.25
 
 
-    run_in_r = false;
+    run_in_r = 0;
     outfd = stdout;
     logfd = stderr;
 }
@@ -193,8 +193,12 @@ void controller::set_default_grid(){
 
 
 void controller::set_outfile(char *outfile, char *logfile){
-    if(run_in_r){
+    if(run_in_r==1){
         logfd = stdout;
+        return;
+    }
+    if(run_in_r==2){
+        fclose(stderr);
         return;
     }
 
@@ -495,7 +499,7 @@ void controller::fine_map(){
 
     }
     summarize_approx_posterior();
-    if(not run_in_r) summary_output();
+    if(run_in_r==0) summary_output();
 
 }
 

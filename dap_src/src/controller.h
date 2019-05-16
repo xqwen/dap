@@ -117,7 +117,7 @@ class controller {
         int use_ss;
 
         // run in R
-        bool run_in_r;
+        int run_in_r;
 
     public:
         // for reporting
@@ -211,8 +211,9 @@ class controller {
         // for R use
         void initialize(vector<double>& pheno, vector<vector<double> >& geno, vector<string>& geno_name, char *grid_file, bool regress);
 
-        void set_for_r(){
-            run_in_r = true;
+        void set_for_r(int quiet){
+            //1:not quiet 2:quiet
+            run_in_r = 1 + quiet;
         }
 
         double get_msize_mean(){

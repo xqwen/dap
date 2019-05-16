@@ -3,7 +3,7 @@
 #' \code{dap} is used perform Bayesian variable selection among a large scale of predictors, multicolinearty and missingness are allowed. It will automatically impute missingness in the input data with mean values, normalize the response and predictors, and propose top predictive signals and signal clusters according to posterior probability.
 #'
 #' @usage
-#' dap(formula, data, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_thresh=0.01, all=FALSE, size_limit=-1, thread=1)
+#' dap(formula, data, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_thresh=0.01, all=FALSE, size_limit=-1, thread=1, quiet=FALSE)
 #'
 #' @aliases dap
 #' @param formula an object of class \code{formula} (or one that can be coerced to that class): a symbolic description of the model to be fitted.
@@ -15,6 +15,7 @@
 #' @param converg_thresh (optional)  the stopping condition for model exploration. By default, \code{converg_thresh=0.01}.
 #' @param all   (optional) If TRUE, dap will output information for all predictors and all signal clusters. By default, only predictors with \code{PIP > 0.001} and signal clusters with \code{SPIP > 0.25} are output.
 #' @param thread (optional) the number of parallel threads to run DAP algorithm, 1 by default. OpenMP is required for multi-thread option.
+#' @param quiet (optional) If TRUE, dap will mute running logs.
 #' @return \code{dap} returns an object of \code{"dap"}, which is a list containing the following components: \item{cluster}{a data frame, with each line representing the information of one signal cluster, including the size (i.e. number of member predictors), the posterior inclusion probability, and the average LD measures (\eqn{r^2}) for predictors within the cluster.}
 #' \item{cluster.r2}{a matrix representing the average LD measures (\eqn{r^2}) for predictors within a cluster and between clusters.}
 #' \item{signal}{a data frame of predictors ordered by the posterior inclusion probability (PIP), including predictor name, PIP, log10abf, and the signal cluster it belongs to.}
@@ -22,7 +23,7 @@
 #' \item{info}{a list of extra information on the expected model size, sample size and the minimum PIP.}
 #' \item{call}{the matched call.}
 #' @examples
-#' set.seed(123)
+#' set.seed(0)
 #' n = 100
 #' p = 1000
 #'
@@ -50,7 +51,7 @@
 #' @useDynLib dap, .registration = TRUE
 #' @importFrom Rcpp sourceCpp
 #' @export
-dap = function(formula, data, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_thresh=0.01, all=FALSE, size_limit=-1, thread=1){
+dap = function(formula, data, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_thresh=0.01, all=FALSE, size_limit=-1, thread=1, quiet=FALSE){
   cl = match.call()
   mf = match.call(expand.dots = FALSE)
   m <- match(c("formula", "data"), names(mf), 0L)
@@ -79,7 +80,7 @@ dap = function(formula, data, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_
   if(class(size_limit)=="numeric" & size_limit>=1) params$size_limit=size_limit
   if(class(thread)=="numeric" & as.integer(thread)>1) params$t=as.integer(thread)
 
-  result = .Call(`_dap_dap_sbams`, PACKAGE = 'dap', x, y, 1, params)
+  result = .Call(`_dap_dap_sbams`, PACKAGE = 'dap', x, y, 1, params, quiet)
 
   result$call = cl
 
@@ -154,6 +155,7 @@ summary.dap = function(object){
   return(ans)
 }
 
+#' @export
 print.summary.dap = function(object, digits = max(5L, getOption("digits") - 3L)){
   cat("\nCall:\n",
      paste(deparse(object$call), sep = "\n", collapse = "\n"), "\n\n", sep = "")
@@ -195,7 +197,7 @@ print.summary.dap = function(object, digits = max(5L, getOption("digits") - 3L))
 #' \code{dap.sbams} is an interface built especially for SBAMS-format files, which is esigned to perform rigorous enrichment analysis, QTL discovery and multi-SNP fine-mapping analysis in a highly efficient way.
 #'
 #' @usage
-#' dap.sbams(file, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_thresh=0.01, all=FALSE, size_limit=-1, thread=1)
+#' dap.sbams(file, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_thresh=0.01, all=FALSE, size_limit=-1, thread=1, quiet=FALSE)
 #'
 #' @aliases dap.sbams
 #' @param file  file path to a sbams file
@@ -213,6 +215,7 @@ print.summary.dap = function(object, digits = max(5L, getOption("digits") - 3L))
 #' @param converg_thresh (optional)  the stopping condition for model exploration. By default, \code{converg_thresh=0.01}.
 #' @param all   (optional) If TRUE, dap will output information for all predictors and all signal clusters. By default, only predictors with \code{PIP > 0.001} and signal clusters with \code{SPIP > 0.25} are output.
 #' @param thread (optional) the number of parallel threads to run DAP algorithm, 1 by default. OpenMP is required for multi-thread option.
+#' @param quiet (optional) If TRUE, dap will mute running logs.
 #' @return \code{dap} returns an object of \code{"dap"}, which is a list containing the following components: \item{cluster}{a data frame, with each line representing the information of one signal cluster, including the size (i.e. number of member predictors), the posterior inclusion probability, and the average LD measures (\eqn{r^2}) for predictors within the cluster.}
 #' \item{cluster.r2}{a matrix representing the average LD measures (\eqn{r^2}) for predictors within a cluster and between clusters.}
 #' \item{signal}{a data frame of predictors ordered by the posterior inclusion probability (PIP), including predictor name, PIP, log10abf, and the signal cluster it belongs to.}
@@ -234,7 +237,7 @@ print.summary.dap = function(object, digits = max(5L, getOption("digits") - 3L))
 #' @useDynLib dap, .registration = TRUE
 #' @importFrom Rcpp sourceCpp
 #' @export
-dap.sbams <- function(file, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_thresh=0.01, all=FALSE, size_limit=-1, thread=1)
+dap.sbams <- function(file, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_thresh=0.01, all=FALSE, size_limit=-1, thread=1, quiet=FALSE)
 {
   params = list(data=file)
   if(class(ens)=="numeric" & ens > 0)       params$ens=ens
@@ -246,7 +249,7 @@ dap.sbams <- function(file, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_th
   if(class(size_limit)=="numeric" & size_limit>=1) params$size_limit=size_limit
   if(class(thread)=="numeric" & as.integer(thread)>1) params$t=as.integer(thread)
 
-  result = .Call(`_dap_dap_main`, PACKAGE = 'dap', params)
+  result = .Call(`_dap_dap_main`, PACKAGE = 'dap', params, quiet)
   cl = match.call()
   result$call = cl
   class(result) = "dap"

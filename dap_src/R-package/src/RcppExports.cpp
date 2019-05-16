@@ -6,19 +6,20 @@
 using namespace Rcpp;
 
 // dap_main
-List dap_main(List arg);
-RcppExport SEXP _dap_dap_main(SEXP argSEXP) {
+List dap_main(List arg, int quiet);
+RcppExport SEXP _dap_dap_main(SEXP argSEXP, SEXP quietSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type arg(argSEXP);
-    rcpp_result_gen = Rcpp::wrap(dap_main(arg));
+    Rcpp::traits::input_parameter< int >::type quiet(quietSEXP);
+    rcpp_result_gen = Rcpp::wrap(dap_main(arg, quiet));
     return rcpp_result_gen;
 END_RCPP
 }
 // dap_sbams
-List dap_sbams(NumericMatrix& x, NumericVector& y, int normalize, List arg);
-RcppExport SEXP _dap_dap_sbams(SEXP xSEXP, SEXP ySEXP, SEXP normalizeSEXP, SEXP argSEXP) {
+List dap_sbams(NumericMatrix& x, NumericVector& y, int normalize, List arg, int quiet);
+RcppExport SEXP _dap_dap_sbams(SEXP xSEXP, SEXP ySEXP, SEXP normalizeSEXP, SEXP argSEXP, SEXP quietSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -26,7 +27,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector& >::type y(ySEXP);
     Rcpp::traits::input_parameter< int >::type normalize(normalizeSEXP);
     Rcpp::traits::input_parameter< List >::type arg(argSEXP);
-    rcpp_result_gen = Rcpp::wrap(dap_sbams(x, y, normalize, arg));
+    Rcpp::traits::input_parameter< int >::type quiet(quietSEXP);
+    rcpp_result_gen = Rcpp::wrap(dap_sbams(x, y, normalize, arg, quiet));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -43,8 +45,8 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_dap_dap_main", (DL_FUNC) &_dap_dap_main, 1},
-    {"_dap_dap_sbams", (DL_FUNC) &_dap_dap_sbams, 4},
+    {"_dap_dap_main", (DL_FUNC) &_dap_dap_main, 2},
+    {"_dap_dap_sbams", (DL_FUNC) &_dap_dap_sbams, 5},
     {"_dap_read_sbams", (DL_FUNC) &_dap_read_sbams, 1},
     {NULL, NULL, 0}
 };

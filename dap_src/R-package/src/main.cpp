@@ -11,7 +11,7 @@ List summary_option_0(controller& con);
 void print_dap_config(controller& con);
 
 // [[Rcpp::export]]
-List dap_main(List arg) {
+List dap_main(List arg, int quiet) {
   char grid_file[128];
   char data_file[128];
   char zval_file[128];
@@ -220,7 +220,7 @@ List dap_main(List arg) {
     stop("Error: no suitable input data specified \n");
   }
 
-  con.set_for_r();
+  con.set_for_r(quiet);
 
   con.set_outfile(out_file, log_file);
 
@@ -277,7 +277,7 @@ List dap_main(List arg) {
 
 
   // all done, print all configs
-  print_dap_config(con);
+  if(quiet==0) print_dap_config(con);
 
   con.run();
   return summary_option_0(con);
@@ -285,7 +285,7 @@ List dap_main(List arg) {
 }
 
 // [[Rcpp::export]]
-List dap_sbams(NumericMatrix& x, NumericVector& y, int normalize, List arg){
+List dap_sbams(NumericMatrix& x, NumericVector& y, int normalize, List arg, int quiet){
 
   char grid_file[128];
   char out_file[128];
@@ -451,7 +451,7 @@ List dap_sbams(NumericMatrix& x, NumericVector& y, int normalize, List arg){
 
   con.initialize(pheno, geno, genonames, grid_file, regress);
 
-  con.set_for_r();
+  con.set_for_r(quiet);
 
   con.set_outfile(out_file, log_file);
 
@@ -502,7 +502,7 @@ List dap_sbams(NumericMatrix& x, NumericVector& y, int normalize, List arg){
 
   // all done, print all configs
   // con.print_dap_config();
-  print_dap_config(con);
+  if(quiet==0) print_dap_config(con);
   con.run();
   return summary_option_0(con);
 }

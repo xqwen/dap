@@ -4,7 +4,7 @@
 \alias{dap}
 \title{Structured Bayesian Model Selection via Deterministic Approximation of Posteriors}
 \usage{
-dap(formula, data, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_thresh=0.01, all=FALSE, size_limit=-1, thread=1)
+dap(formula, data, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_thresh=0.01, all=FALSE, size_limit=-1, thread=1, quiet=FALSE)
 }
 \arguments{
 \item{formula}{an object of class \code{formula} (or one that can be coerced to that class): a symbolic description of the model to be fitted.}
@@ -24,6 +24,8 @@ dap(formula, data, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_thresh=0.01
 \item{all}{(optional) If TRUE, dap will output information for all predictors and all signal clusters. By default, only predictors with \code{PIP > 0.001} and signal clusters with \code{SPIP > 0.25} are output.}
 
 \item{thread}{(optional) the number of parallel threads to run DAP algorithm, 1 by default. OpenMP is required for multi-thread option.}
+
+\item{quiet}{(optional) If TRUE, dap will mute running logs.}
 }
 \value{
 \code{dap} returns an object of \code{"dap"}, which is a list containing the following components: \item{cluster}{a data frame, with each line representing the information of one signal cluster, including the size (i.e. number of member predictors), the posterior inclusion probability, and the average LD measures (\eqn{r^2}) for predictors within the cluster.}
@@ -40,7 +42,7 @@ dap(formula, data, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_thresh=0.01
 Please refer to \url{https://github.com/xqwen/dap/tree/master/dap_src} for more details.
 }
 \examples{
-set.seed(123)
+set.seed(0)
 n = 100
 p = 1000
 

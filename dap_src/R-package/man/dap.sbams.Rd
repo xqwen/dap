@@ -4,7 +4,7 @@
 \alias{dap.sbams}
 \title{Integrative Genetic Association Analysis using Deterministic Approximation of Posteriors for SBAMS-format Data}
 \usage{
-dap.sbams(file, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_thresh=0.01, all=FALSE, size_limit=-1, thread=1)
+dap.sbams(file, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_thresh=0.01, all=FALSE, size_limit=-1, thread=1, quiet=FALSE)
 }
 \arguments{
 \item{file}{file path to a sbams file}
@@ -22,6 +22,8 @@ dap.sbams(file, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_thresh=0.01, a
 \item{all}{(optional) If TRUE, dap will output information for all SNPs and all signal clusters. By default, only SNPs with \code{PIP > 0.001} and signal clusters with \code{SPIP > 0.25} are output.}
 
 \item{thread}{(optional) the number of parallel threads to run DAP algorithm, 1 by default. OpenMP is required for multi-thread option.}
+
+\item{quiet}{(optional) If TRUE, dap will mute running logs.}
 
 \item{ens}{(optional) prior expected number of signal clusters, \code{ens=1} by default.}
 
