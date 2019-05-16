@@ -145,14 +145,11 @@ sbams.dat  = read.sbams(sbams.file)
 test.dap.sbams.1 = dap(gene~., sbams.dat, quiet=TRUE)
 ```
 
-Also, we implement a function `dap.sbams` which can directly read and analyze the sbams-format file, the signals discovered from this approach are exactly the same as those above:
+Also, we implement a function `dap.sbams` which can directly read and analyze the sbams-format file.
 
 ``` r
 test.dap.sbams.2 = dap.sbams(sbams.file, quiet=TRUE)
-all.equal(test.dap.sbams.1$signal, test.dap.sbams.2$signal)
 ```
-
-    ## [1] TRUE
 
 Citation
 --------

@@ -64,7 +64,7 @@ dap = function(formula, data, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_
 
   y = model.response(mf, "numeric")
   attr(mt, "intercept") = 0
-  x <- model.matrix(mt, mf, contrasts)
+  x <- model.matrix(mt, mf)
 
   # impute with mean
   y[is.na(y)] = mean(y, na.rm = TRUE)
