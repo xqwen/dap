@@ -1,10 +1,12 @@
 Package: dap
 Type: Package
-Title: Integrative Genetic Association Analysis using Deterministic Approximation of Posteriors
+Title: Structured Bayesian Model Selection via Adaptive DAP Algorithm
 Version: 0.1.0
-Author: Ketian Yu, William Wen
+Author: William Wen, Ketian Yu
 Maintainer: Ketian Yu <yukt@umich.edu>
-Description: Interface for reading and analyzing sbams file.
+Description: An implementations of structured Bayesian model selection via adaptive deterministic approximation of posteriors (DAP) algorithm.
+   Applications include genetic association analysis integrating genomic annotations. 
+   These methods are designed to perform rigorous enrichment analysis, QTL discovery and multi-SNP fine-mapping analysis in a highly efficient way.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

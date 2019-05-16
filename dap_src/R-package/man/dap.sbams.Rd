@@ -57,6 +57,8 @@ Please refer to \url{https://github.com/xqwen/dap/tree/master/dap_src} for more 
 ##-- Continuing the  read.sbams(.) example:
 test.dap.sbams = dap.sbams(sbams.dat)
 test.dap.sbams
+
+summary(test.dap.sbams)
 }
 }
 \references{

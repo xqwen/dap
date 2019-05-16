@@ -5,11 +5,10 @@
 #' @param file file path to the sbams file
 #' @return a data.frame with the first colunm as the normalized phenotype, and the following columns as the normalized genotypes.
 #' @details Please refer to \url{https://github.com/xqwen/dap/tree/master/dap_src} for more details.
-#' @examples \dontrun{
+#' @examples
+#' sbams.file = system.file("sbamsdat", "sim.1.sbams.dat", package = "dap")
+#' sbams.dat  = read.sbams(sbams.file)
 #'
-#' # test data from https://github.com/xqwen/dap/blob/master/dap_src/sample_data/sim.1.sbams.dat
-#' sbams.dat = read.sbams("sim.1.sbams.dat")
-#' }
 #' @useDynLib dap, .registration = TRUE
 #' @importFrom Rcpp sourceCpp
 #' @export

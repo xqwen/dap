@@ -225,9 +225,11 @@ print.summary.dap = function(object, digits = max(5L, getOption("digits") - 3L))
 #' @references Lee, Y, Luca, F, Pique-Regi, R,Wen, X. Bayesian Multi-SNP Genetic Association Analysis: Control of FDR and Use of Summary Statistics bioRxiv:316471
 #' @examples \dontrun{
 #'
-#' ##-- Continuing the  read.sbams(.) example:
-#' test.dap.sbams = dap.sbams(sbams.dat)
+#' sbams.file = system.file("sbamsdat", "sim.1.sbams.dat", package = "dap")
+#' test.dap.sbams = dap.sbams(sbams.file)
 #' test.dap.sbams
+#'
+#' summary(test.dap.sbams)
 #' }
 #' @useDynLib dap, .registration = TRUE
 #' @importFrom Rcpp sourceCpp

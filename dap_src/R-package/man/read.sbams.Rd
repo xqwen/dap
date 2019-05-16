@@ -19,9 +19,7 @@ This function will import the sbams file, automatically impute missing values wi
 Please refer to \url{https://github.com/xqwen/dap/tree/master/dap_src} for more details.
 }
 \examples{
-\dontrun{
+sbams.file = system.file("sbamsdat", "sim.1.sbams.dat", package = "dap")
+sbams.dat  = read.sbams(sbams.file)
 
-# test data from https://github.com/xqwen/dap/blob/master/dap_src/sample_data/sim.1.sbams.dat
-sbams.dat = read.sbams("sim.1.sbams.dat")
-}
 }
