@@ -1,0 +1,39 @@
+citHeader("To cite dap in publications use:")
+
+citEntry(entry = "Article",
+  title        = "Efficient integrative multi-SNP association analysis via deterministic approximation of posteriors",
+  author       = personList(as.person("Xiaoquan Wen"),
+                   as.person("Yeji Lee"),
+                   as.person("Francesca Luca"),
+                   as.person("Roger Pique-Regi")),
+  journal      = "The American Journal of Human Genetics",
+  year         = "2016",
+  volume       = "98",
+  number       = "6",
+  pages        = "1114--1129",
+  url          = "https://doi.org/10.1016/j.ajhg.2016.03.029",
+
+  textVersion  =
+  paste("Wen, X., Lee, Y., Luca, F., & Pique-Regi, R. (2016).",
+        "Efficient integrative multi-SNP association analysis via deterministic approximation of posteriors.",
+        "The American Journal of Human Genetics, 98(6), 1114-1129.",
+        "URL https://doi.org/10.1016/j.ajhg.2016.03.029")
+)
+
+citEntry(entry = "Article",
+  title        = "Bayesian Multi-SNP Genetic Association Analysis: Control of FDR and Use of Summary Statistics",
+  author       = personList(as.person("Yeji Lee"),
+                   as.person("Francesca Luca"),
+                   as.person("Roger Pique-Regi"),
+                   as.person("Xiaoquan Wen")),
+  journal      = "bioRxiv",
+  year         = "2018",
+  pages        = "316471",
+  url          = "https://doi.org/10.1101/316471",
+
+  textVersion  =
+  paste("Lee, Y., Francesca, L., Pique-Regi, R., & Wen, X. (2018).",
+        "Bayesian Multi-SNP Genetic Association Analysis: Control of FDR and Use of Summary Statistics.",
+        "bioRxiv, 316471.",
+        "URL https://doi.org/10.1101/316471")
+)

@@ -54,8 +54,8 @@ Please refer to \url{https://github.com/xqwen/dap/tree/master/dap_src} for more 
 \examples{
 \dontrun{
 
-##-- Continuing the  read.sbams(.) example:
-test.dap.sbams = dap.sbams(sbams.dat)
+sbams.file = system.file("sbamsdat", "sim.1.sbams.dat", package = "dap")
+test.dap.sbams = dap.sbams(sbams.file)
 test.dap.sbams
 
 summary(test.dap.sbams)
