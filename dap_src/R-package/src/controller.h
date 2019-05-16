@@ -209,7 +209,7 @@ class controller {
 
 
         // for R use
-        void initialize(vector<double>& pheno, vector<vector<double> >& geno, vector<string>& geno_name, char *grid_file, bool regress);
+        void initialize(vector<double>& pheno, string phenoname, vector<vector<double> >& geno, vector<string>& geno_name, char *grid_file, bool regress);
 
         void set_for_r(int quiet){
             //1:not quiet 2:quiet
@@ -258,6 +258,10 @@ class controller {
 
         int get_nthread(){
             return nthread;
+        }
+
+        string get_pheno_name(){
+            return pars.pheno_name;
         }
 
 

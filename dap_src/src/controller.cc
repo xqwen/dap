@@ -68,7 +68,7 @@ void controller::initialize(char *data_file, char *grid_file){
 }
 
 
-void controller::initialize(vector<double>& pheno, vector<vector<double> >& geno, vector<string>& geno_name, char *grid_file, bool regress){
+void controller::initialize(vector<double>& pheno, string phenoname, vector<vector<double> >& geno, vector<string>& geno_name, char *grid_file, bool regress){
 
     use_ss = 0;
 
@@ -77,7 +77,7 @@ void controller::initialize(vector<double>& pheno, vector<vector<double> >& geno
     else
         load_grid(grid_file);
 
-    pars.process_data(pheno, geno, "group", "gene", geno_name, regress);
+    pars.process_data(pheno, geno, "group", phenoname, geno_name, regress);
 
     p = pars.geno_vec[0].size();
     N = pars.geno_vec[0][0].size();

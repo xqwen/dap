@@ -14,6 +14,7 @@
 #' @param msize (optional) the maximum size of model dap explores. Valid maximum model size ranges from \code{1} to \code{p}. By default -1, it is set to \code{p}, i.e., there is no restriction on how large the true association model can be. If it is specified, the DAP runs DAP-K algorithm and stops at the specified maximum model size.
 #' @param converg_thresh (optional)  the stopping condition for model exploration. By default, \code{converg_thresh=0.01}.
 #' @param all   (optional) If TRUE, dap will output information for all predictors and all signal clusters. By default, only predictors with \code{PIP > 0.001} and signal clusters with \code{SPIP > 0.25} are output.
+#' @param size_limit (optional) the maximum number of predictors allowed in a signal cluster. By default -1, there is no constraint and the size of each signal cluster is completely data determined. Setting a small number forces DAP to cap the number of predictors into each cluster and reduces computation.
 #' @param thread (optional) the number of parallel threads to run DAP algorithm, 1 by default. OpenMP is required for multi-thread option.
 #' @param quiet (optional) If TRUE, dap will mute running logs.
 #' @return \code{dap} returns an object of \code{"dap"}, which is a list containing the following components: \item{cluster}{a data frame, with each line representing the information of one signal cluster, including the size (i.e. number of member predictors), the posterior inclusion probability, and the average LD measures (\eqn{r^2}) for predictors within the cluster.}
@@ -62,7 +63,6 @@ dap = function(formula, data, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_
   mt <- attr(mf, "terms")
 
   y = model.response(mf, "numeric")
-  mt <- attr(mf, "terms")
   attr(mt, "intercept") = 0
   x <- model.matrix(mt, mf, contrasts)
 
@@ -80,7 +80,7 @@ dap = function(formula, data, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_
   if(class(size_limit)=="numeric" & size_limit>=1) params$size_limit=size_limit
   if(class(thread)=="numeric" & as.integer(thread)>1) params$t=as.integer(thread)
 
-  result = .Call(`_dap_dap_sbams`, PACKAGE = 'dap', x, y, 1, params, quiet)
+  result = .Call(`_dap_dap_sbams`, PACKAGE = 'dap', x, y, 1, params, as.numeric(quiet), all.vars(cl)[1])
 
   result$call = cl
 
@@ -106,7 +106,7 @@ print.dap = function(object, digits = max(3L, getOption("digits") - 3L)){
   }
 
   cat("\nOne of the best models is:\n")
-  cat("\t", strsplit(deparse(object$call$formula),"~")[[1]][1],"~", gsub("&", " + ", object$model$configuration[1]), "\n\n")
+  cat("\t", object$info$response,"~", gsub("&", " + ", object$model$configuration[1]), "\n\n")
 
   cat("Please refer to <dap.object>$signal for PIP of top predictors,\n")
   cat("       and <dap.object>$model for configuration of top models.\n")
@@ -207,13 +207,7 @@ print.summary.dap = function(object, digits = max(5L, getOption("digits") - 3L))
 #' @param msize (optional) the maximum size of model dap-g explores. Valid maximum model size ranges from \code{1} to \code{p}. By default -1, it is set to \code{p}, i.e., there is no restriction on how large the true association model can be. If it is specified, the DAP-G runs DAP-K algorithm and stops at the specified maximum model size.
 #' @param converg_thresh (optional)  the stopping condition for model exploration. By default, \code{converg_thresh=0.01}.
 #' @param all   (optional) If TRUE, dap will output information for all SNPs and all signal clusters. By default, only SNPs with \code{PIP > 0.001} and signal clusters with \code{SPIP > 0.25} are output.
-#' @param thread (optional) the number of parallel threads to run DAP algorithm, 1 by default. OpenMP is required for multi-thread option.
-#' @param ens   (optional) prior expected number of signal clusters, \code{ens=1} by default.
-#' @param pi1   (optional) the exchangeable prior probability, values \code{0<pi1<1} accepted. By default -1, \code{pi1=ens/p}, where \code{p} is number of predictors in the input file.
-#' @param ld_control (optional) the LD threshold to be considered within a single signal cluster. By default, the threshold is set to 0.25.
-#' @param msize (optional) the maximum size of model dap explores. Valid maximum model size ranges from \code{1} to \code{p}. By default -1, it is set to \code{p}, i.e., there is no restriction on how large the true association model can be. If it is specified, the DAP runs DAP-K algorithm and stops at the specified maximum model size.
-#' @param converg_thresh (optional)  the stopping condition for model exploration. By default, \code{converg_thresh=0.01}.
-#' @param all   (optional) If TRUE, dap will output information for all predictors and all signal clusters. By default, only predictors with \code{PIP > 0.001} and signal clusters with \code{SPIP > 0.25} are output.
+#' @param size_limit (optional) the maximum number of predictors allowed in a signal cluster. By default -1, there is no constraint and the size of each signal cluster is completely data determined. Setting a small number forces DAP to cap the number of predictors into each cluster and reduces computation.
 #' @param thread (optional) the number of parallel threads to run DAP algorithm, 1 by default. OpenMP is required for multi-thread option.
 #' @param quiet (optional) If TRUE, dap will mute running logs.
 #' @return \code{dap} returns an object of \code{"dap"}, which is a list containing the following components: \item{cluster}{a data frame, with each line representing the information of one signal cluster, including the size (i.e. number of member predictors), the posterior inclusion probability, and the average LD measures (\eqn{r^2}) for predictors within the cluster.}
@@ -239,6 +233,7 @@ print.summary.dap = function(object, digits = max(5L, getOption("digits") - 3L))
 #' @export
 dap.sbams <- function(file, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_thresh=0.01, all=FALSE, size_limit=-1, thread=1, quiet=FALSE)
 {
+  cl = match.call()
   params = list(data=file)
   if(class(ens)=="numeric" & ens > 0)       params$ens=ens
   if(class(pi1)=="numeric" & pi1>0 & pi1<1) params$pi1=pi1
@@ -249,8 +244,8 @@ dap.sbams <- function(file, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_th
   if(class(size_limit)=="numeric" & size_limit>=1) params$size_limit=size_limit
   if(class(thread)=="numeric" & as.integer(thread)>1) params$t=as.integer(thread)
 
-  result = .Call(`_dap_dap_main`, PACKAGE = 'dap', params, quiet)
-  cl = match.call()
+  result = .Call(`_dap_dap_main`, PACKAGE = 'dap', params, as.numeric(quiet))
+
   result$call = cl
   class(result) = "dap"
   return(result)

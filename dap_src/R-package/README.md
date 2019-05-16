@@ -1,9 +1,10 @@
-### An R package for Bayesian model selection via adaptive deterministic approximation of posteriors
+dap: An R package for Bayesian model selection via DAP algorithm
+================================================================
 
-This package is designed for structured Bayesian model selection via DAP algorithm. Applications include genetic association analysis integrating genomic annotations. These methods are designed to perform rigorous enrichment analysis, QTL discovery and multi-SNP fine-mapping analysis in a highly efficient way.
+This package is designed for structured Bayesian model selection via adaptive deterministic approximation of posteriors (DAP) algorithm. Applications include genetic association analysis integrating genomic annotations. These methods are designed to perform rigorous enrichment analysis, QTL discovery and multi-SNP fine-mapping analysis in a highly efficient way.
 
-1. Installation
----------------
+Installation
+------------
 
 Pre-installation of [GNU Scientific Library (GSL)](https://www.gnu.org/software/gsl/) is required, and [OpenMP](https://www.openmp.org) compatible compiler is recommended.
 
@@ -17,10 +18,11 @@ Once installed, the package can be loaded in a given R session using:
 
 ``` r
 library(dap)
+help(dap) # for detailed documentation
 ```
 
-2. Analysis Examples
---------------------
+Analysis Examples
+-----------------
 
 To illustrate how the package works, we create a toy dataset `df`. It consists of a response variable `y` and 1000 candidate predictors, in which only `a1` and `b1` are causal. `a2` and `a3` are highly correlated with `a1`, `b2` is highly correlated with `b1`, and `x1`-`x995` are unrelated to `y`.
 
@@ -86,7 +88,7 @@ test.dap
     ## 2             2       0.9999      0.9802              b1 b2
     ## 
     ## One of the best models is:
-    ##   y  ~ a1 + b1 
+    ##   y ~ a1 + b1 
     ## 
     ## Please refer to <dap.object>$signal for PIP of top predictors,
     ##        and <dap.object>$model for configuration of top models.
@@ -135,23 +137,44 @@ summary(test.dap)
 
 ### Support of sbams-format file
 
-The sbams format is designed for to represent data from a meta-analytic setting including data from multiple subgroups. The file contains a phenotype section and a genotype section. This package implements an interface `read.sbams` which reads the sbams-format file into a standard R data.frame.
+The sbams format is designed for to represent data from a meta-analytic setting including data from multiple subgroups. The file contains a phenotype section and a genotype section. This package implements an interface `read.sbams` which reading the sbams-format file into a standard R data.frame, which can be seamlessly passed into the `dap` function:
 
 ``` r
 sbams.file = system.file("sbamsdat", "sim.1.sbams.dat", package = "dap")
 sbams.dat  = read.sbams(sbams.file)
-```
-
-The data frame generated from `read.sbams` can be seamlessly passed into the `dap` function:
-
-``` r
 test.dap.sbams.1 = dap(gene~., sbams.dat, quiet=TRUE)
 ```
 
-Also, we implement a function `dap.sbams` which can directly read and analyze the sbams-format file:
+Also, we implement a function `dap.sbams` which can directly read and analyze the sbams-format file, the signals discovered from this approach are exactly the same as those above:
 
 ``` r
 test.dap.sbams.2 = dap.sbams(sbams.file, quiet=TRUE)
+all.equal(test.dap.sbams.1$signal, test.dap.sbams.2$signal)
 ```
 
-The analysis result `test.dap.sbams.2` is exactly the same as `test.dap.sbams.1`.
+    ## [1] TRUE
+
+Citation
+--------
+
+``` r
+citation("dap")
+```
+
+    ## 
+    ## To cite dap in publications use:
+    ## 
+    ##   Wen, X., Lee, Y., Luca, F., & Pique-Regi, R. (2016). Efficient
+    ##   integrative multi-SNP association analysis via deterministic
+    ##   approximation of posteriors. The American Journal of Human
+    ##   Genetics, 98(6), 1114-1129. URL
+    ##   https://doi.org/10.1016/j.ajhg.2016.03.029
+    ## 
+    ##   Lee, Y., Francesca, L., Pique-Regi, R., & Wen, X. (2018).
+    ##   Bayesian Multi-SNP Genetic Association Analysis: Control of FDR
+    ##   and Use of Summary Statistics. bioRxiv, 316471. URL
+    ##   https://doi.org/10.1101/316471
+    ## 
+    ## To see these entries in BibTeX format, use 'print(<citation>,
+    ## bibtex=TRUE)', 'toBibtex(.)', or set
+    ## 'options(citation.bibtex.max=999)'.

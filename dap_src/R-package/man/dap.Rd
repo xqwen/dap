@@ -23,6 +23,8 @@ dap(formula, data, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_thresh=0.01
 
 \item{all}{(optional) If TRUE, dap will output information for all predictors and all signal clusters. By default, only predictors with \code{PIP > 0.001} and signal clusters with \code{SPIP > 0.25} are output.}
 
+\item{size_limit}{(optional) the maximum number of predictors allowed in a signal cluster. By default -1, there is no constraint and the size of each signal cluster is completely data determined. Setting a small number forces DAP to cap the number of predictors into each cluster and reduces computation.}
+
 \item{thread}{(optional) the number of parallel threads to run DAP algorithm, 1 by default. OpenMP is required for multi-thread option.}
 
 \item{quiet}{(optional) If TRUE, dap will mute running logs.}

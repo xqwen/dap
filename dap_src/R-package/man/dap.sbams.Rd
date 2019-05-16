@@ -21,23 +21,11 @@ dap.sbams(file, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_thresh=0.01, a
 
 \item{all}{(optional) If TRUE, dap will output information for all SNPs and all signal clusters. By default, only SNPs with \code{PIP > 0.001} and signal clusters with \code{SPIP > 0.25} are output.}
 
+\item{size_limit}{(optional) the maximum number of predictors allowed in a signal cluster. By default -1, there is no constraint and the size of each signal cluster is completely data determined. Setting a small number forces DAP to cap the number of predictors into each cluster and reduces computation.}
+
 \item{thread}{(optional) the number of parallel threads to run DAP algorithm, 1 by default. OpenMP is required for multi-thread option.}
 
 \item{quiet}{(optional) If TRUE, dap will mute running logs.}
-
-\item{ens}{(optional) prior expected number of signal clusters, \code{ens=1} by default.}
-
-\item{pi1}{(optional) the exchangeable prior probability, values \code{0<pi1<1} accepted. By default -1, \code{pi1=ens/p}, where \code{p} is number of predictors in the input file.}
-
-\item{ld_control}{(optional) the LD threshold to be considered within a single signal cluster. By default, the threshold is set to 0.25.}
-
-\item{msize}{(optional) the maximum size of model dap explores. Valid maximum model size ranges from \code{1} to \code{p}. By default -1, it is set to \code{p}, i.e., there is no restriction on how large the true association model can be. If it is specified, the DAP runs DAP-K algorithm and stops at the specified maximum model size.}
-
-\item{converg_thresh}{(optional)  the stopping condition for model exploration. By default, \code{converg_thresh=0.01}.}
-
-\item{all}{(optional) If TRUE, dap will output information for all predictors and all signal clusters. By default, only predictors with \code{PIP > 0.001} and signal clusters with \code{SPIP > 0.25} are output.}
-
-\item{thread}{(optional) the number of parallel threads to run DAP algorithm, 1 by default. OpenMP is required for multi-thread option.}
 }
 \value{
 \code{dap} returns an object of \code{"dap"}, which is a list containing the following components: \item{cluster}{a data frame, with each line representing the information of one signal cluster, including the size (i.e. number of member predictors), the posterior inclusion probability, and the average LD measures (\eqn{r^2}) for predictors within the cluster.}

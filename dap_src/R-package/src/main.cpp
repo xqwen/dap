@@ -285,7 +285,7 @@ List dap_main(List arg, int quiet) {
 }
 
 // [[Rcpp::export]]
-List dap_sbams(NumericMatrix& x, NumericVector& y, int normalize, List arg, int quiet){
+List dap_sbams(NumericMatrix& x, NumericVector& y, int normalize, List arg, int quiet, String phenoname){
 
   char grid_file[128];
   char out_file[128];
@@ -446,10 +446,12 @@ List dap_sbams(NumericMatrix& x, NumericVector& y, int normalize, List arg, int 
     geno[i].resize(n_ind);
   }
 
+  string name = phenoname;
+
 
   controller con;
 
-  con.initialize(pheno, geno, genonames, grid_file, regress);
+  con.initialize(pheno, name, geno, genonames, grid_file, regress);
 
   con.set_for_r(quiet);
 
@@ -561,7 +563,8 @@ List summary_option_0(controller& con){
   List info = List::create(Named("model.size") = msize,
                            Named("log10NC") = con.get_log10_pnorm(),
                            Named("PIP.min") = min_pip,
-                           Named("N") = con.get_N());
+                           Named("N") = con.get_N(),
+                           Named("response") = con.get_pheno_name());
 
 
   List result = List::create(Named("signal") = SNP,

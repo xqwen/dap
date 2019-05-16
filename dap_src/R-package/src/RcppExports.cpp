@@ -18,8 +18,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // dap_sbams
-List dap_sbams(NumericMatrix& x, NumericVector& y, int normalize, List arg, int quiet);
-RcppExport SEXP _dap_dap_sbams(SEXP xSEXP, SEXP ySEXP, SEXP normalizeSEXP, SEXP argSEXP, SEXP quietSEXP) {
+List dap_sbams(NumericMatrix& x, NumericVector& y, int normalize, List arg, int quiet, String phenoname);
+RcppExport SEXP _dap_dap_sbams(SEXP xSEXP, SEXP ySEXP, SEXP normalizeSEXP, SEXP argSEXP, SEXP quietSEXP, SEXP phenonameSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -28,7 +28,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type normalize(normalizeSEXP);
     Rcpp::traits::input_parameter< List >::type arg(argSEXP);
     Rcpp::traits::input_parameter< int >::type quiet(quietSEXP);
-    rcpp_result_gen = Rcpp::wrap(dap_sbams(x, y, normalize, arg, quiet));
+    Rcpp::traits::input_parameter< String >::type phenoname(phenonameSEXP);
+    rcpp_result_gen = Rcpp::wrap(dap_sbams(x, y, normalize, arg, quiet, phenoname));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -46,7 +47,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_dap_dap_main", (DL_FUNC) &_dap_dap_main, 2},
-    {"_dap_dap_sbams", (DL_FUNC) &_dap_dap_sbams, 5},
+    {"_dap_dap_sbams", (DL_FUNC) &_dap_dap_sbams, 6},
     {"_dap_read_sbams", (DL_FUNC) &_dap_read_sbams, 1},
     {NULL, NULL, 0}
 };
