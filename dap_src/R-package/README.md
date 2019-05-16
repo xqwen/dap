@@ -179,4 +179,4 @@ citation("dap")
     ## bibtex=TRUE)', 'toBibtex(.)', or set
     ## 'options(citation.bibtex.max=999)'.
 
-You can get citation information in BibTeX format via `print("dap", bibtex=TRUE)`.
+You can get citation information in BibTeX format via `print(citation("dap"), bibtex=TRUE)`.
