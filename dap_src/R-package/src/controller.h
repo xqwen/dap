@@ -5,6 +5,9 @@
 #include <set>
 #include <map>
 #include <stdio.h>
+#ifdef _OPENMP
+#include <omp.h>
+#endif
 
 class NSNP {
 
@@ -201,9 +204,11 @@ class controller {
 
 
         void set_thread(int thread){
+            nthread = thread;
             #ifdef _OPENMP
-                nthread = thread;
-                omp_set_num_threads(thread);
+                omp_set_num_threads(nthread);
+            #else
+                nthread=1;
             #endif
         }
 

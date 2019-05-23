@@ -10,9 +10,7 @@
 #include <unistd.h>
 #include <gsl/gsl_combination.h>
 #include <gsl/gsl_sf_gamma.h>
-#ifdef _OPENMP
-#include <omp.h>
-#endif
+
 
 void controller::initialize(char *effect_file, char *ld_file, char *grid_file, int sample_size, double syy_, int ld_format){
     
@@ -93,7 +91,7 @@ void controller::set_default_options(){
 
     max_size = p;
     // default thread 
-    nthread = 1;
+    nthread = 5;
 
     output_all = 0;
     size_select_thresh = 0.01;  // set to big positive numbers to enforce the adaptive stopping rule

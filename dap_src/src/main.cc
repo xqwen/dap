@@ -53,7 +53,7 @@ int main(int argc, char **argv){
     int run_scan = 0;
     int extract_ss = 0;
 
-    int thread = 1;
+    int thread = 5;
 
 
 
