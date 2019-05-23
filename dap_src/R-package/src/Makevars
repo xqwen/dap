@@ -1,3 +1,4 @@
 # Makevars
 CXX_STD = CXX11
-PKG_LIBS=-lgsl -lgslcblas
+PKG_CXXFLAGS = $(SHLIB_OPENMP_CXXFLAGS)
+PKG_LIBS=-lgsl -lgslcblas $(SHLIB_OPENMP_CXXFLAGS)
