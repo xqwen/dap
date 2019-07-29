@@ -17,11 +17,18 @@
 #' @param size_limit (optional) the maximum number of predictors allowed in a signal cluster. By default -1, there is no constraint and the size of each signal cluster is completely data determined. Setting a small number forces DAP to cap the number of predictors into each cluster and reduces computation.
 #' @param thread (optional) the number of parallel threads to run DAP algorithm, 1 by default. OpenMP is required for multi-thread option.
 #' @param quiet (optional) If TRUE, dap will mute running logs.
-#' @return \code{dap} returns an object of \code{"dap"}, which is a list containing the following components: \item{cluster}{a data frame, with each line representing the information of one signal cluster, including the size (i.e. number of member predictors), the posterior inclusion probability, and the average LD measures (\eqn{r^2}) for predictors within the cluster.}
-#' \item{cluster.r2}{a matrix representing the average LD measures (\eqn{r^2}) for predictors within a cluster and between clusters.}
-#' \item{signal}{a data frame of predictors ordered by the posterior inclusion probability (PIP), including predictor name, PIP, log10abf, and the signal cluster it belongs to.}
-#' \item{model}{a data frame of models. Specifically, the first column shows the posterior probability of the corresponding model; the second column indicates the size (i.e., the number of predictors) of the model; the third column shows the unnormalized posterior score of the model (defined as \eqn{log10(model prior)+log10(BF)}); and the last column gives the exact configuration of the model.}
-#' \item{info}{a list of extra information on the expected model size, sample size and the minimum PIP.}
+#' @return \code{dap} returns an object of \code{"dap"}, which is a list containing the following components:
+#' \item{signal.cluster}{a List of signal-cluster information including:\itemize{
+#' \item{\code{cluster.summary}}{: a data frame, with each line representing the information of one signal cluster, including the size (i.e. number of member predictors), the posterior inclusion probability, and the average LD measures (\eqn{r^2}) for predictors within the cluster.}
+#' \item{\code{cluster.r2}}{: a matrix representing the average LD measures (\eqn{r^2}) for predictors within a cluster and between clusters.}}}
+#'
+#' \item{variant}{a data frame of predictors ordered by the posterior inclusion probability (PIP), including predictor name, PIP, log10abf, and the signal cluster it belongs to.}
+#'
+#' \item{model.summary}{a List of model configuration information including \itemize{
+#' \item{\code{model}}{: a data frame of models. Specifically, the first column shows the posterior probability of the corresponding model; the second column indicates the size (i.e., the number of predictors) of the model; the third column shows the unnormalized posterior score of the model (defined as \eqn{log10(model prior)+log10(BF)}); and the last column gives the exact configuration of the model.}
+#' \item{\code{model.size}}{: expected model size along with the standard deviation.}
+#' \item{\code{N}}{: sample size.}
+#' \item{\code{PIP.min}}{: the minimum posterior inclusion probability (PIP).}}}
 #' \item{call}{the matched call.}
 #' @examples
 #' set.seed(0)
@@ -83,6 +90,7 @@ dap = function(formula, data, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_
   result = .Call(`_dap_dap_sbams`, PACKAGE = 'dap', x, y, 1, params, as.numeric(quiet), all.vars(cl)[1])
 
   result$call = cl
+  result$model.summary$model$configuration = gsub("&", "+", result$model.summary$model$configuration)
 
   class(result) = "dap"
   return(result)
@@ -93,20 +101,20 @@ print.dap = function(object, digits = max(3L, getOption("digits") - 3L)){
   cat("\nCall:\n",
       paste(deparse(object$call), sep = "\n", collapse = "\n"), "\n\n", sep = "")
 
-  cat("Posterior expected model size:", format(object$info$model.size[1], digits=digits), "( sd =", format(object$info$model.size[2], digits=digits), ")\n")
-  cat("LogNC =", format(object$info$log10NC/log10(exp(1)), digits=digits), "( Log10NC =", format(object$info$log10NC, digits=digits), ")\n")
-  cat("Minimum PIP is estimated at", format(object$info$PIP.min, digits=digits), "( N =", format(object$info$N, digits=digits), ")\n")
+  cat("Posterior expected model size:", format(object$model.summary$model.size[1], digits=digits), "( sd =", format(object$model.summary$model.size[2], digits=digits), ")\n")
+  cat("LogNC =", format(object$model.summary$log10NC/log10(exp(1)), digits=digits), "( Log10NC =", format(object$model.summary$log10NC, digits=digits), ")\n")
+  cat("Minimum PIP is estimated at", format(object$model.summary$PIP.min, digits=digits), "( N =", format(object$model.summary$N, digits=digits), ")\n")
 
-  if(length(object$cluster)){
+  if(length(object$signal.cluster)){
     cat("\nIndependent Association Signal Clusters:\n")
-    signals = sapply(1:nrow(object$cluster), function(t) paste(sort(object$signal[object$signal$cluster==t,"predictor"]), collapse =" "))
-    print(format(data.frame(object$cluster, member.predictors=signals), digits=digits), print.gap=2L, quote=FALSE)
+    signals = sapply(1:nrow(object$signal.cluster$cluster.summary), function(t) paste(sort(object$variant[object$variant$cluster==t,"predictor"]), collapse =" "))
+    print(format(data.frame(object$signal.cluster$cluster.summary, member.predictors=signals), digits=digits), print.gap=2L, quote=FALSE)
   }else{
     cat("\nNo Independent Association Signal Clusters.\n")
   }
 
   cat("\nOne of the best models is:\n")
-  cat("\t", object$info$response,"~", gsub("&", " + ", object$model$configuration[1]), "\n\n")
+  cat("\t", object$model.summary$response,"~", gsub("&", " + ", object$model.summary$model$configuration[1]), "\n\n")
 
   cat("Please refer to <dap.object>$signal for PIP of top predictors,\n")
   cat("       and <dap.object>$model for configuration of top models.\n")
@@ -133,20 +141,22 @@ print.dap = function(object, digits = max(3L, getOption("digits") - 3L)){
 summary.dap = function(object){
   if(!inherits(object, "dap"))
     warning("calling summary.dap(<fake-dap-object>) ...")
-  ans = object[c("call", "info")]
+
+  ans = list()
   ans$call = object$call
+  ans$info = object$model.summary[-1]
 
-  n_top_model = min(5, nrow(object$model))
-  model = sapply(1:n_top_model, function(i) gsub("&", " + ", object$model$configuration[i]))
-  ans$top.models = data.frame(model, object$model[1:n_top_model,c(2,1,3)])
+  n_top_model = min(5, nrow(object$model.summary$model))
+  model = sapply(1:n_top_model, function(i) gsub("&", " + ", object$model.summary$model$configuration[i]))
+  ans$top.models = data.frame(model, object$model.summary$model[1:n_top_model,c(2,1,3)])
 
-  if(length(object$cluster)){
-    ncluster = nrow(object$cluster)
-    ans$clusters = data.frame(object$cluster[,-3], object$cluster.r2)
+  if(length(object$signal.cluster)){
+    ncluster = nrow(object$signal.cluster$cluster.summary)
+    ans$clusters = data.frame(object$signal.cluster$cluster.summary[,-3], object$signal.cluster$cluster.r2)
     names(ans$clusters) = c(names(ans$clusters)[1:2], "r2 matrix", rep("", ncluster-1))
 
     for(i in 1:ncluster){
-      ans$signals[[i]] = object$signal[object$signal$cluster==i,-4]
+      ans$signals[[i]] = object$variant[object$variant$cluster==i,-4]
       row.names(ans$signals[[i]]) = 1:nrow(ans$signals[[i]])
     }
   }
@@ -160,9 +170,9 @@ print.summary.dap = function(object, digits = max(5L, getOption("digits") - 3L))
   cat("\nCall:\n",
      paste(deparse(object$call), sep = "\n", collapse = "\n"), "\n\n", sep = "")
 
-  cat("Posterior expected model size:", format(object$info$model.size[1], digits=digits), "( sd =", format(object$info$model.size[2], digits=digits), ")\n")
-  cat("LogNC =", format(object$info$log10NC/log10(exp(1)), digits=digits), "( Log10NC =", format(object$info$log10NC, digits=digits), ")\n")
-  cat("Minimum PIP is estimated at", format(object$info$PIP.min, digits=digits), "( N =", format(object$info$N, digits=digits), ")\n")
+  cat("Posterior expected model size:", format(object$model.size[1], digits=digits), "( sd =", format(object$model.size[2], digits=digits), ")\n")
+  cat("LogNC =", format(object$log10NC/log10(exp(1)), digits=digits), "( Log10NC =", format(object$log10NC, digits=digits), ")\n")
+  cat("Minimum PIP is estimated at", format(object$PIP.min, digits=digits), "( N =", format(object$N, digits=digits), ")\n")
 
   cat("\nTop Models:\n")
   print(format(object$top.models, digits=digits), print.gap=2L, quote=FALSE)
@@ -184,8 +194,8 @@ print.summary.dap = function(object, digits = max(5L, getOption("digits") - 3L))
     cat("\nNo Independent Association Signal Clusters.\n")
   }
 
-  cat("Please refer to <dap.object>$signal for PIP of top predictors,\n")
-  cat("       and <dap.object>$model for configuration of top models.\n")
+  cat("Please refer to <dap.object>$variant for PIP of top predictors,\n")
+  cat("       and model.dap(<dap.object>) for configuration of top models.\n")
 
   cat("\n")
   invisible(object)
@@ -247,6 +257,15 @@ dap.sbams <- function(file, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_th
   result = .Call(`_dap_dap_main`, PACKAGE = 'dap', params, as.numeric(quiet))
 
   result$call = cl
+  result$model.summary$model$configuration = gsub("&", "+", result$model.summary$model$configuration)
   class(result) = "dap"
   return(result)
+}
+
+#' @export
+model.dap = function(object)
+{
+  if(!inherits(object, "dap"))
+    warning("calling model.dap(<fake-dap-object>) ...")
+  return(object$model.summary$model)
 }

@@ -30,11 +30,18 @@ dap(formula, data, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_thresh=0.01
 \item{quiet}{(optional) If TRUE, dap will mute running logs.}
 }
 \value{
-\code{dap} returns an object of \code{"dap"}, which is a list containing the following components: \item{cluster}{a data frame, with each line representing the information of one signal cluster, including the size (i.e. number of member predictors), the posterior inclusion probability, and the average LD measures (\eqn{r^2}) for predictors within the cluster.}
-\item{cluster.r2}{a matrix representing the average LD measures (\eqn{r^2}) for predictors within a cluster and between clusters.}
-\item{signal}{a data frame of predictors ordered by the posterior inclusion probability (PIP), including predictor name, PIP, log10abf, and the signal cluster it belongs to.}
-\item{model}{a data frame of models. Specifically, the first column shows the posterior probability of the corresponding model; the second column indicates the size (i.e., the number of predictors) of the model; the third column shows the unnormalized posterior score of the model (defined as \eqn{log10(model prior)+log10(BF)}); and the last column gives the exact configuration of the model.}
-\item{info}{a list of extra information on the expected model size, sample size and the minimum PIP.}
+\code{dap} returns an object of \code{"dap"}, which is a list containing the following components:
+\item{signal.cluster}{a List of signal-cluster information including:\itemize{
+\item{\code{cluster.summary}}{: a data frame, with each line representing the information of one signal cluster, including the size (i.e. number of member predictors), the posterior inclusion probability, and the average LD measures (\eqn{r^2}) for predictors within the cluster.}
+\item{\code{cluster.r2}}{: a matrix representing the average LD measures (\eqn{r^2}) for predictors within a cluster and between clusters.}}}
+
+\item{variant}{a data frame of predictors ordered by the posterior inclusion probability (PIP), including predictor name, PIP, log10abf, and the signal cluster it belongs to.}
+
+\item{model.summary}{a List of model configuration information including \itemize{
+\item{\code{model}}{: a data frame of models. Specifically, the first column shows the posterior probability of the corresponding model; the second column indicates the size (i.e., the number of predictors) of the model; the third column shows the unnormalized posterior score of the model (defined as \eqn{log10(model prior)+log10(BF)}); and the last column gives the exact configuration of the model.}
+\item{\code{model.size}}{: expected model size along with the standard deviation.}
+\item{\code{N}}{: sample size.}
+\item{\code{PIP.min}}{: the minimum posterior inclusion probability (PIP).}}}
 \item{call}{the matched call.}
 }
 \description{

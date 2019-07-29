@@ -560,16 +560,16 @@ List summary_option_0(controller& con){
                                     Named("log10abf")=nsnp_abfv,
                                     Named("cluster") =nsnp_cluster);
 
-  List info = List::create(Named("model.size") = msize,
-                           Named("log10NC") = con.get_log10_pnorm(),
-                           Named("PIP.min") = min_pip,
-                           Named("N") = con.get_N(),
-                           Named("response") = con.get_pheno_name());
+  List model_summary = List::create(Named("model") = nmodel,
+                                    Named("model.size") = msize,
+                                    Named("log10NC") = con.get_log10_pnorm(),
+                                    Named("PIP.min") = min_pip,
+                                    Named("N") = con.get_N(),
+                                    Named("response") = con.get_pheno_name());
 
 
-  List result = List::create(Named("signal") = SNP,
-                             Named("model") = nmodel,
-                             Named("info") = info);
+  List result = List::create(Named("variant") = SNP,
+                             Named("model.summary") = model_summary);
 
   if(con.grp_vec.size() > 0){
     DataFrame cluster = DataFrame::create(Named("cluster.size") = wrap(con.cluster_count),
@@ -595,8 +595,10 @@ List summary_option_0(controller& con){
     rownames(r2) = wrap(con.cluster_id);
     colnames(r2) = rownames(r2);
 
-    result.push_front(r2, "cluster.r2");
-    result.push_front(cluster, "cluster");
+    List signal_cluster = List::create(Named("cluster.summary") = cluster,
+                                       Named("cluster.r2") = r2);
+
+    result.push_front(signal_cluster, "signal.cluster");
   }
 
   return result;
