@@ -8,6 +8,7 @@ using namespace Rcpp;
 using namespace std;
 
 List summary_option_0(controller& con);
+List summary_option_1(controller& con);
 void print_dap_config(controller& con);
 
 // [[Rcpp::export]]
@@ -280,7 +281,12 @@ List dap_main(List arg, int quiet) {
   if(quiet==0) print_dap_config(con);
 
   con.run();
-  return summary_option_0(con);
+
+  if(con.run_option==0) return summary_option_0(con);
+  if(con.run_option==1) return summary_option_1(con);
+
+  // API not built for other options
+  return List::create();
 
 }
 
@@ -505,8 +511,14 @@ List dap_sbams(NumericMatrix& x, NumericVector& y, int normalize, List arg, int 
   // all done, print all configs
   // con.print_dap_config();
   if(quiet==0) print_dap_config(con);
+
   con.run();
-  return summary_option_0(con);
+
+  if(con.run_option==0) return summary_option_0(con);
+  if(con.run_option==1) return summary_option_1(con);
+
+  // API not built for other options
+  return List::create();
 }
 
 
@@ -602,6 +614,15 @@ List summary_option_0(controller& con){
   }
 
   return result;
+}
+
+List summary_option_1(controller& con){
+  DataFrame result = DataFrame::create(Named("SNP")=con.single_snp_name,
+                                       Named("log10_ABF")=con.single_snp_log10_ABF,
+                                       Named("b")=con.single_snp_bhat,
+                                       Named("se")=con.single_snp_se,
+                                       Named("z-value")=con.single_snp_zval);
+  return List::create(result);
 }
 
 void print_dap_config(controller& con){

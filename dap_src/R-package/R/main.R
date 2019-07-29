@@ -204,7 +204,7 @@ print.summary.dap = function(object, digits = max(5L, getOption("digits") - 3L))
 
 #' Integrative Genetic Association Analysis using Deterministic Approximation of Posteriors for SBAMS-format Data
 #'
-#' \code{dap.sbams} is an interface built especially for SBAMS-format files, which is esigned to perform rigorous enrichment analysis, QTL discovery and multi-SNP fine-mapping analysis in a highly efficient way.
+#' \code{dap.sbams} is an interface built especially for SBAMS-format files, which is designed to perform rigorous enrichment analysis, QTL discovery and multi-SNP fine-mapping analysis in a highly efficient way.
 #'
 #' @usage
 #' dap.sbams(file, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_thresh=0.01, all=FALSE, size_limit=-1, thread=1, quiet=FALSE)

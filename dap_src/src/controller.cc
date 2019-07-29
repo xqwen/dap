@@ -1163,6 +1163,7 @@ double *controller::get_weights(vector<double>& vec){
 void controller::scan(){
 
     init();
+    init_scan_for_R();
     mlr.get_single_SNP_stats();
     for(int i=0;i<p;i++){
 
@@ -1171,10 +1172,38 @@ void controller::scan(){
         double bhat = mlr.beta_vec[i];
         double se = mlr.se_vec[i];
         double zval = bhat/se;
-        fprintf(outfd,"%25s  %9.3f        %12.3e %12.3e   %12.3e\n" , pars.geno_map[i].c_str(),  mlr.compute_log10_ABF(mcfg),bhat, se, zval);
 
-    }  
+        if(run_in_r==0)
+            fprintf(outfd,"%25s  %9.3f        %12.3e %12.3e   %12.3e\n" , pars.geno_map[i].c_str(),  mlr.compute_log10_ABF(mcfg),bhat, se, zval);
+        else{
+            single_snp_name[i] = pars.geno_map[i];
+            single_snp_bhat[i] = bhat;
+            single_snp_se[i]   = se;
+            single_snp_zval[i] = zval;
+            single_snp_log10_ABF[i] = mlr.compute_log10_ABF(mcfg);
+        }
 
+    }
+
+    // test_scan_for_R();  
+
+}
+
+void controller::init_scan_for_R(){
+    if(run_in_r>0){
+        single_snp_name.resize(p);
+        single_snp_bhat.resize(p);
+        single_snp_se.resize(p);
+        single_snp_zval.resize(p);
+        single_snp_log10_ABF.resize(p);
+    }
+}
+
+void controller::test_scan_for_R(){
+    if(run_in_r>0){
+        for(int i=0; i<p; i++)
+            fprintf(outfd,"%25s  %9.3f        %12.3e %12.3e   %12.3e\n" , single_snp_name[i].c_str(), single_snp_log10_ABF[i],single_snp_bhat[i], single_snp_se[i], single_snp_zval[i]);
+    }
 }
 
 

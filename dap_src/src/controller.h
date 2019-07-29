@@ -123,7 +123,7 @@ class controller {
         int run_in_r;
 
     public:
-        // for reporting
+        // for reporting option 0
         vector<Nmodel> nmodel_vec;
         vector<NSNP> nsnp_vec;
         double msize_mean;
@@ -138,6 +138,14 @@ class controller {
         map<int,int> grpr2_map;
         map<string, double> grp_r2;
         map<string,double> single_log10_abfv;
+
+        // for reporting option 1 --scan
+        vector<string> single_snp_name;
+        vector<double> single_snp_bhat;
+        vector<double> single_snp_se;
+        vector<double> single_snp_zval;
+        vector<double> single_snp_log10_ABF;
+
 
         // public interface
         int run_option; 
@@ -302,6 +310,10 @@ class controller {
         double compute_average_r2 (const vector<int> & vec);
         double compute_average_r2(const vector<int> & vec1, const vector<int> & vec2);
         double compute_r2(int i, int j); 
+
+        // for R use
+        void init_scan_for_R();
+        void test_scan_for_R();
 };  
 
 double log10_weighted_sum(vector<double> &vec, vector<double> &wts);

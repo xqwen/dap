@@ -36,7 +36,7 @@ dap.sbams(file, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_thresh=0.01, a
 \item{call}{the matched call.}
 }
 \description{
-\code{dap.sbams} is an interface built especially for SBAMS-format files, which is esigned to perform rigorous enrichment analysis, QTL discovery and multi-SNP fine-mapping analysis in a highly efficient way.
+\code{dap.sbams} is an interface built especially for SBAMS-format files, which is designed to perform rigorous enrichment analysis, QTL discovery and multi-SNP fine-mapping analysis in a highly efficient way.
 }
 \details{
 Please refer to \url{https://github.com/xqwen/dap/tree/master/dap_src} for more details.
