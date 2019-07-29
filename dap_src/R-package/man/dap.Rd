@@ -4,12 +4,14 @@
 \alias{dap}
 \title{Structured Bayesian Model Selection via Deterministic Approximation of Posteriors}
 \usage{
-dap(formula, data, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_thresh=0.01, all=FALSE, size_limit=-1, thread=1, quiet=FALSE)
+dap(formula, data, twas=FALSE, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_thresh=0.01, all=FALSE, size_limit=-1, thread=1, quiet=FALSE)
 }
 \arguments{
 \item{formula}{an object of class \code{formula} (or one that can be coerced to that class): a symbolic description of the model to be fitted.}
 
 \item{data}{a data frame containing the variables in the model.}
+
+\item{twas}{If TRUE, \code{dap} will return the coefficients of candidate predictors for TWAS use.}
 
 \item{ens}{(optional) prior expected number of signal clusters, \code{ens=1} by default.}
 
@@ -43,6 +45,7 @@ dap(formula, data, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_thresh=0.01
 \item{\code{N}}{: sample size.}
 \item{\code{PIP.min}}{: the minimum posterior inclusion probability (PIP).}}}
 \item{call}{the matched call.}
+\item{twas}{(Available when \code{dap(...,twas=TRUE,...)}) a list including coefficients and expected R2.}
 }
 \description{
 \code{dap} is used perform Bayesian variable selection among a large scale of predictors, multicolinearty and missingness are allowed. It will automatically impute missingness in the input data with mean values, normalize the response and predictors, and propose top predictive signals and signal clusters according to posterior probability.

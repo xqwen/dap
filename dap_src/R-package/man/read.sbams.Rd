@@ -21,5 +21,6 @@ Please refer to \url{https://github.com/xqwen/dap/tree/master/dap_src} for more 
 \examples{
 sbams.file = system.file("sbamsdat", "sim.1.sbams.dat", package = "dap")
 sbams.dat  = read.sbams(sbams.file)
+test.dap.sbams.dat = dap(gene~., sbams.dat)
 
 }
