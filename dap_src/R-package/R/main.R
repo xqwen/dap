@@ -116,8 +116,8 @@ print.dap = function(object, digits = max(3L, getOption("digits") - 3L)){
   cat("\nOne of the best models is:\n")
   cat("\t", object$model.summary$response,"~", gsub("&", " + ", object$model.summary$model$configuration[1]), "\n\n")
 
-  cat("Please refer to <dap.object>$signal for PIP of top predictors,\n")
-  cat("       and <dap.object>$model for configuration of top models.\n")
+  cat("Please refer to <dap.object>$variant for PIP of top predictors,\n")
+  cat("       and model.dap(<dap.object>) for configuration of top models.\n")
 
   cat("\n")
   invisible(object)
