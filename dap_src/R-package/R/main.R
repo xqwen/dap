@@ -100,7 +100,6 @@ dap = function(formula, data, twas=FALSE, ens=1, pi1=-1, ld_control=0.25, msize=
     twas_coef = rep(0, length(twas_vars))
     names(twas_coef) = twas_vars
     ER2 = 0
-    cump = sum(result$model.summary$model$posterior)
 
     for(i in 1:nrow(result$model.summary$model)){
       if(result$model.summary$model$size[i]>0){
@@ -111,7 +110,6 @@ dap = function(formula, data, twas=FALSE, ens=1, pi1=-1, ld_control=0.25, msize=
       }
     }
 
-    twas_coef = twas_coef/cump
     index_sorted = sort(abs(twas_coef), decreasing = TRUE, index.return=TRUE)$ix
     twas_df = data.frame(predictor=names(twas_coef), beta = twas_coef)[index_sorted,]
     row.names(twas_df) = 1:length(twas_coef)
