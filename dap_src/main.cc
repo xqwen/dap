@@ -3,30 +3,31 @@ using namespace std;
 #include "controller.h"
 #include <stdlib.h>
 
+#define LENGTH 1024
 int main(int argc, char **argv){
 
-    char grid_file[128];
-    char data_file[128];
-    char zval_file[128];
-    char est_file[128];
-    char ld_file[128];
-    char out_file[128];
-    char log_file[128];
-    char gene_name[64];
+    char grid_file[LENGTH];
+    char data_file[LENGTH];
+    char zval_file[LENGTH];
+    char est_file[LENGTH];
+    char ld_file[LENGTH];
+    char out_file[LENGTH];
+    char log_file[LENGTH];
+    char gene_name[LENGTH];
 
-    char prior_file[128];
+    char prior_file[LENGTH];
 
 
-    memset(gene_name,0,64);
-    memset(grid_file,0,128);
-    memset(out_file,0,128);
-    memset(log_file,0,128);
-    memset(data_file,0,128);
-    memset(ld_file,0,128);
-    memset(zval_file,0,128);
-    memset(est_file,0,128);
+    memset(gene_name,0,LENGTH);
+    memset(grid_file,0,LENGTH);
+    memset(out_file,0,LENGTH);
+    memset(log_file,0,LENGTH);
+    memset(data_file,0,LENGTH);
+    memset(ld_file,0,LENGTH);
+    memset(zval_file,0,LENGTH);
+    memset(est_file,0,LENGTH);
 
-    memset(prior_file,0,128);
+    memset(prior_file,0,LENGTH);
 
 
     int ld_format = 1; // for correlation matrix
