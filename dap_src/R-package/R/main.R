@@ -194,9 +194,9 @@ print.summary.dap = function(object, digits = max(5L, getOption("digits") - 3L))
   cat("\nCall:\n",
      paste(deparse(object$call), sep = "\n", collapse = "\n"), "\n\n", sep = "")
 
-  cat("Posterior expected model size:", format(object$model.size[1], digits=digits), "( sd =", format(object$model.size[2], digits=digits), ")\n")
-  cat("LogNC =", format(object$log10NC/log10(exp(1)), digits=digits), "( Log10NC =", format(object$log10NC, digits=digits), ")\n")
-  cat("Minimum PIP is estimated at", format(object$PIP.min, digits=digits), "( N =", format(object$N, digits=digits), ")\n")
+  cat("Posterior expected model size:", format(object$info$model.size[1], digits=digits), "( sd =", format(object$info$model.size[2], digits=digits), ")\n")
+  cat("LogNC =", format(object$info$log10NC/log10(exp(1)), digits=digits), "( Log10NC =", format(object$info$log10NC, digits=digits), ")\n")
+  cat("Minimum PIP is estimated at", format(object$info$PIP.min, digits=digits), "( N =", format(object$info$N, digits=digits), ")\n")
 
   cat("\nTop Models:\n")
   print(format(object$top.models, digits=digits), print.gap=2L, quote=FALSE)
