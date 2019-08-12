@@ -4,14 +4,12 @@
 \alias{dap}
 \title{Structured Bayesian Model Selection via Deterministic Approximation of Posteriors}
 \usage{
-dap(formula, data, twas=FALSE, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_thresh=0.01, all=FALSE, size_limit=-1, thread=1, quiet=FALSE)
+dap(formula, data, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_thresh=0.01, all=FALSE, size_limit=-1, thread=1, quiet=FALSE)
 }
 \arguments{
 \item{formula}{an object of class \code{formula} (or one that can be coerced to that class): a symbolic description of the model to be fitted.}
 
 \item{data}{a data frame containing the variables in the model.}
-
-\item{twas}{If TRUE, \code{dap} will return the coefficients of candidate predictors for TWAS use.}
 
 \item{ens}{(optional) prior expected number of signal clusters, \code{ens=1} by default.}
 

@@ -3,12 +3,11 @@
 #' \code{dap} is used perform Bayesian variable selection among a large scale of predictors, multicolinearty and missingness are allowed. It will automatically impute missingness in the input data with mean values, normalize the response and predictors, and propose top predictive signals and signal clusters according to posterior probability.
 #'
 #' @usage
-#' dap(formula, data, twas=FALSE, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_thresh=0.01, all=FALSE, size_limit=-1, thread=1, quiet=FALSE)
+#' dap(formula, data, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_thresh=0.01, all=FALSE, size_limit=-1, thread=1, quiet=FALSE)
 #'
 #' @aliases dap
 #' @param formula an object of class \code{formula} (or one that can be coerced to that class): a symbolic description of the model to be fitted.
 #' @param data  a data frame containing the variables in the model.
-#' @param twas  If TRUE, \code{dap} will return the coefficients of candidate predictors for TWAS use.
 #' @param ens   (optional) prior expected number of signal clusters, \code{ens=1} by default.
 #' @param pi1   (optional) the exchangeable prior probability, values \code{0<pi1<1} accepted. By default -1, \code{pi1=ens/p}, where \code{p} is number of predictors in the input file.
 #' @param ld_control (optional) the LD threshold to be considered within a single signal cluster. By default, the threshold is set to 0.25.
@@ -61,7 +60,7 @@
 #' @useDynLib dap, .registration = TRUE
 #' @importFrom Rcpp sourceCpp
 #' @export
-dap = function(formula, data, twas=FALSE, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_thresh=0.01, all=FALSE, size_limit=-1, thread=1, quiet=FALSE){
+dap = function(formula, data, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_thresh=0.01, all=FALSE, size_limit=-1, thread=1, quiet=FALSE){
   cl = match.call()
   mf = match.call(expand.dots = FALSE)
   m <- match(c("formula", "data"), names(mf), 0L)
@@ -93,28 +92,6 @@ dap = function(formula, data, twas=FALSE, ens=1, pi1=-1, ld_control=0.25, msize=
 
   result$call = cl
   result$model.summary$model$configuration = gsub("&", "+", result$model.summary$model$configuration)
-
-  if(twas){
-    data = data.frame(y,x)
-    twas_vars = unique(unlist(sapply(result$model.summary$model$configuration[result$model.summary$model$size>0], function(x) strsplit(x,"\\+"))))
-    twas_coef = rep(0, length(twas_vars))
-    names(twas_coef) = twas_vars
-    ER2 = 0
-
-    for(i in 1:nrow(result$model.summary$model)){
-      if(result$model.summary$model$size[i]>0){
-        this_formula = as.formula(paste("y ~",result$model.summary$model$configuration[i]))
-        this_result  = myRegression(this_formula, data, result$model.summary$model$posterior[i])
-        ER2 = ER2 + this_result$er2
-        twas_coef[names(this_result$coef)] = twas_coef[names(this_result$coef)]+this_result$coef
-      }
-    }
-
-    index_sorted = sort(abs(twas_coef), decreasing = TRUE, index.return=TRUE)$ix
-    twas_df = data.frame(predictor=names(twas_coef), beta = twas_coef)[index_sorted,]
-    row.names(twas_df) = 1:length(twas_coef)
-    result$twas = list(coef=twas_df, ER2=ER2)
-  }
 
   class(result) = "dap"
   return(result)
