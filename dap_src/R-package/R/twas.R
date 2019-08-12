@@ -72,7 +72,7 @@ twas = function(data, dap){
   index_sorted = sort(abs(coefs), decreasing = TRUE, index.return=TRUE)$ix
   twas_df = data.frame(predictor=names(coefs), weight = coefs)[index_sorted,]
   row.names(twas_df) = 1:length(coefs)
-  result = list(coef=twas_df, ER2=ER2)
+  result = list(weights=twas_df, ER2=ER2)
   class(result) = "twas"
   return(result)
 }
