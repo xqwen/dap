@@ -9,6 +9,10 @@ dap_sbams <- function(x, y, normalize, arg, quiet, phenoname) {
     .Call(`_dap_dap_sbams`, x, y, normalize, arg, quiet, phenoname)
 }
 
+dap_ss <- function(snp_name, est, est_se, ld_matrix, sample_size, syy, arg, quiet) {
+    .Call(`_dap_dap_ss`, snp_name, est, est_se, ld_matrix, sample_size, syy, arg, quiet)
+}
+
 read_sbams <- function(data_file) {
     .Call(`_dap_read_sbams`, data_file)
 }

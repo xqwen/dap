@@ -270,3 +270,28 @@ model.dap = function(object)
     warning("calling model.dap(<fake-dap-object>) ...")
   return(object$model.summary$model)
 }
+
+#' dap.ss
+#' @examples \dontrun{
+#'
+#' est_file = system.file("sbamsdat", "sim.1.est.dat", package = "dap")
+#' ld_file  = system.file("sbamsdat", "sim.1.ld.dat", package = "dap")
+#' est = read.table(est_file)
+#' ld = read.table(ld_file)
+#' ld = as.matrix(ld)
+#' dap.ss(est, ld, 343, 515.6)
+#' }
+#' @useDynLib dap, .registration = TRUE
+#' @importFrom Rcpp sourceCpp
+#' @export
+dap.ss = function(est, ld, n, syy){
+  
+  params = list(t=1)
+  result = .Call(`_dap_dap_ss`, PACKAGE = 'dap', est[,1], est[,2], est[,3], ld, n, syy, params, 1)
+
+  result$model.summary$model$configuration = gsub("&", "+", result$model.summary$model$configuration)
+  
+  class(result) = "dap"
+  return(result)
+}
+

@@ -33,6 +33,24 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// dap_ss
+List dap_ss(StringVector& snp_name, NumericVector& est, NumericVector& est_se, NumericMatrix& ld_matrix, int sample_size, double syy, List arg, int quiet);
+RcppExport SEXP _dap_dap_ss(SEXP snp_nameSEXP, SEXP estSEXP, SEXP est_seSEXP, SEXP ld_matrixSEXP, SEXP sample_sizeSEXP, SEXP syySEXP, SEXP argSEXP, SEXP quietSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< StringVector& >::type snp_name(snp_nameSEXP);
+    Rcpp::traits::input_parameter< NumericVector& >::type est(estSEXP);
+    Rcpp::traits::input_parameter< NumericVector& >::type est_se(est_seSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix& >::type ld_matrix(ld_matrixSEXP);
+    Rcpp::traits::input_parameter< int >::type sample_size(sample_sizeSEXP);
+    Rcpp::traits::input_parameter< double >::type syy(syySEXP);
+    Rcpp::traits::input_parameter< List >::type arg(argSEXP);
+    Rcpp::traits::input_parameter< int >::type quiet(quietSEXP);
+    rcpp_result_gen = Rcpp::wrap(dap_ss(snp_name, est, est_se, ld_matrix, sample_size, syy, arg, quiet));
+    return rcpp_result_gen;
+END_RCPP
+}
 // read_sbams
 DataFrame read_sbams(const char * data_file);
 RcppExport SEXP _dap_read_sbams(SEXP data_fileSEXP) {
@@ -48,6 +66,7 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_dap_dap_main", (DL_FUNC) &_dap_dap_main, 2},
     {"_dap_dap_sbams", (DL_FUNC) &_dap_dap_sbams, 6},
+    {"_dap_dap_ss", (DL_FUNC) &_dap_dap_ss, 8},
     {"_dap_read_sbams", (DL_FUNC) &_dap_read_sbams, 1},
     {NULL, NULL, 0}
 };

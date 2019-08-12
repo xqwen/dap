@@ -522,6 +522,220 @@ List dap_sbams(NumericMatrix& x, NumericVector& y, int normalize, List arg, int 
 }
 
 
+// [[Rcpp::export]]
+List dap_ss(StringVector& snp_name, NumericVector& est, NumericVector& est_se, NumericMatrix& ld_matrix, int sample_size, double syy, List arg, int quiet){
+  
+  char grid_file[128];
+  char out_file[128];
+  char log_file[128];
+  char gene_name[64];
+  char prior_file[128];
+  
+  memset(grid_file,0,128);
+  memset(out_file,0,128);
+  memset(log_file,0,128);
+  memset(gene_name,0,64);
+  memset(prior_file,0,128);
+  
+  
+  double abf_option = -1;
+  
+  int msize =-1;
+  
+  int output_all = 0;
+  
+  double pes = 1.0;
+  double pi1 = -1;
+  
+  double ld_control = -1;
+  
+  int size_limit = -1;
+  
+  
+  double snp_select_thresh = -1;
+  double size_select_thresh = -1;
+  
+  // alternative non-fm running options
+  int run_scan = 0;
+  
+  int thread = 1;
+  
+  
+  vector< string > mystrings =  arg.attr("names");
+  
+  for(int i=0; i<arg.size(); i++)
+  {
+    // required data files and additional info
+    if(mystrings[i]=="grid")
+    {
+      strcpy(grid_file, arg[i]);
+      continue;
+    }
+    
+    // prior file
+    if(mystrings[i]=="prior")
+    {
+      strcpy(prior_file, arg[i]);
+      continue;
+    }
+    
+    // prior options
+    
+    if(mystrings[i]=="ens"){
+      pes = arg[i];
+      continue;
+    }
+    
+    
+    if(mystrings[i]=="pi1"){
+      pi1 = arg[i];
+      continue;
+    }
+    
+    if(mystrings[i]=="abf"){
+      abf_option = arg[i];
+      continue;
+    }
+    
+    // thresholds
+    
+    if(mystrings[i]=="converg_thresh"){
+      size_select_thresh = arg[i];
+      continue;
+    }
+    
+    if(mystrings[i]=="size_limit"){
+      size_limit = arg[i];
+      continue;
+    }
+    
+    if(mystrings[i]=="no_size_limit"){
+      size_limit = -1;
+      continue;
+    }
+    
+    
+    if(mystrings[i]=="ld_control"){
+      ld_control = arg[i];
+      continue;
+    }
+    
+    // msize option  for DAP-K
+    if(mystrings[i]=="msize" || mystrings[i]=="dapk"){
+      msize = arg[i];
+      continue;
+    }
+    
+    
+    // openmp threads
+    
+    if(mystrings[i]=="t"){
+      thread = arg[i];
+      continue;
+    }
+    
+    
+    // output option
+    if(mystrings[i]=="all"){
+      output_all = 1;
+      continue;
+    }
+    
+    // gene/locus name
+    if(mystrings[i]=="name"){
+      strcpy(gene_name, arg[i]);
+      continue;
+    }
+    
+    // no finemapping, just single SNP analysis
+    if(mystrings[i]=="scan"){
+      run_scan = 1;
+      continue;
+    }
+    
+    stop("Unknow option ", mystrings[i]);
+  }
+  
+  
+  int p = snp_name.size();
+  vector<string> genonames = as<vector<string>>(snp_name);
+  vector<double> beta = as<vector<double>>(est);
+  vector<double> se = as<vector<double>>(est_se);
+  vector<vector<double>> ld;
+  ld.resize(p);
+  for(int i=0; i<p; i++){
+    NumericVector v = ld_matrix(_,i);
+    ld[i] = as<vector<double>>(v);
+    ld[i].resize(p);
+  }
+  
+  controller con;
+  
+  con.initialize(genonames, beta, se, ld, sample_size, syy);
+  
+  con.set_for_r(quiet);
+  
+  con.set_outfile(out_file, log_file);
+  
+  con.set_gene(gene_name);
+  con.set_abf_option(abf_option);
+  con.set_thread(thread);
+  
+  con.set_size_limit(size_limit);
+  
+  if(ld_control>=0)
+    con.set_ld_control(ld_control);
+  
+  if(msize>=1){
+    con.set_max_size(msize);
+  }
+  
+  
+  if(strlen(prior_file)==0){
+    if(pi1 != -1){
+      if(0<pi1 && pi1 <1){
+        con.set_prior(pi1);
+      }else{
+        warning("Warning: pi1 specification is outside the range, ignored...\n");
+        con.set_prior_exp(pes);
+      }
+    }else{
+      // default
+      con.set_prior_exp(pes);
+    }
+  }else
+    con.set_prior(prior_file);
+  
+  if(output_all == 1)
+    con.set_output_all();
+  
+  if(snp_select_thresh>=0)
+    con.set_snp_select_thresh(snp_select_thresh);
+  
+  if(size_select_thresh >=0)
+    con.set_size_select_thresh(size_select_thresh);
+  
+  con.run_option = 0;
+  
+  if(run_scan){
+    con.run_option = 1;
+  }
+  
+  
+  // all done, print all configs
+  // con.print_dap_config();
+  if(quiet==0) print_dap_config(con);
+  
+  con.run();
+  
+  if(con.run_option==0) return summary_option_0(con);
+  if(con.run_option==1) return summary_option_1(con);
+  
+  // API not built for other options
+  return List::create();
+}
+
+
 List summary_option_0(controller& con){
   int n_nmodel = con.nmodel_vec.size();
   NumericVector   nmodel_prob, nmodel_post;
