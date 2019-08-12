@@ -102,7 +102,8 @@ void parser::process_summary_data2(char *effect_file, char *ld_file, int sample_
 
 }
 
-void parser::process_summary_data2(vector<string>& snp_names, vector<double>& beta_vector, vector<double>& se_vector, vector<vector<double>>& ld, int sample_size, double syy){
+void parser::process_summary_data2(vector<string>& snp_names, vector<double>& beta_vector, vector<double>& se_vector, vector<vector<double>>& ld, int sample_size, double syy, string name){
+    pheno_name = name;
     int p = snp_names.size();
     ld_matrix = gsl_matrix_calloc(p,p);
 

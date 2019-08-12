@@ -28,11 +28,17 @@ dap.sbams(file, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_thresh=0.01, a
 \item{quiet}{(optional) If TRUE, dap will mute running logs.}
 }
 \value{
-\code{dap} returns an object of \code{"dap"}, which is a list containing the following components: \item{cluster}{a data frame, with each line representing the information of one signal cluster, including the size (i.e. number of member predictors), the posterior inclusion probability, and the average LD measures (\eqn{r^2}) for predictors within the cluster.}
-\item{cluster.r2}{a matrix representing the average LD measures (\eqn{r^2}) for predictors within a cluster and between clusters.}
-\item{signal}{a data frame of predictors ordered by the posterior inclusion probability (PIP), including predictor name, PIP, log10abf, and the signal cluster it belongs to.}
+\code{dap} returns an object of \code{"dap"}, which is a list containing the following components: \item{signal.cluster}{a list of information on signal clusters: \describe{
+\item{cluster.summary}{a data frame, with each line representing the information of one signal cluster, including the size (i.e. number of member predictors), the posterior inclusion probability, and the average LD measures (\eqn{r^2}) for predictors within the cluster.} 
+\item{cluster.r2}{a matrix representing the average LD measures (\eqn{r^2}) for predictors within a cluster and between clusters.}}}
+\item{variant}{a data frame of predictors ordered by the posterior inclusion probability (PIP), including predictor name, PIP, log10abf, and the signal cluster it belongs to.}
+\item{model.summary}{a list of information on candidate models:\describe{
 \item{model}{a data frame of models. Specifically, the first column shows the posterior probability of the corresponding model; the second column indicates the size (i.e., the number of predictors) of the model; the third column shows the unnormalized posterior score of the model (defined as \eqn{log10(model prior)+log10(BF)}); and the last column gives the exact configuration of the model.}
-\item{info}{a list of extra information on the expected model size, sample size and the minimum PIP.}
+\item{model.size}{information on expected model size and corresponding standard deviation.}
+\item{log10NC}{log10 normalizing constant.}
+\item{PIP.min}{the minimum posterior inclusion probability.}
+\item{N}{the sample size.}
+\item{response}{the name of the phenotype/response variable.}}}
 \item{call}{the matched call.}
 }
 \description{

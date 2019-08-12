@@ -223,7 +223,7 @@ class controller {
 
         // for R use
         void initialize(vector<double>& pheno, string phenoname, vector<vector<double> >& geno, vector<string>& geno_name, char *grid_file, bool regress);
-        void initialize(vector<string>& snp, vector<double>& beta, vector<double>& se, vector<vector<double>>& ld, int sample_size, double syy_);
+        void initialize(vector<string>& snp, vector<double>& beta, vector<double>& se, vector<vector<double>>& ld, int sample_size, double syy_, string phenoname);
 
         void set_for_r(int quiet){
             //1:not quiet 2:quiet

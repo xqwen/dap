@@ -2,12 +2,62 @@
 % Please edit documentation in R/main.R
 \name{dap.ss}
 \alias{dap.ss}
-\title{dap.ss}
+\title{Structured Bayesian Model Selection via Deterministic Approximation of Posteriors using Sufficient Summary Statistics}
 \usage{
-dap.ss(est, ld, n, syy)
+dap.ss(est, ld, n, syy, pheno_name = "", ens = 1, pi1 = -1,
+  ld_control = 0.25, msize = -1, converg_thresh = 0.01,
+  all = FALSE, size_limit = -1, thread = 1, quiet = FALSE)
+}
+\arguments{
+\item{est}{a data.frame or matrix with 3 columns representing SNP names, effect size estimates and corresponding standard errors respectively.}
+
+\item{ld}{a data.frame or matrix containing the correlation matrix between SNPs. The order of the SNP is required to match the order listed in \code{est}.}
+
+\item{n}{an integer that specifies the sample size.}
+
+\item{syy}{the total sum of squares for the quantitative phenotype.}
+
+\item{pheno_name}{(optional) the name of the phenotype. For display use and follow-up TWAS analysis only.}
+
+\item{ens}{(optional) prior expected number of signals, \code{ens=1} by default.}
+
+\item{pi1}{(optional) the exchangeable prior probability, values \code{0<pi1<1} accepted. By default -1, \code{pi1=ens/p}, where \code{p} is number of SNPs in the input file.}
+
+\item{ld_control}{(optional) the LD threshold to be considered within a single signal cluster. By default, the threshold is set to 0.25.}
+
+\item{msize}{(optional) the maximum size of model dap-g explores. Valid maximum model size ranges from \code{1} to \code{p}. By default -1, it is set to \code{p}, i.e., there is no restriction on how large the true association model can be. If it is specified, the DAP-G runs DAP-K algorithm and stops at the specified maximum model size.}
+
+\item{converg_thresh}{(optional)  the stopping condition for model exploration. By default, \code{converg_thresh=0.01}.}
+
+\item{all}{(optional) If TRUE, dap will output information for all SNPs and all signal clusters. By default, only SNPs with \code{PIP > 0.001} and signal clusters with \code{SPIP > 0.25} are output.}
+
+\item{size_limit}{(optional) the maximum number of predictors allowed in a signal cluster. By default -1, there is no constraint and the size of each signal cluster is completely data determined. Setting a small number forces DAP to cap the number of predictors into each cluster and reduces computation.}
+
+\item{thread}{(optional) the number of parallel threads to run DAP algorithm, 1 by default. OpenMP is required for multi-thread option.}
+
+\item{quiet}{(optional) If TRUE, dap will mute running logs.}
+}
+\value{
+\code{dap} returns an object of \code{"dap"}, which is a list containing the following components: \item{signal.cluster}{a list of information on signal clusters: \describe{
+\item{cluster.summary}{a data frame, with each line representing the information of one signal cluster, including the size (i.e. number of member predictors), the posterior inclusion probability, and the average LD measures (\eqn{r^2}) for predictors within the cluster.} 
+\item{cluster.r2}{a matrix representing the average LD measures (\eqn{r^2}) for predictors within a cluster and between clusters.}}}
+\item{variant}{a data frame of predictors ordered by the posterior inclusion probability (PIP), including predictor name, PIP, log10abf, and the signal cluster it belongs to.}
+\item{model.summary}{a list of information on candidate models:\describe{
+\item{model}{a data frame of models. Specifically, the first column shows the posterior probability of the corresponding model; the second column indicates the size (i.e., the number of predictors) of the model; the third column shows the unnormalized posterior score of the model (defined as \eqn{log10(model prior)+log10(BF)}); and the last column gives the exact configuration of the model.}
+\item{model.size}{information on expected model size and corresponding standard deviation.}
+\item{log10NC}{log10 normalizing constant.}
+\item{PIP.min}{the minimum posterior inclusion probability.}
+\item{N}{the sample size.}
+\item{response}{the name of the phenotype/response variable.}}}
+\item{call}{the matched call.}
 }
 \description{
-dap.ss
+The sufficient summary statistics refer to the following information: \itemize{
+\item estimated effect size and corresponding estimated standard error from single SNP testing for each SNP
+\item correlation matrix of SNPs
+\item total sum of squares for the quantitative phenotype
+}
+Note that the using sufficient summary statistics yield the same results (except small numerical difference) as that using individual-level data.
 }
 \examples{
 \dontrun{
@@ -17,6 +67,10 @@ ld_file  = system.file("sbamsdat", "sim.1.ld.dat", package = "dap")
 est = read.table(est_file)
 ld = read.table(ld_file)
 ld = as.matrix(ld)
-dap.ss(est, ld, 343, 515.6)
+dap.ss(est, ld, 343, 515.6, pheno_name="gene")
+
+# It should yield the same result as:
+sbams.file = system.file("sbamsdat", "sim.1.sbams.dat", package = "dap")
+dap.sbams(sbams.file)
 }
 }

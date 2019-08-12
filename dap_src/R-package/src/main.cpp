@@ -212,6 +212,7 @@ List dap_main(int input_format, List arg, int quiet) {
     NumericVector est     = arg["beta"];
     NumericVector est_se  = arg["se"];
     NumericMatrix ld_matrix = arg["ld"];
+    string name = arg["pheno_name"];
     
     int p = snp_name.size();
     vector<string> genonames = as<vector<string>>(snp_name);
@@ -225,7 +226,7 @@ List dap_main(int input_format, List arg, int quiet) {
       ld[i].resize(p);
     }
     
-    con.initialize(genonames, beta, se, ld, sample_size, syy);
+    con.initialize(genonames, beta, se, ld, sample_size, syy, name);
   }
 
   con.set_for_r(quiet);

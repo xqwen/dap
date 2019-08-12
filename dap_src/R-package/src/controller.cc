@@ -85,7 +85,7 @@ void controller::initialize(vector<double>& pheno, string phenoname, vector<vect
 
 }
 
-void controller::initialize(vector<string>& snp, vector<double>& beta, vector<double>& se, vector<vector<double>>& ld, int sample_size, double syy_){
+void controller::initialize(vector<string>& snp, vector<double>& beta, vector<double>& se, vector<vector<double>>& ld, int sample_size, double syy_, string phenoname){
     use_ss = 2;
     N = sample_size;
     syy = syy_;
@@ -93,7 +93,7 @@ void controller::initialize(vector<string>& snp, vector<double>& beta, vector<do
 
     set_default_grid();
     
-    pars.process_summary_data2(snp, beta, se, ld,sample_size, syy);
+    pars.process_summary_data2(snp, beta, se, ld,sample_size, syy, phenoname);
     set_default_options();
 }
 
