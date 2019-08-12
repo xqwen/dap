@@ -78,7 +78,8 @@ dap = function(formula, data, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_
   y[is.na(y)] = mean(y, na.rm = TRUE)
   x = apply(x, 2, function(t) replace(t, is.na(t), mean(t, na.rm=TRUE)))
 
-  params = list(t=1)
+  params = list(x=x, y=y, pheno_name=all.vars(cl)[1])
+  
   if(class(ens)=="numeric" & ens > 0)       params$ens=ens
   if(class(pi1)=="numeric" & pi1>0 & pi1<1) params$pi1=pi1
   if(class(ld_control)=="numeric" & ld_control>=0 & ld_control<1) params$ld_control=ld_control
@@ -88,7 +89,8 @@ dap = function(formula, data, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_
   if(class(size_limit)=="numeric" & size_limit>=1) params$size_limit=size_limit
   if(class(thread)=="numeric" & as.integer(thread)>1) params$t=as.integer(thread)
 
-  result = .Call(`_dap_dap_sbams`, PACKAGE = 'dap', x, y, 1, params, as.numeric(quiet), all.vars(cl)[1])
+  # result = .Call(`_dap_dap_sbams`, PACKAGE = 'dap', x, y, 1, params, as.numeric(quiet), all.vars(cl)[1])
+  result = .Call(`_dap_dap_main`, PACKAGE = 'dap',2, params, as.numeric(quiet))
 
   result$call = cl
   result$model.summary$model$configuration = gsub("&", "+", result$model.summary$model$configuration)
@@ -255,7 +257,7 @@ dap.sbams <- function(file, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_th
   if(class(size_limit)=="numeric" & size_limit>=1) params$size_limit=size_limit
   if(class(thread)=="numeric" & as.integer(thread)>1) params$t=as.integer(thread)
 
-  result = .Call(`_dap_dap_main`, PACKAGE = 'dap', params, as.numeric(quiet))
+  result = .Call(`_dap_dap_main`, PACKAGE = 'dap', 1, params, as.numeric(quiet))
 
   result$call = cl
   result$model.summary$model$configuration = gsub("&", "+", result$model.summary$model$configuration)
@@ -285,9 +287,10 @@ model.dap = function(object)
 #' @importFrom Rcpp sourceCpp
 #' @export
 dap.ss = function(est, ld, n, syy){
-  
-  params = list(t=1)
-  result = .Call(`_dap_dap_ss`, PACKAGE = 'dap', est[,1], est[,2], est[,3], ld, n, syy, params, 1)
+  ld = as.matrix(ld)
+  params = list(snp_names=est[,1], beta=est[,2], se=est[,3], ld=ld, n=n, syy=syy)
+  # result = .Call(`_dap_dap_ss`, PACKAGE = 'dap', est[,1], est[,2], est[,3], ld, n, syy, params, 1)
+  result = .Call(`_dap_dap_main`, PACKAGE = 'dap', 3, params, 1)
 
   result$model.summary$model$configuration = gsub("&", "+", result$model.summary$model$configuration)
   

@@ -51,9 +51,9 @@ scan = function(formula, data){
   y[is.na(y)] = mean(y, na.rm = TRUE)
   x = apply(x, 2, function(t) replace(t, is.na(t), mean(t, na.rm=TRUE)))
 
-  params = list(scan=TRUE)
+  params = list(x=x,y=y,pheno_name=all.vars(cl)[1],scan=TRUE)
 
-  result = .Call(`_dap_dap_sbams`, PACKAGE = 'dap', x, y, 1, params, 1, all.vars(cl)[1])
+  result = .Call(`_dap_dap_main`, PACKAGE = 'dap', 2, params, 1)
 
   return(result[[1]])
 }
@@ -83,7 +83,7 @@ scan.sbams <- function(file)
 {
   params = list(data=file, scan=TRUE)
 
-  result = .Call(`_dap_dap_main`, PACKAGE = 'dap', params, 1)
+  result = .Call(`_dap_dap_main`, PACKAGE = 'dap', 1, params, 1)
 
   return(result[[1]])
 }
