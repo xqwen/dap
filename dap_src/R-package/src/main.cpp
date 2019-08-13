@@ -37,8 +37,8 @@ List dap_main(int input_format, List arg, int quiet) {
   memset(prior_file,0,128);
 
 
-  int ld_format = 1; // for correlation matrix
-
+  // int ld_format = 1; // for correlation matrix
+  // for now the R-package allows ld in format 1 only!!!
 
   double abf_option = -1;
 
@@ -227,6 +227,25 @@ List dap_main(int input_format, List arg, int quiet) {
     }
     
     con.initialize(genonames, beta, se, ld, sample_size, syy, name);
+  }else if(input_format==4){
+    
+    StringVector snp_name = arg["snp_names"];
+    NumericVector     est = arg["zvals"];
+    NumericMatrix ld_matrix = arg["ld"];
+    string name = arg["pheno_name"];
+    
+    int p = snp_name.size();
+    vector<string> genonames = as<vector<string>>(snp_name);
+    vector<double> zvals = as<vector<double>>(est);
+    vector<vector<double>> ld;
+    ld.resize(p);
+    for(int i=0; i<p; i++){
+      NumericVector v = ld_matrix(_,i);
+      ld[i] = as<vector<double>>(v);
+      ld[i].resize(p);
+    }
+    
+    con.initialize(genonames, zvals, ld, sample_size, name);
   }
 
   con.set_for_r(quiet);

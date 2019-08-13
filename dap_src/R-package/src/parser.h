@@ -40,7 +40,7 @@ class parser {
   // for R use only
   void process_data(vector<double>& pheno, vector<vector<double> >& geno, string grp, string name, vector<string>& geno_name, bool regress);
   void process_summary_data2(vector<string>& snp_names, vector<double>& beta_vector, vector<double>& se_vector, vector<vector<double>>& ld, int sample_size, double syy, string name);
-  
+  void process_summary_data(vector<string>& snp_names, vector<double>& z_vector, vector<vector<double>>& ld, int sample_size, string name);
 
 
 

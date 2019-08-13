@@ -311,8 +311,7 @@ model.dap = function(object)
 #' \item{N}{the sample size.}
 #' \item{response}{the name of the phenotype/response variable.}}}
 #' \item{call}{the matched call.}
-#' @examples \dontrun{
-#'
+#' @examples 
 #' est_file = system.file("sbamsdat", "sim.1.est.dat", package = "dap")
 #' ld_file  = system.file("sbamsdat", "sim.1.ld.dat", package = "dap")
 #' est = read.table(est_file)
@@ -323,7 +322,7 @@ model.dap = function(object)
 #' # It should yield the same result as:
 #' sbams.file = system.file("sbamsdat", "sim.1.sbams.dat", package = "dap")
 #' dap.sbams(sbams.file)
-#' }
+#' 
 #' @useDynLib dap, .registration = TRUE
 #' @importFrom Rcpp sourceCpp
 #' @export
@@ -332,6 +331,56 @@ dap.ss = function(est, ld, n, syy, pheno_name="", ens=1, pi1=-1, ld_control=0.25
   ld = as.matrix(ld)
   params = list(snp_names=est[,1], beta=est[,2], se=est[,3], ld=ld, n=n, syy=syy, pheno_name=pheno_name)
   result = .Call(`_dap_dap_main`, PACKAGE = 'dap', 3, params, as.numeric(quiet))
+  result$model.summary$model$configuration = gsub("&", "+", result$model.summary$model$configuration)
+  result$call = cl
+  class(result) = "dap"
+  return(result)
+}
+
+#' Structured Bayesian Model Selection via Deterministic Approximation of Posteriors using Z-Scores and LD Information
+#' 
+#' \code{dap.z} accepts input in the format of z-scores (from single-SNP testing) and LD matrix. Note the results are typically more conservative than that from \code{dap} using individual-level data or \code{dap.ss} using sufficient statistics.
+#' 
+#' @param z     a data.frame or matrix with 2 columns representing SNP names and corresponding z-scores respectively.
+#' @param ld    a data.frame or matrix containing the correlation matrix between SNPs. The order of the SNP is required to match the order listed in \code{est}.
+#' @param n     (optional) an integer that specifies the (approximate) sample size which is used to estimate the input z-scores, 1000 by default.
+#' @param pheno_name (optional) the name of the phenotype. For display use and follow-up TWAS analysis only.
+#' @param ens   (optional) prior expected number of signals, \code{ens=1} by default.
+#' @param pi1   (optional) the exchangeable prior probability, values \code{0<pi1<1} accepted. By default -1, \code{pi1=ens/p}, where \code{p} is number of SNPs in the input file.
+#' @param ld_control (optional) the LD threshold to be considered within a single signal cluster. By default, the threshold is set to 0.25.
+#' @param msize (optional) the maximum size of model dap-g explores. Valid maximum model size ranges from \code{1} to \code{p}. By default -1, it is set to \code{p}, i.e., there is no restriction on how large the true association model can be. If it is specified, the DAP-G runs DAP-K algorithm and stops at the specified maximum model size.
+#' @param converg_thresh (optional)  the stopping condition for model exploration. By default, \code{converg_thresh=0.01}.
+#' @param all   (optional) If TRUE, dap will output information for all SNPs and all signal clusters. By default, only SNPs with \code{PIP > 0.001} and signal clusters with \code{SPIP > 0.25} are output.
+#' @param size_limit (optional) the maximum number of predictors allowed in a signal cluster. By default -1, there is no constraint and the size of each signal cluster is completely data determined. Setting a small number forces DAP to cap the number of predictors into each cluster and reduces computation.
+#' @param thread (optional) the number of parallel threads to run DAP algorithm, 1 by default. OpenMP is required for multi-thread option.
+#' @param quiet (optional) If TRUE, dap will mute running logs.
+#' @return \code{dap} returns an object of \code{"dap"}, which is a list containing the following components: \item{signal.cluster}{a list of information on signal clusters: \describe{
+#' \item{cluster.summary}{a data frame, with each line representing the information of one signal cluster, including the size (i.e. number of member predictors), the posterior inclusion probability, and the average LD measures (\eqn{r^2}) for predictors within the cluster.} 
+#' \item{cluster.r2}{a matrix representing the average LD measures (\eqn{r^2}) for predictors within a cluster and between clusters.}}}
+#' \item{variant}{a data frame of predictors ordered by the posterior inclusion probability (PIP), including predictor name, PIP, log10abf, and the signal cluster it belongs to.}
+#' \item{model.summary}{a list of information on candidate models:\describe{
+#' \item{model}{a data frame of models. Specifically, the first column shows the posterior probability of the corresponding model; the second column indicates the size (i.e., the number of predictors) of the model; the third column shows the unnormalized posterior score of the model (defined as \eqn{log10(model prior)+log10(BF)}); and the last column gives the exact configuration of the model.}
+#' \item{model.size}{information on expected model size and corresponding standard deviation.}
+#' \item{log10NC}{log10 normalizing constant.}
+#' \item{PIP.min}{the minimum posterior inclusion probability.}
+#' \item{N}{the sample size.}
+#' \item{response}{the name of the phenotype/response variable.}}}
+#' \item{call}{the matched call.}
+#' @examples 
+#' z_file = system.file("sbamsdat", "sim.1.zval.dat", package = "dap")
+#' ld_file  = system.file("sbamsdat", "sim.1.ld.dat", package = "dap")
+#' zscores = read.table(z_file)
+#' ld = read.table(ld_file)
+#' dap.z(zscores, ld, n=343, pheno_name="gene")
+#' 
+#' @useDynLib dap, .registration = TRUE
+#' @importFrom Rcpp sourceCpp
+#' @export
+dap.z = function(z, ld, n=1000, pheno_name="", ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_thresh=0.01, all=FALSE, size_limit=-1, thread=1, quiet=FALSE){
+  cl = match.call()
+  ld = as.matrix(ld)
+  params = list(snp_names=z[,1], zvals=z[,2], ld=ld, n=n, pheno_name=pheno_name)
+  result = .Call(`_dap_dap_main`, PACKAGE = 'dap', 4, params, as.numeric(quiet))
   result$model.summary$model$configuration = gsub("&", "+", result$model.summary$model$configuration)
   result$call = cl
   class(result) = "dap"

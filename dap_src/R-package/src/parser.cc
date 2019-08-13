@@ -125,8 +125,9 @@ void parser::process_summary_data2(vector<string>& snp_names, vector<double>& be
         sxx_vec.push_back(sxx);
 
         for(int j=i; j<p; j++){
-            gsl_matrix_set(ld_matrix,i,j,ld[i][j]);
-            gsl_matrix_set(ld_matrix,j,i,ld[i][j]);
+            double val = ld[i][j];
+            gsl_matrix_set(ld_matrix,i,j,val);
+            gsl_matrix_set(ld_matrix,j,i,val);
         }
     }
 }
@@ -225,6 +226,33 @@ void parser::process_summary_data(char *zval_file, char *ld_file, int sample_siz
         }
     }
 
+}
+
+void parser::process_summary_data(vector<string>& snp_names, vector<double>& z_vector, vector<vector<double>>& ld, int sample_size, string name){
+    pheno_name = name;
+    int p = snp_names.size();
+    
+    zval_matrix = gsl_matrix_calloc(p,1);
+    ld_matrix = gsl_matrix_calloc(p,p);
+    
+    for(int i=0; i<p; i++){
+        double zval = z_vector[i];
+        string  snp = snp_names[i];
+        geno_map[i] = snp;
+        geno_rmap[snp] = i;
+        if(sample_size>0){
+            double h2 = zval*zval/(zval*zval+sample_size);
+            double factor = sqrt(0.5*(1+1/(1-h2)));
+            zval = zval/factor;
+        }
+        gsl_matrix_set(zval_matrix,i,0,zval);
+        
+        for(int j=i; j<p; j++){
+            double val = ld[i][j];
+            gsl_matrix_set(ld_matrix,i,j, val);
+            gsl_matrix_set(ld_matrix,j,i, val);
+        }
+    }
 }
 
 
