@@ -1294,6 +1294,33 @@ void controller::extract_ss2(){
 }
 
 
+void controller::extract_ss2_in_r(){
+    init();
+  
+    mlr.extract_summary();
+    gsl_matrix * R = mlr.get_R();
+    ld_matrix_flat.resize(p*p);
+    for(int i=0; i<p; i++){
+        for(int j=i; j<p; j++){
+            double val = gsl_matrix_get(R,i,j);
+            ld_matrix_flat[i*p+j] = val;
+            ld_matrix_flat[j*p+i] = val;
+        }
+    }
+
+    single_snp_name.resize(p);
+    single_snp_bhat.resize(p);
+    single_snp_se.resize(p);
+    for(int i=0; i<p; i++){
+        single_snp_name[i] = pars.geno_map[i];
+        single_snp_bhat[i] = mlr.beta_vec[i];
+        single_snp_se[i] = mlr.se_vec[i];
+    }
+    syy = mlr.get_syy();
+}
+
+
+
 double controller::compute_average_r2(const vector<int> & vec){
     if(vec.size()==1)
         return 1.0;

@@ -92,6 +92,9 @@ class MLR {
             printf("N = %d\n",n);
             printf("Syy = %7.3e\n\n", yty);
         }
+        double get_syy(){
+            return yty;
+        }
         // for data extraction
         vector<double> beta_vec;
         vector<double> se_vec;

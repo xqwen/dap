@@ -145,6 +145,9 @@ class controller {
         vector<double> single_snp_se;
         vector<double> single_snp_zval;
         vector<double> single_snp_log10_ABF;
+        
+        // for reporting ld matrix
+        vector<double> ld_matrix_flat; // flat vector of size pxp
 
 
         // public interface
@@ -159,6 +162,7 @@ class controller {
         void scan();
         void extract_ss();
         void extract_ss2();
+        void extract_ss2_in_r();
         void print_dap_config();
         // system setting
 
@@ -253,6 +257,10 @@ class controller {
 
         int get_p(){
             return p;
+        }
+        
+        double get_syy(){
+            return syy;
         }
 
         int get_output_all(){

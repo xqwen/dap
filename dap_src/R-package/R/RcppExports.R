@@ -9,3 +9,7 @@ read_sbams <- function(data_file) {
     .Call(`_dap_read_sbams`, data_file)
 }
 
+extract_sbams <- function(arg) {
+    .Call(`_dap_extract_sbams`, arg)
+}
+

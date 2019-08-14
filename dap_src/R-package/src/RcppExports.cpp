@@ -29,10 +29,22 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// extract_sbams
+List extract_sbams(List arg);
+RcppExport SEXP _dap_extract_sbams(SEXP argSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type arg(argSEXP);
+    rcpp_result_gen = Rcpp::wrap(extract_sbams(arg));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_dap_dap_main", (DL_FUNC) &_dap_dap_main, 3},
     {"_dap_read_sbams", (DL_FUNC) &_dap_read_sbams, 1},
+    {"_dap_extract_sbams", (DL_FUNC) &_dap_extract_sbams, 1},
     {NULL, NULL, 0}
 };
 
