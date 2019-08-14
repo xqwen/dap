@@ -37,11 +37,11 @@ void controller::initialize(char *zval_file, char *ld_file, char *grid_file, int
         load_grid(grid_file);
     pars.process_summary_data(zval_file, ld_file, sample_size, ld_format);
     p = pars.ld_matrix->size1;
-    N = sample_size;
+
     // set an approximate smaple size to avoid errors
     if(sample_size <= 0)
         sample_size = 1000;
-
+    N = sample_size;
     set_default_options();
 }
 
