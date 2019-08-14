@@ -281,6 +281,7 @@ model.dap = function(object)
 #' The sufficient summary statistics refer to the following information: \itemize{
 #' \item estimated effect size and corresponding estimated standard error from single SNP testing for each SNP
 #' \item correlation matrix of SNPs
+#' \item sample size
 #' \item total sum of squares for the quantitative phenotype
 #' }
 #' Note that the using sufficient summary statistics yield the same results (except small numerical difference) as that using individual-level data.
@@ -311,6 +312,9 @@ model.dap = function(object)
 #' \item{N}{the sample size.}
 #' \item{response}{the name of the phenotype/response variable.}}}
 #' \item{call}{the matched call.}
+#' 
+#' @seealso \code{\link{extract.sbams}} for obtaining sufficient summary statistics from a sbams file.
+#' 
 #' @examples 
 #' est_file = system.file("sbamsdat", "sim.1.est.dat", package = "dap")
 #' ld_file  = system.file("sbamsdat", "sim.1.ld.dat", package = "dap")
@@ -330,6 +334,16 @@ dap.ss = function(est, ld, n, syy, pheno_name="", ens=1, pi1=-1, ld_control=0.25
   cl = match.call()
   ld = as.matrix(ld)
   params = list(snp_names=est[,1], beta=est[,2], se=est[,3], ld=ld, n=n, syy=syy, pheno_name=pheno_name)
+  
+  if(class(ens)=="numeric" & ens > 0)       params$ens=ens
+  if(class(pi1)=="numeric" & pi1>0 & pi1<1) params$pi1=pi1
+  if(class(ld_control)=="numeric" & ld_control>=0 & ld_control<1) params$ld_control=ld_control
+  if(class(msize)=="numeric" & as.integer(msize) >= 1)  params$msize=as.integer(msize)
+  if(class(converg_thresh)=="numeric" & converg_thresh>=0) params$converg_thresh=converg_thresh
+  if(class(all)=="logical" & all) params$all=1
+  if(class(size_limit)=="numeric" & size_limit>=1) params$size_limit=size_limit
+  if(class(thread)=="numeric" & as.integer(thread)>1) params$t=as.integer(thread)
+  
   result = .Call(`_dap_dap_main`, PACKAGE = 'dap', 3, params, as.numeric(quiet))
   result$model.summary$model$configuration = gsub("&", "+", result$model.summary$model$configuration)
   result$call = cl
@@ -380,6 +394,16 @@ dap.z = function(z, ld, n=1000, pheno_name="", ens=1, pi1=-1, ld_control=0.25, m
   cl = match.call()
   ld = as.matrix(ld)
   params = list(snp_names=z[,1], zvals=z[,2], ld=ld, n=n, pheno_name=pheno_name)
+  
+  if(class(ens)=="numeric" & ens > 0)       params$ens=ens
+  if(class(pi1)=="numeric" & pi1>0 & pi1<1) params$pi1=pi1
+  if(class(ld_control)=="numeric" & ld_control>=0 & ld_control<1) params$ld_control=ld_control
+  if(class(msize)=="numeric" & as.integer(msize) >= 1)  params$msize=as.integer(msize)
+  if(class(converg_thresh)=="numeric" & converg_thresh>=0) params$converg_thresh=converg_thresh
+  if(class(all)=="logical" & all) params$all=1
+  if(class(size_limit)=="numeric" & size_limit>=1) params$size_limit=size_limit
+  if(class(thread)=="numeric" & as.integer(thread)>1) params$t=as.integer(thread)
+  
   result = .Call(`_dap_dap_main`, PACKAGE = 'dap', 4, params, as.numeric(quiet))
   result$model.summary$model$configuration = gsub("&", "+", result$model.summary$model$configuration)
   result$call = cl

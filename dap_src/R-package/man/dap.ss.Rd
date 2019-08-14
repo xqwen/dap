@@ -55,6 +55,7 @@ dap.ss(est, ld, n, syy, pheno_name = "", ens = 1, pi1 = -1,
 The sufficient summary statistics refer to the following information: \itemize{
 \item estimated effect size and corresponding estimated standard error from single SNP testing for each SNP
 \item correlation matrix of SNPs
+\item sample size
 \item total sum of squares for the quantitative phenotype
 }
 Note that the using sufficient summary statistics yield the same results (except small numerical difference) as that using individual-level data.
@@ -71,4 +72,7 @@ dap.ss(est, ld, 343, 515.6, pheno_name="gene")
 sbams.file = system.file("sbamsdat", "sim.1.sbams.dat", package = "dap")
 dap.sbams(sbams.file)
 
+}
+\seealso{
+\code{\link{extract.sbams}} for obtaining sufficient summary statistics from a sbams file.
 }
