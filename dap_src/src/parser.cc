@@ -102,6 +102,36 @@ void parser::process_summary_data2(char *effect_file, char *ld_file, int sample_
 
 }
 
+void parser::process_summary_data2(vector<string>& snp_names, vector<double>& beta_vector, vector<double>& se_vector, vector<vector<double>>& ld, int sample_size, double syy, string name){
+    pheno_name = name;
+    int p = snp_names.size();
+    ld_matrix = gsl_matrix_calloc(p,p);
+
+    for(int i=0; i<p; i++){
+        double beta = beta_vector[i];
+        double se = se_vector[i];
+        string snp = snp_names[i];
+        
+        double var = se*se;
+        double z = beta/se;
+        double r2 = z*z/(sample_size-2+z*z);
+        double s2 = syy*(1-r2)/(sample_size-2.0);
+        double sxx = s2/var;
+        double sxy = beta*sxx;
+        geno_map[i] = snp;
+        geno_rmap[snp] = i;
+            
+        gty_vec.push_back(sxy);
+        sxx_vec.push_back(sxx);
+
+        for(int j=i; j<p; j++){
+            double val = ld[i][j];
+            gsl_matrix_set(ld_matrix,i,j,val);
+            gsl_matrix_set(ld_matrix,j,i,val);
+        }
+    }
+}
+
 void parser::process_summary_data(char *zval_file, char *ld_file, int sample_size, int ld_format){
     // reading data file
     ifstream infile(zval_file);
@@ -196,6 +226,33 @@ void parser::process_summary_data(char *zval_file, char *ld_file, int sample_siz
         }
     }
 
+}
+
+void parser::process_summary_data(vector<string>& snp_names, vector<double>& z_vector, vector<vector<double>>& ld, int sample_size, string name){
+    pheno_name = name;
+    int p = snp_names.size();
+    
+    zval_matrix = gsl_matrix_calloc(p,1);
+    ld_matrix = gsl_matrix_calloc(p,p);
+    
+    for(int i=0; i<p; i++){
+        double zval = z_vector[i];
+        string  snp = snp_names[i];
+        geno_map[i] = snp;
+        geno_rmap[snp] = i;
+        if(sample_size>0){
+            double h2 = zval*zval/(zval*zval+sample_size);
+            double factor = sqrt(0.5*(1+1/(1-h2)));
+            zval = zval/factor;
+        }
+        gsl_matrix_set(zval_matrix,i,0,zval);
+        
+        for(int j=i; j<p; j++){
+            double val = ld[i][j];
+            gsl_matrix_set(ld_matrix,i,j, val);
+            gsl_matrix_set(ld_matrix,j,i, val);
+        }
+    }
 }
 
 
