@@ -52,14 +52,12 @@ dap.sbams(file, prior = NULL, ens = 1, pi1 = -1, ld_control = 0.25,
 Please refer to \url{https://github.com/xqwen/dap/tree/master/dap_src} for more details.
 }
 \examples{
-\dontrun{
-
 sbams.file = system.file("sbamsdat", "sim.1.sbams.dat", package = "dap")
 test.dap.sbams = dap.sbams(sbams.file)
 test.dap.sbams
 
 summary(test.dap.sbams)
-}
+
 }
 \references{
 Wen, X., Lee, Y., Luca, F., Pique-Regi, R. Efficient Integrative Multi-SNP Association Analysis using Deterministic Approximation of Posteriors. \emph{The American Journal of Human Genetics}, 98(6), 1114--1129

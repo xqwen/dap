@@ -75,6 +75,11 @@ test.dap
 
 summary(test.dap)
 
+
+### example with prior ####
+prior = data.frame(snp=c("a1","b1"), prior=c(0.5,0.5))
+dap(y~., df, prior=prior)
+
 }
 \references{
 Wen, X., Lee, Y., Luca, F., Pique-Regi, R. Efficient Integrative Multi-SNP Association Analysis using Deterministic Approximation of Posteriors. \emph{The American Journal of Human Genetics}, 98(6), 1114--1129

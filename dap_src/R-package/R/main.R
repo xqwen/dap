@@ -48,6 +48,11 @@
 #' test.dap
 #'
 #' summary(test.dap)
+#' 
+#' 
+#' ### example with prior ####
+#' prior = data.frame(snp=c("a1","b1"), prior=c(0.5,0.5))
+#' dap(y~., df, prior=prior)
 #'
 #' @details Please refer to \url{https://github.com/xqwen/dap/tree/master/dap_src} for more details.
 #' @seealso Please see \code{\link{summary.dap}} for summaries; and \code{\link{dap.sbams}} for a different interface directly analyzing a sbams-format file.
@@ -242,14 +247,13 @@ print.summary.dap = function(object, digits = max(5L, getOption("digits") - 3L))
 #' @seealso Please see \code{\link{summary.dap}} for summaries; and \code{\link{read.sbams}} for reading in sbams-format files as an \R \code{data frame} which can call the general version of \code{\link{dap}} function.
 #' @references Wen, X., Lee, Y., Luca, F., Pique-Regi, R. Efficient Integrative Multi-SNP Association Analysis using Deterministic Approximation of Posteriors. \emph{The American Journal of Human Genetics}, 98(6), 1114--1129
 #' @references Lee, Y, Luca, F, Pique-Regi, R,Wen, X. Bayesian Multi-SNP Genetic Association Analysis: Control of FDR and Use of Summary Statistics bioRxiv:316471
-#' @examples \dontrun{
-#'
+#' @examples 
 #' sbams.file = system.file("sbamsdat", "sim.1.sbams.dat", package = "dap")
 #' test.dap.sbams = dap.sbams(sbams.file)
 #' test.dap.sbams
 #'
 #' summary(test.dap.sbams)
-#' }
+#' 
 #' @useDynLib dap, .registration = TRUE
 #' @importFrom Rcpp sourceCpp
 #' @export
