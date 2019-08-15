@@ -25,17 +25,12 @@ List dap_main(int input_format, List arg, int quiet) {
   char log_file[128];
   char gene_name[64];
 
-  char prior_file[128];
-
 
   memset(gene_name,0,64);
   memset(grid_file,0,128);
   memset(out_file,0,128);
   memset(log_file,0,128);
   memset(data_file,0,128);
-
-  memset(prior_file,0,128);
-
 
   // int ld_format = 1; // for correlation matrix
   // for now the R-package allows ld in format 1 only!!!
@@ -46,6 +41,7 @@ List dap_main(int input_format, List arg, int quiet) {
 
   int output_all = 0;
 
+  bool has_prior_data = false;
   double pes = 1.0;
   double pi1 = -1;
   //    double lambda = 0.5;
@@ -93,10 +89,9 @@ List dap_main(int input_format, List arg, int quiet) {
     }
 
 
-    // prior file
-    if(mystrings[i]=="prior")
-    {
-      strcpy(prior_file, arg[i]);
+    // prior data.frame
+    if(mystrings[i]=="has_prior"){
+      has_prior_data = true;
       continue;
     }
 
@@ -266,20 +261,32 @@ List dap_main(int input_format, List arg, int quiet) {
   }
 
 
-  if(strlen(prior_file)==0){
+  if(pes>0){
+    con.set_ens(pes);
+  }
+  
+  
+  if(!has_prior_data){
     if(pi1 != -1){
       if(0<pi1 && pi1 <1){
         con.set_prior(pi1);
       }else{
-        warning("Warning: pi1 specification is outside the range, ignored...\n");
-        con.set_prior_exp(pes);
+        // fprintf(stderr, "Warning: pi1 specification is outside the range, ignored...\n");
+        con.set_prior_default();
       }
     }else{
       // default
-      con.set_prior_exp(pes);
+      con.set_prior_default();
     }
-  }else
-    con.set_prior(prior_file);
+  }else{
+    StringVector  prior_snp_names_r = arg["prior_snp_names"];
+    NumericVector prior_values_r    = arg["prior_values"];
+    vector<string> prior_snp_names = as<vector<string>>(prior_snp_names_r);
+    vector<double> prior_values    = as<vector<double>>(prior_values_r);
+    con.set_prior(prior_snp_names, prior_values);
+  }
+    
+  
 
   if(output_all == 1)
     con.set_output_all();

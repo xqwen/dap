@@ -4,20 +4,24 @@
 \alias{dap}
 \title{Structured Bayesian Model Selection via Deterministic Approximation of Posteriors}
 \usage{
-dap(formula, data, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_thresh=0.01, all=FALSE, size_limit=-1, thread=1, quiet=FALSE)
+dap(formula, data, prior = NULL, ens = 1, pi1 = -1,
+  ld_control = 0.25, msize = -1, converg_thresh = 0.01,
+  all = FALSE, size_limit = -1, thread = 1, quiet = FALSE)
 }
 \arguments{
 \item{formula}{an object of class \code{formula} (or one that can be coerced to that class): a symbolic description of the model to be fitted.}
 
-\item{data}{a data frame containing the variables in the model.}
+\item{data}{a \code{data.frame} containing the variables in the model.}
+
+\item{prior}{(optional) a \code{data.frame} with 1st column as snp names, and 2nd column as prior probabilities. If any snp in \code{data} is not found in this data frame, the corresponding prior will be set as \code{ens/p}, where \code{p} is number of SNPs in \code{data}.}
 
 \item{ens}{(optional) prior expected number of signals, \code{ens=1} by default.}
 
-\item{pi1}{(optional) the exchangeable prior probability, values \code{0<pi1<1} accepted. By default -1, \code{pi1=ens/p}, where \code{p} is number of SNPs in the input file.}
+\item{pi1}{(optional) the exchangeable prior probability, values \code{0<pi1<1} accepted. By default -1, \code{pi1} will be reset as \code{pi1=ens/p}.}
 
-\item{ld_control}{(optional) the LD threshold to be considered within a single signal cluster. By default, the threshold is set to 0.25.}
+\item{ld_control}{(optional) the LD threshold to be considered within a single signal cluster. By default, the threshold is set as 0.25.}
 
-\item{msize}{(optional) the maximum size of model dap-g explores. Valid maximum model size ranges from \code{1} to \code{p}. By default -1, it is set to \code{p}, i.e., there is no restriction on how large the true association model can be. If it is specified, the DAP-G runs DAP-K algorithm and stops at the specified maximum model size.}
+\item{msize}{(optional) the maximum size of model dap-g explores. Valid maximum model size ranges from \code{1} to \code{p}. By default -1, \code{msize} will be reset as \code{p}, i.e., there is no restriction on how large the true association model can be. If it is specified, the DAP-G runs DAP-K algorithm and stops at the specified maximum model size.}
 
 \item{converg_thresh}{(optional)  the stopping condition for model exploration. By default, \code{converg_thresh=0.01}.}
 

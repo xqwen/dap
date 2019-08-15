@@ -45,8 +45,6 @@ List extract_sbams(List arg){
   char log_file[128];
   char gene_name[64];
   
-  char prior_file[128];
-  
   
   memset(gene_name,0,64);
   memset(grid_file,0,128);
@@ -54,11 +52,9 @@ List extract_sbams(List arg){
   memset(log_file,0,128);
   memset(data_file,0,128);
   
-  memset(prior_file,0,128);
-  
   double abf_option = -1;
 
-
+  bool has_prior_data = false;
   double pes = 1.0;
   double pi1 = -1;
   
@@ -81,9 +77,8 @@ List extract_sbams(List arg){
     
     
     // prior file
-    if(mystrings[i]=="prior")
-    {
-      strcpy(prior_file, arg[i]);
+    if(mystrings[i]=="has_prior"){
+      has_prior_data = true;
       continue;
     }
     
@@ -124,21 +119,31 @@ List extract_sbams(List arg){
   con.set_abf_option(abf_option);
 
 
-  if(strlen(prior_file)==0){
+  if(pes>0){
+    con.set_ens(pes);
+  }
+  
+  
+  if(!has_prior_data){
     if(pi1 != -1){
       if(0<pi1 && pi1 <1){
         con.set_prior(pi1);
       }else{
-        warning("Warning: pi1 specification is outside the range, ignored...\n");
-        con.set_prior_exp(pes);
+        // fprintf(stderr, "Warning: pi1 specification is outside the range, ignored...\n");
+        con.set_prior_default();
       }
     }else{
       // default
-      con.set_prior_exp(pes);
+      con.set_prior_default();
     }
-  }else
-    con.set_prior(prior_file);
-
+  }else{
+    // StringVector  prior_snp_names_r = arg["prior_snp_names"];
+    // NumericVector prior_values_r    = arg["prior_values"];
+    vector<string> prior_snp_names = as<vector<string>>(arg["prior_snp_names"]);
+    vector<double> prior_values    = as<vector<double>>(arg["prior_values"]);
+    con.set_prior(prior_snp_names, prior_values);
+  }
+  
   con.extract_ss2_in_r();
   
   int p = con.get_p();

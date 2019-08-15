@@ -4,18 +4,22 @@
 \alias{dap.sbams}
 \title{Integrative Genetic Association Analysis using Deterministic Approximation of Posteriors for SBAMS-format Data}
 \usage{
-dap.sbams(file, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_thresh=0.01, all=FALSE, size_limit=-1, thread=1, quiet=FALSE)
+dap.sbams(file, prior = NULL, ens = 1, pi1 = -1, ld_control = 0.25,
+  msize = -1, converg_thresh = 0.01, all = FALSE, size_limit = -1,
+  thread = 1, quiet = FALSE)
 }
 \arguments{
 \item{file}{file path to a sbams file}
 
+\item{prior}{(optional) a \code{data.frame} with 1st column as snp names, and 2nd column as prior probabilities. If any snp in the input file is not found in this data frame, the corresponding prior will be set as \code{ens/p}, where \code{p} is number of SNPs in the input file.}
+
 \item{ens}{(optional) prior expected number of signals, \code{ens=1} by default.}
 
-\item{pi1}{(optional) the exchangeable prior probability, values \code{0<pi1<1} accepted. By default -1, \code{pi1=ens/p}, where \code{p} is number of SNPs in the input file.}
+\item{pi1}{(optional) the exchangeable prior probability, values \code{0<pi1<1} accepted. By default -1, \code{pi1} will be reset as \code{pi1=ens/p}.}
 
-\item{ld_control}{(optional) the LD threshold to be considered within a single signal cluster. By default, the threshold is set to 0.25.}
+\item{ld_control}{(optional) the LD threshold to be considered within a single signal cluster. By default, the threshold is set as 0.25.}
 
-\item{msize}{(optional) the maximum size of model dap-g explores. Valid maximum model size ranges from \code{1} to \code{p}. By default -1, it is set to \code{p}, i.e., there is no restriction on how large the true association model can be. If it is specified, the DAP-G runs DAP-K algorithm and stops at the specified maximum model size.}
+\item{msize}{(optional) the maximum size of model dap-g explores. Valid maximum model size ranges from \code{1} to \code{p}. By default -1, \code{msize} will be reset as \code{p}, i.e., there is no restriction on how large the true association model can be. If it is specified, the DAP-G runs DAP-K algorithm and stops at the specified maximum model size.}
 
 \item{converg_thresh}{(optional)  the stopping condition for model exploration. By default, \code{converg_thresh=0.01}.}
 

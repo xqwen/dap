@@ -297,6 +297,32 @@ void controller::set_prior(char *prior_file){
 }
 
 
+void controller::set_prior(vector<string>& snp_names, vector<double> prior_values){
+    int n_priors = prior_values.size();
+    map<string,int>::iterator it;
+  
+    // comment the following lines if prefer default as 0.0
+    double pi_default = ens/(double)p;
+    if(pi_default > 1 - 1e-3)
+        pi_default = 1 - 1e-3;
+    pi_vec = vector<double>(p,pi_default);
+  
+    // uncomment the following line if prefer default as 0.0
+//    pi_vec = vector<double>(p,0.0);
+    
+    for(int i=0; i<n_priors; i++){
+        double value = prior_values[i];
+        string snp_name = snp_names[i];
+        it = pars.geno_rmap.find(snp_name);
+        if(it != pars.geno_rmap.end()){
+            int index = it->second;
+            pi_vec[index] = value;
+        }
+    }
+  
+}
+
+
 void controller::init(){  
     if(use_ss==0){
         vector<vector<vector<double> > > Xgv;

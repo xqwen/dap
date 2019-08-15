@@ -191,6 +191,8 @@ class controller {
         void set_prior(char *prior_file);
         void set_prior_default();
         void set_prior(double pi1);
+        // for R use
+        void set_prior(vector<string>& snp_names, vector<double> prior_values);
 
         void set_max_size(int msize){
             max_size = msize;

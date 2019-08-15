@@ -2,16 +2,14 @@
 #'
 #' \code{dap} is used perform Bayesian variable selection among a large scale of predictors, multicolinearty and missingness are allowed. It will automatically impute missingness in the input data with mean values, normalize the response and predictors, and propose top predictive signals and signal clusters according to posterior probability.
 #'
-#' @usage
-#' dap(formula, data, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_thresh=0.01, all=FALSE, size_limit=-1, thread=1, quiet=FALSE)
-#'
 #' @aliases dap
 #' @param formula an object of class \code{formula} (or one that can be coerced to that class): a symbolic description of the model to be fitted.
-#' @param data  a data frame containing the variables in the model.
+#' @param data  a \code{data.frame} containing the variables in the model.
+#' @param prior (optional) a \code{data.frame} with 1st column as snp names, and 2nd column as prior probabilities. If any snp in \code{data} is not found in this data frame, the corresponding prior will be set as \code{ens/p}, where \code{p} is number of SNPs in \code{data}.
 #' @param ens   (optional) prior expected number of signals, \code{ens=1} by default.
-#' @param pi1   (optional) the exchangeable prior probability, values \code{0<pi1<1} accepted. By default -1, \code{pi1=ens/p}, where \code{p} is number of SNPs in the input file.
-#' @param ld_control (optional) the LD threshold to be considered within a single signal cluster. By default, the threshold is set to 0.25.
-#' @param msize (optional) the maximum size of model dap-g explores. Valid maximum model size ranges from \code{1} to \code{p}. By default -1, it is set to \code{p}, i.e., there is no restriction on how large the true association model can be. If it is specified, the DAP-G runs DAP-K algorithm and stops at the specified maximum model size.
+#' @param pi1   (optional) the exchangeable prior probability, values \code{0<pi1<1} accepted. By default -1, \code{pi1} will be reset as \code{pi1=ens/p}.
+#' @param ld_control (optional) the LD threshold to be considered within a single signal cluster. By default, the threshold is set as 0.25.
+#' @param msize (optional) the maximum size of model dap-g explores. Valid maximum model size ranges from \code{1} to \code{p}. By default -1, \code{msize} will be reset as \code{p}, i.e., there is no restriction on how large the true association model can be. If it is specified, the DAP-G runs DAP-K algorithm and stops at the specified maximum model size.
 #' @param converg_thresh (optional)  the stopping condition for model exploration. By default, \code{converg_thresh=0.01}.
 #' @param all   (optional) If TRUE, dap will output information for all SNPs and all signal clusters. By default, only SNPs with \code{PIP > 0.001} and signal clusters with \code{SPIP > 0.25} are output.
 #' @param size_limit (optional) the maximum number of predictors allowed in a signal cluster. By default -1, there is no constraint and the size of each signal cluster is completely data determined. Setting a small number forces DAP to cap the number of predictors into each cluster and reduces computation.
@@ -58,7 +56,7 @@
 #' @useDynLib dap, .registration = TRUE
 #' @importFrom Rcpp sourceCpp
 #' @export
-dap = function(formula, data, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_thresh=0.01, all=FALSE, size_limit=-1, thread=1, quiet=FALSE){
+dap = function(formula, data, prior=NULL, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_thresh=0.01, all=FALSE, size_limit=-1, thread=1, quiet=FALSE){
   cl = match.call()
   mf = match.call(expand.dots = FALSE)
   m <- match(c("formula", "data"), names(mf), 0L)
@@ -77,6 +75,16 @@ dap = function(formula, data, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_
   x = apply(x, 2, function(t) replace(t, is.na(t), mean(t, na.rm=TRUE)))
 
   params = list(x=x, y=y, pheno_name=all.vars(cl)[1])
+  
+  if(!is.null(prior)){
+    if(class(prior)=="data.frame"){
+      if(nrow(prior)>0 & ncol(prior)>1){
+        params$has_prior = TRUE
+        params$prior_snp_names = prior[,1]
+        params$prior_values    = prior[,2]
+      }
+    }
+  }
   
   if(class(ens)=="numeric" & ens > 0)       params$ens=ens
   if(class(pi1)=="numeric" & pi1>0 & pi1<1) params$pi1=pi1
@@ -206,15 +214,13 @@ print.summary.dap = function(object, digits = max(5L, getOption("digits") - 3L))
 #'
 #' \code{dap.sbams} is an interface built especially for SBAMS-format files, which is designed to perform rigorous enrichment analysis, QTL discovery and multi-SNP fine-mapping analysis in a highly efficient way.
 #'
-#' @usage
-#' dap.sbams(file, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_thresh=0.01, all=FALSE, size_limit=-1, thread=1, quiet=FALSE)
-#'
 #' @aliases dap.sbams
 #' @param file  file path to a sbams file
+#' @param prior (optional) a \code{data.frame} with 1st column as snp names, and 2nd column as prior probabilities. If any snp in the input file is not found in this data frame, the corresponding prior will be set as \code{ens/p}, where \code{p} is number of SNPs in the input file.
 #' @param ens   (optional) prior expected number of signals, \code{ens=1} by default.
-#' @param pi1   (optional) the exchangeable prior probability, values \code{0<pi1<1} accepted. By default -1, \code{pi1=ens/p}, where \code{p} is number of SNPs in the input file.
-#' @param ld_control (optional) the LD threshold to be considered within a single signal cluster. By default, the threshold is set to 0.25.
-#' @param msize (optional) the maximum size of model dap-g explores. Valid maximum model size ranges from \code{1} to \code{p}. By default -1, it is set to \code{p}, i.e., there is no restriction on how large the true association model can be. If it is specified, the DAP-G runs DAP-K algorithm and stops at the specified maximum model size.
+#' @param pi1   (optional) the exchangeable prior probability, values \code{0<pi1<1} accepted. By default -1, \code{pi1} will be reset as \code{pi1=ens/p}.
+#' @param ld_control (optional) the LD threshold to be considered within a single signal cluster. By default, the threshold is set as 0.25.
+#' @param msize (optional) the maximum size of model dap-g explores. Valid maximum model size ranges from \code{1} to \code{p}. By default -1, \code{msize} will be reset as \code{p}, i.e., there is no restriction on how large the true association model can be. If it is specified, the DAP-G runs DAP-K algorithm and stops at the specified maximum model size.
 #' @param converg_thresh (optional)  the stopping condition for model exploration. By default, \code{converg_thresh=0.01}.
 #' @param all   (optional) If TRUE, dap will output information for all SNPs and all signal clusters. By default, only SNPs with \code{PIP > 0.001} and signal clusters with \code{SPIP > 0.25} are output.
 #' @param size_limit (optional) the maximum number of predictors allowed in a signal cluster. By default -1, there is no constraint and the size of each signal cluster is completely data determined. Setting a small number forces DAP to cap the number of predictors into each cluster and reduces computation.
@@ -247,10 +253,21 @@ print.summary.dap = function(object, digits = max(5L, getOption("digits") - 3L))
 #' @useDynLib dap, .registration = TRUE
 #' @importFrom Rcpp sourceCpp
 #' @export
-dap.sbams <- function(file, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_thresh=0.01, all=FALSE, size_limit=-1, thread=1, quiet=FALSE)
+dap.sbams <- function(file, prior=NULL, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_thresh=0.01, all=FALSE, size_limit=-1, thread=1, quiet=FALSE)
 {
   cl = match.call()
   params = list(data=file)
+  
+  if(!is.null(prior)){
+    if(class(prior)=="data.frame"){
+      if(nrow(prior)>0 & ncol(prior)>1){
+        params$has_prior = TRUE
+        params$prior_snp_names = prior[,1]
+        params$prior_values    = prior[,2]
+      }
+    }
+  }
+  
   if(class(ens)=="numeric" & ens > 0)       params$ens=ens
   if(class(pi1)=="numeric" & pi1>0 & pi1<1) params$pi1=pi1
   if(class(ld_control)=="numeric" & ld_control>=0 & ld_control<1) params$ld_control=ld_control
@@ -291,10 +308,11 @@ model.dap = function(object)
 #' @param n     an integer that specifies the sample size.
 #' @param syy   the total sum of squares for the quantitative phenotype.
 #' @param pheno_name (optional) the name of the phenotype. For display use and follow-up TWAS analysis only.
+#' @param prior (optional) a \code{data.frame} with 1st column as SNP names, and 2nd column as prior probabilities. If any snp in \code{est} is not found in this data frame, the corresponding prior will be set as \code{ens/p}, where \code{p} is number of SNPs in \code{est}.
 #' @param ens   (optional) prior expected number of signals, \code{ens=1} by default.
-#' @param pi1   (optional) the exchangeable prior probability, values \code{0<pi1<1} accepted. By default -1, \code{pi1=ens/p}, where \code{p} is number of SNPs in the input file.
-#' @param ld_control (optional) the LD threshold to be considered within a single signal cluster. By default, the threshold is set to 0.25.
-#' @param msize (optional) the maximum size of model dap-g explores. Valid maximum model size ranges from \code{1} to \code{p}. By default -1, it is set to \code{p}, i.e., there is no restriction on how large the true association model can be. If it is specified, the DAP-G runs DAP-K algorithm and stops at the specified maximum model size.
+#' @param pi1   (optional) the exchangeable prior probability, values \code{0<pi1<1} accepted. By default -1, \code{pi1} will be reset as \code{pi1=ens/p}.
+#' @param ld_control (optional) the LD threshold to be considered within a single signal cluster. By default, the threshold is set as 0.25.
+#' @param msize (optional) the maximum size of model dap-g explores. Valid maximum model size ranges from \code{1} to \code{p}. By default -1, \code{msize} will be reset as \code{p}, i.e., there is no restriction on how large the true association model can be. If it is specified, the DAP-G runs DAP-K algorithm and stops at the specified maximum model size.
 #' @param converg_thresh (optional)  the stopping condition for model exploration. By default, \code{converg_thresh=0.01}.
 #' @param all   (optional) If TRUE, dap will output information for all SNPs and all signal clusters. By default, only SNPs with \code{PIP > 0.001} and signal clusters with \code{SPIP > 0.25} are output.
 #' @param size_limit (optional) the maximum number of predictors allowed in a signal cluster. By default -1, there is no constraint and the size of each signal cluster is completely data determined. Setting a small number forces DAP to cap the number of predictors into each cluster and reduces computation.
@@ -330,10 +348,20 @@ model.dap = function(object)
 #' @useDynLib dap, .registration = TRUE
 #' @importFrom Rcpp sourceCpp
 #' @export
-dap.ss = function(est, ld, n, syy, pheno_name="", ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_thresh=0.01, all=FALSE, size_limit=-1, thread=1, quiet=FALSE){
+dap.ss = function(est, ld, n, syy, pheno_name="", prior=NULL, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_thresh=0.01, all=FALSE, size_limit=-1, thread=1, quiet=FALSE){
   cl = match.call()
   ld = as.matrix(ld)
   params = list(snp_names=est[,1], beta=est[,2], se=est[,3], ld=ld, n=n, syy=syy, pheno_name=pheno_name)
+  
+  if(!is.null(prior)){
+    if(class(prior)=="data.frame"){
+      if(nrow(prior)>0 & ncol(prior)>1){
+        params$has_prior = TRUE
+        params$prior_snp_names = prior[,1]
+        params$prior_values    = prior[,2]
+      }
+    }
+  }
   
   if(class(ens)=="numeric" & ens > 0)       params$ens=ens
   if(class(pi1)=="numeric" & pi1>0 & pi1<1) params$pi1=pi1
@@ -359,10 +387,11 @@ dap.ss = function(est, ld, n, syy, pheno_name="", ens=1, pi1=-1, ld_control=0.25
 #' @param ld    a data.frame or matrix containing the correlation matrix between SNPs. The order of the SNP is required to match the order listed in \code{est}.
 #' @param n     (optional) an integer that specifies the (approximate) sample size which is used to estimate the input z-scores, 1000 by default.
 #' @param pheno_name (optional) the name of the phenotype. For display use and follow-up TWAS analysis only.
+#' @param prior (optional) a \code{data.frame} with 1st column as SNP names, and 2nd column as prior probabilities. If any snp in \code{z} is not found in this data frame, the corresponding prior will be set as \code{ens/p}, where \code{p} is number of SNPs in \code{z}.
 #' @param ens   (optional) prior expected number of signals, \code{ens=1} by default.
-#' @param pi1   (optional) the exchangeable prior probability, values \code{0<pi1<1} accepted. By default -1, \code{pi1=ens/p}, where \code{p} is number of SNPs in the input file.
-#' @param ld_control (optional) the LD threshold to be considered within a single signal cluster. By default, the threshold is set to 0.25.
-#' @param msize (optional) the maximum size of model dap-g explores. Valid maximum model size ranges from \code{1} to \code{p}. By default -1, it is set to \code{p}, i.e., there is no restriction on how large the true association model can be. If it is specified, the DAP-G runs DAP-K algorithm and stops at the specified maximum model size.
+#' @param pi1   (optional) the exchangeable prior probability, values \code{0<pi1<1} accepted. By default -1, \code{pi1} will be reset as \code{pi1=ens/p}.
+#' @param ld_control (optional) the LD threshold to be considered within a single signal cluster. By default, the threshold is set as 0.25.
+#' @param msize (optional) the maximum size of model dap-g explores. Valid maximum model size ranges from \code{1} to \code{p}. By default -1, \code{msize} will be reset as \code{p}, i.e., there is no restriction on how large the true association model can be. If it is specified, the DAP-G runs DAP-K algorithm and stops at the specified maximum model size.
 #' @param converg_thresh (optional)  the stopping condition for model exploration. By default, \code{converg_thresh=0.01}.
 #' @param all   (optional) If TRUE, dap will output information for all SNPs and all signal clusters. By default, only SNPs with \code{PIP > 0.001} and signal clusters with \code{SPIP > 0.25} are output.
 #' @param size_limit (optional) the maximum number of predictors allowed in a signal cluster. By default -1, there is no constraint and the size of each signal cluster is completely data determined. Setting a small number forces DAP to cap the number of predictors into each cluster and reduces computation.
@@ -390,10 +419,20 @@ dap.ss = function(est, ld, n, syy, pheno_name="", ens=1, pi1=-1, ld_control=0.25
 #' @useDynLib dap, .registration = TRUE
 #' @importFrom Rcpp sourceCpp
 #' @export
-dap.z = function(z, ld, n=1000, pheno_name="", ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_thresh=0.01, all=FALSE, size_limit=-1, thread=1, quiet=FALSE){
+dap.z = function(z, ld, n=1000, pheno_name="", prior=NULL, ens=1, pi1=-1, ld_control=0.25, msize=-1, converg_thresh=0.01, all=FALSE, size_limit=-1, thread=1, quiet=FALSE){
   cl = match.call()
   ld = as.matrix(ld)
   params = list(snp_names=z[,1], zvals=z[,2], ld=ld, n=n, pheno_name=pheno_name)
+  
+  if(!is.null(prior)){
+    if(class(prior)=="data.frame"){
+      if(nrow(prior)>0 & ncol(prior)>1){
+        params$has_prior = TRUE
+        params$prior_snp_names = prior[,1]
+        params$prior_values    = prior[,2]
+      }
+    }
+  }
   
   if(class(ens)=="numeric" & ens > 0)       params$ens=ens
   if(class(pi1)=="numeric" & pi1>0 & pi1<1) params$pi1=pi1
