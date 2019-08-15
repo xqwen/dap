@@ -78,5 +78,5 @@ Wen, X., Lee, Y., Luca, F., Pique-Regi, R. Efficient Integrative Multi-SNP Assoc
 Lee, Y, Luca, F, Pique-Regi, R,Wen, X. Bayesian Multi-SNP Genetic Association Analysis: Control of FDR and Use of Summary Statistics bioRxiv:316471
 }
 \seealso{
-\code{\link{summary.dap}} for summaries; and \code{\link{dap.sbams}} for a different interface directly analyzing a sbams-format file.
+Please see \code{\link{summary.dap}} for summaries; and \code{\link{dap.sbams}} for a different interface directly analyzing a sbams-format file.
 }

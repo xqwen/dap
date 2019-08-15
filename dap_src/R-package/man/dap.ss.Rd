@@ -74,5 +74,5 @@ dap.sbams(sbams.file)
 
 }
 \seealso{
-\code{\link{extract.sbams}} for obtaining sufficient summary statistics from a sbams file.
+Please see \code{\link{extract.sbams}} for obtaining sufficient summary statistics from a sbams file.
 }

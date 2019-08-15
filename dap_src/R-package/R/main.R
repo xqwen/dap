@@ -52,7 +52,7 @@
 #' summary(test.dap)
 #'
 #' @details Please refer to \url{https://github.com/xqwen/dap/tree/master/dap_src} for more details.
-#' @seealso \code{\link{summary.dap}} for summaries; and \code{\link{dap.sbams}} for a different interface directly analyzing a sbams-format file.
+#' @seealso Please see \code{\link{summary.dap}} for summaries; and \code{\link{dap.sbams}} for a different interface directly analyzing a sbams-format file.
 #' @references Wen, X., Lee, Y., Luca, F., Pique-Regi, R. Efficient Integrative Multi-SNP Association Analysis using Deterministic Approximation of Posteriors. \emph{The American Journal of Human Genetics}, 98(6), 1114--1129
 #' @references Lee, Y, Luca, F, Pique-Regi, R,Wen, X. Bayesian Multi-SNP Genetic Association Analysis: Control of FDR and Use of Summary Statistics bioRxiv:316471
 #' @useDynLib dap, .registration = TRUE
@@ -233,7 +233,7 @@ print.summary.dap = function(object, digits = max(5L, getOption("digits") - 3L))
 #' \item{response}{the name of the phenotype/response variable.}}}
 #' \item{call}{the matched call.}
 #' @details Please refer to \url{https://github.com/xqwen/dap/tree/master/dap_src} for more details.
-#' @seealso \code{\link{summary.dap}} for summaries; and \code{\link{read.sbams}} for reading in sbams-format files as an \R \code{data frame} which can call the general version of \code{\link{dap}} function.
+#' @seealso Please see \code{\link{summary.dap}} for summaries; and \code{\link{read.sbams}} for reading in sbams-format files as an \R \code{data frame} which can call the general version of \code{\link{dap}} function.
 #' @references Wen, X., Lee, Y., Luca, F., Pique-Regi, R. Efficient Integrative Multi-SNP Association Analysis using Deterministic Approximation of Posteriors. \emph{The American Journal of Human Genetics}, 98(6), 1114--1129
 #' @references Lee, Y, Luca, F, Pique-Regi, R,Wen, X. Bayesian Multi-SNP Genetic Association Analysis: Control of FDR and Use of Summary Statistics bioRxiv:316471
 #' @examples \dontrun{
@@ -313,7 +313,7 @@ model.dap = function(object)
 #' \item{response}{the name of the phenotype/response variable.}}}
 #' \item{call}{the matched call.}
 #' 
-#' @seealso \code{\link{extract.sbams}} for obtaining sufficient summary statistics from a sbams file.
+#' @seealso Please see \code{\link{extract.sbams}} for obtaining sufficient summary statistics from a sbams file.
 #' 
 #' @examples 
 #' est_file = system.file("sbamsdat", "sim.1.est.dat", package = "dap")
