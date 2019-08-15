@@ -254,6 +254,10 @@ int main(int argc, char **argv){
         con.set_max_size(msize);
     }
 
+    if(pes>0){
+        con.set_ens(pes);
+    }
+
 
     if(strlen(prior_file)==0){
         if(pi1 != -1){
@@ -261,11 +265,11 @@ int main(int argc, char **argv){
                 con.set_prior(pi1);
             }else{
                 fprintf(stderr, "Warning: pi1 specification is outside the range, ignored...\n");
-                con.set_prior_exp(pes);
+                con.set_prior_default();
             }
         }else{
             // default
-            con.set_prior_exp(pes);
+            con.set_prior_default();
         }
     }else
         con.set_prior(prior_file);

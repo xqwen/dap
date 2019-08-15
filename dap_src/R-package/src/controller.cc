@@ -235,9 +235,9 @@ void controller::set_outfile(char *outfile, char *logfile){
 
 
 // exchangeable prior pes/p
-void controller::set_prior_exp(double pes){
+void controller::set_prior_default(){
 
-    double pi1 = pes/double(p);
+    double pi1 = ens/double(p);
     set_prior(pi1);
 }
 
@@ -264,8 +264,16 @@ void controller::set_prior(char *prior_file){
     ifstream ifile(prior_file);
     string line;
     istringstream ins;
+    map<string,int>::iterator it;
 
-    pi_vec = vector<double>(p,0.0);
+    // comment the following lines if prefer default as 0.0
+    double pi_default = ens/(double)p;
+    if(pi_default > 1 - 1e-3)
+        pi_default = 1 - 1e-3;
+    pi_vec = vector<double>(p,pi_default);
+
+    // uncomment the following line if prefer default as 0.0
+//    pi_vec = vector<double>(p,0.0);
 
     while(getline(ifile,line)){
 
@@ -273,11 +281,13 @@ void controller::set_prior(char *prior_file){
         ins.str(line);
         double value;
         string snp_name;
-        ins>>snp_name;
+        ins>>snp_name>>value;
 
-        int index = pars.geno_rmap[snp_name];
-        ins>>value;
-        pi_vec[index] = value;
+        it = pars.geno_rmap.find(snp_name);
+        if(it != pars.geno_rmap.end()){
+            int index = it->second;
+            pi_vec[index] = value;
+        }
 
     }
 

@@ -70,6 +70,7 @@ class controller {
 
         vector<double>  pi_vec; //prior for configs
         double prior_ratio; // for estimate residual from the approximaiton
+        double ens; // pes or ens - expected number of signals
 
 
         int max_size; //user option, maximum model size
@@ -184,9 +185,11 @@ class controller {
         }
 
 
-
+        void set_ens(double pes){
+            ens = pes;
+        }
         void set_prior(char *prior_file);
-        void set_prior_exp(double pes);
+        void set_prior_default();
         void set_prior(double pi1);
 
         void set_max_size(int msize){
