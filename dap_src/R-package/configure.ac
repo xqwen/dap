@@ -43,10 +43,9 @@ OPENMP_LIB=""
 if test x"${hasOpenMP}" != x""; then
     if test x"${apple_clang}" == x"yes"; then
         OPENMP_FLAG="-Xpreprocessor -fopenmp"
-        OPENMP_LIB="-Xpreprocessor -fopenmp -lomp"
+        OPENMP_LIB="-lomp"
     else
         OPENMP_FLAG="-fopenmp"
-        OPENMP_LIB="-fopenmp"
     fi
 fi
 
