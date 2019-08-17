@@ -88,7 +88,7 @@ void controller::initialize(vector<double>& pheno, string phenoname, vector<vect
 
 }
 
-void controller::initialize(vector<string>& snp, vector<double>& beta, vector<double>& se, vector<vector<double>>& ld, int sample_size, double syy_, string phenoname){
+void controller::initialize(vector<string>& snp, vector<double>& beta, vector<double>& se, vector<vector<double> >& ld, int sample_size, double syy_, string phenoname){
     use_ss = 2;
     N = sample_size;
     syy = syy_;
@@ -100,7 +100,7 @@ void controller::initialize(vector<string>& snp, vector<double>& beta, vector<do
     set_default_options();
 }
 
-void controller::initialize(vector<string>& snp, vector<double>& zval, vector<vector<double>>& ld, int sample_size, string phenoname){
+void controller::initialize(vector<string>& snp, vector<double>& zval, vector<vector<double> >& ld, int sample_size, string phenoname){
     use_ss = 1;
     N = sample_size;
     p = snp.size();

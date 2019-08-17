@@ -139,8 +139,8 @@ List extract_sbams(List arg){
   }else{
     // StringVector  prior_snp_names_r = arg["prior_snp_names"];
     // NumericVector prior_values_r    = arg["prior_values"];
-    vector<string> prior_snp_names = as<vector<string>>(arg["prior_snp_names"]);
-    vector<double> prior_values    = as<vector<double>>(arg["prior_values"]);
+    vector<string> prior_snp_names = as<vector<string> >(arg["prior_snp_names"]);
+    vector<double> prior_values    = as<vector<double> >(arg["prior_values"]);
     con.set_prior(prior_snp_names, prior_values);
   }
   

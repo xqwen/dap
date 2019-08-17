@@ -191,13 +191,13 @@ List dap_main(int input_format, List arg, int quiet) {
     string name = arg["pheno_name"];
     
     int n_gene = x.ncol(), n_ind = x.nrow();
-    vector<string> genonames = as<vector<string>>(colnames(x));
-    vector<double> pheno = as<vector<double>>(y);
-    vector<vector<double>> geno;
+    vector<string> genonames = as<vector<string> >(colnames(x));
+    vector<double> pheno = as<vector<double> >(y);
+    vector<vector<double> > geno;
     geno.resize(n_gene);
     for(int i=0; i<n_gene; i++){
       NumericVector v = x(_,i);
-      geno[i] = as<vector<double>>(v);
+      geno[i] = as<vector<double> >(v);
       geno[i].resize(n_ind);
     }
     con.initialize(pheno, name, geno, genonames, grid_file, true);
@@ -210,14 +210,14 @@ List dap_main(int input_format, List arg, int quiet) {
     string name = arg["pheno_name"];
     
     int p = snp_name.size();
-    vector<string> genonames = as<vector<string>>(snp_name);
-    vector<double> beta = as<vector<double>>(est);
-    vector<double> se = as<vector<double>>(est_se);
-    vector<vector<double>> ld;
+    vector<string> genonames = as<vector<string> >(snp_name);
+    vector<double> beta = as<vector<double> >(est);
+    vector<double> se = as<vector<double> >(est_se);
+    vector<vector<double> > ld;
     ld.resize(p);
     for(int i=0; i<p; i++){
       NumericVector v = ld_matrix(_,i);
-      ld[i] = as<vector<double>>(v);
+      ld[i] = as<vector<double> >(v);
       ld[i].resize(p);
     }
     
@@ -230,13 +230,13 @@ List dap_main(int input_format, List arg, int quiet) {
     string name = arg["pheno_name"];
     
     int p = snp_name.size();
-    vector<string> genonames = as<vector<string>>(snp_name);
-    vector<double> zvals = as<vector<double>>(est);
-    vector<vector<double>> ld;
+    vector<string> genonames = as<vector<string> >(snp_name);
+    vector<double> zvals = as<vector<double> >(est);
+    vector<vector<double> > ld;
     ld.resize(p);
     for(int i=0; i<p; i++){
       NumericVector v = ld_matrix(_,i);
-      ld[i] = as<vector<double>>(v);
+      ld[i] = as<vector<double> >(v);
       ld[i].resize(p);
     }
     
@@ -281,8 +281,8 @@ List dap_main(int input_format, List arg, int quiet) {
   }else{
     StringVector  prior_snp_names_r = arg["prior_snp_names"];
     NumericVector prior_values_r    = arg["prior_values"];
-    vector<string> prior_snp_names = as<vector<string>>(prior_snp_names_r);
-    vector<double> prior_values    = as<vector<double>>(prior_values_r);
+    vector<string> prior_snp_names = as<vector<string> >(prior_snp_names_r);
+    vector<double> prior_values    = as<vector<double> >(prior_values_r);
     con.set_prior(prior_snp_names, prior_values);
   }
     
