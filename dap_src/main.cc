@@ -37,7 +37,7 @@ int main(int argc, char **argv){
 
     int msize =-1;
 
-    int output_all = 0;
+    int output_all = 1;
 
     double pes = 1.0;
     double pi1 = -1;
