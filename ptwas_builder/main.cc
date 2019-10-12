@@ -16,6 +16,8 @@ using namespace std;
 #include <gsl/gsl_blas.h>
 #include <gsl/gsl_cdf.h>
 
+#define LENGTH 1280
+
 void parse_fm(char *fm_file);
 double run_regression(vector<int> &index_vec, double prob);
 double single_snp_analysis(int index);
@@ -31,12 +33,24 @@ int n;
 vector<double> coef_vec;
 vector<double> z2_vec;
 
+string gene;
+string tissue;
+
+
 int main (int argc, char **argv){ 
 
 
 
-    char data_file[128];
-    char fm_file[128];
+    char data_file[LENGTH];
+    char fm_file[LENGTH];
+    char tissue_name[LENGTH];
+    char gene_name[LENGTH];
+
+    memset(data_file, 0, LENGTH);
+    memset(fm_file,0,LENGTH);
+    memset(tissue_name,0,LENGTH);
+    memset(gene_name,0, LENGTH);
+
 
     int er2_only = 0;
     for(int i=1;i<argc;i++){
@@ -56,21 +70,48 @@ int main (int argc, char **argv){
             continue;
         }
 
+
+        if(strcmp(argv[i], "-tissue")==0 || strcmp(argv[i], "-t")==0){
+            strcpy(tissue_name, argv[++i]);
+            continue;
+        }
+
+
+
+        if(strcmp(argv[i], "-gene")==0 || strcmp(argv[i], "-g")==0){
+            strcpy(gene_name, argv[++i]);
+            continue;
+        }
+
+
+        
+
+    }
+
+    if(strlen(tissue_name)==0){
+        tissue = string("TISSUE");
+    }else{
+        tissue = string(tissue_name);
+    }
+
+    if(strlen(gene_name)==0){
+        fprintf(stderr, "Error: gene name is not specified\n");
+    }else{
+        gene = string(gene_name);
     }
 
 
 
     parse_fm(fm_file);
-
     // parsing data file
     parser pars;
     pars.process_data(data_file);
-
-
+    
     genov = pars.geno_vec[0];
     for(int i=0;i<genov.size();i++){
         coef_vec.push_back(0);
     }
+
 
     n = pars.pheno_vec[0].size();
 
@@ -80,13 +121,11 @@ int main (int argc, char **argv){
     }
 
 
-
     //single snp analysis
     vector<double> z2_vec;
     for(int i=0; i<coef_vec.size();i++){
         z2_vec.push_back(single_snp_analysis(i));
     }
-
 
 
     // run regression  
@@ -114,7 +153,7 @@ int main (int argc, char **argv){
 
 
         for(int i=0;i<coef_vec.size();i++){
-            printf("%s\t%7.3e   %9.3e   %7.3e\n",pars.geno_map[i].c_str(), coef_vec[i],z2_vec[i],2*gsl_cdf_ugaussian_P(-fabs(z2_vec[i])));
+            printf("%s\t%s\t%s\t%7.3e\t%9.3e\t%7.3e\n",tissue.c_str(), gene.c_str(), pars.geno_map[i].c_str(), coef_vec[i],z2_vec[i],2*gsl_cdf_ugaussian_P(-fabs(z2_vec[i])));
         }
 
     }else{
