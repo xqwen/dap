@@ -97,6 +97,8 @@ class controller {
 
 
         map<string,double> single_log10_abfv;
+        map<string,double> single_bhat;
+        map<string,double> single_se;
 
         // threshold 
         double snp_select_thresh;   // conditional inclusion prob.

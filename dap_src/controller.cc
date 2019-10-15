@@ -706,6 +706,7 @@ size_model controller::compute_post_model_single(vector<int>& bm){
     double max_log10_abf = -9999;
     double max_log10_post = -9999;
     int max_id = -1;
+    mlr.get_single_SNP_stats();
     for(int index=0;index<p;index++){
 
         string name = pars.geno_map[index];
@@ -713,6 +714,8 @@ size_model controller::compute_post_model_single(vector<int>& bm){
         mcfg[index]=1;
         double log10_abf = mlr.compute_log10_ABF(mcfg); 
         single_log10_abfv[name] = log10_abf;
+        single_bhat[name] = mlr.beta_vec[index];
+        single_se[name] = mlr.se_vec[index];
         abf_vec.push_back(log10_abf);
         double log10_post =  log10_abf + compute_log10_prior(mcfg);
         post_vec.push_back(log10_post);
@@ -1031,7 +1034,7 @@ void controller::summarize_approx_posterior(){
             break;
         if(nsnp_vec_sort[i].cluster==-1&&!output_all)
             continue;
-        fprintf(outfd,"((%d))\t%15s\t%8.5e\t%7.3f\t%d\n",i+1, nsnp_vec_sort[i].name.c_str(), nsnp_vec_sort[i].incl_prob, single_log10_abfv[nsnp_vec_sort[i].name], nsnp_vec_sort[i].cluster);
+        fprintf(outfd,"((%d))\t%15s\t%8.5e\t%7.3f\t%d\t%7.3e\t%7.3e\n",i+1, nsnp_vec_sort[i].name.c_str(), nsnp_vec_sort[i].incl_prob, single_log10_abfv[nsnp_vec_sort[i].name], nsnp_vec_sort[i].cluster, single_bhat[nsnp_vec_sort[i].name],single_se[nsnp_vec_sort[i].name]);
     }
 
 
