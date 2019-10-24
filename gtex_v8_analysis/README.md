@@ -7,13 +7,13 @@ This directory documents the procedures to fine-map cis-eQTLs in GTEx v8 data. T
 
 1. Run process script
 ```
-perl pre-process.pl -e tissue_expression -g master_genotype_vcf -c tissue_covariate -t tissue_name
+perl process.pl -e tissue_expression -g master_genotype_vcf -c tissue_covariate -t tissue_name
 ```
 The ``tissue_expression``, ``master_genotype_vcf``, and ``tissue_covariate`` files are distributed by GTEx. 
 
 In the end, depending on the tissue name, a directory named as ``tissue_name`` and a single batch command file ``tissue_name.assemble.cmd`` are  generated in the current working directory. 
 
-2. Execute batch assemble commands to obtain SBMAS files in ``tissue_name`` directory. 
+2. Execute batch assemble commands to obtain SBMAS files in ``tissue_name`` directory. This will require script ``assemble.pl`` which is distributed here. 
 
 
 ## Estimate priors for fine-mapping
