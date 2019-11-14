@@ -76,12 +76,12 @@ void controller::set_default_options(){
 
     output_all = 0;
     size_select_thresh = 0.01;  // set to big positive numbers to enforce the adaptive stopping rule
-    snp_select_thresh = 0.01;
+    //snp_select_thresh = 0.01;
 
 
     cluster_pip_thresh = 0.25; // for output cluster purpose
     priority_msize = 100;
-    log10_bf_thresh = 2;
+    log10_snp_thresh = 2;
 
     ld_control_thresh = 0.25; // by default  ld control with r^2 = 0.25
 }
@@ -121,7 +121,10 @@ void controller::print_dap_config(){
     
    if(run_option==0)
        fprintf(logfd,"\nRUN LOG\n");
+
+
 }
+
 
 
 
@@ -524,7 +527,7 @@ double controller::conditional_est(vector<int>& bm){
     int flag = 0;
     if(max > -9999){
         for(int i=0;i<p;i++){
-            if( max - post_vec[i]  <= log10_bf_thresh  && post_vec[i]>=thresh){
+            if( max - post_vec[i]  <= log10_snp_thresh  && post_vec[i]>=thresh){
                 if(compute_r2(max_id,i)< ld_control_thresh)
                     continue;
                 cand_set.push_back(i);
@@ -741,7 +744,7 @@ size_model controller::compute_post_model_single(vector<int>& bm){
     }
 
     for(int i=0;i<p;i++){
-        if( max_log10_post - post_vec[i]  <= log10_bf_thresh && post_vec[i]>= thresh){
+        if( max_log10_post - post_vec[i]  <= log10_snp_thresh && post_vec[i]>= thresh){
             if(compute_r2(max_id,i)< ld_control_thresh)
                 continue;
             vector<int> mv;

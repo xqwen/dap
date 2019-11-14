@@ -101,14 +101,14 @@ class controller {
         map<string,double> single_se;
 
         // threshold 
-        double snp_select_thresh;   // conditional inclusion prob.
+        // double snp_select_thresh;   // conditional inclusion prob.
         double size_select_thresh;  // the decay of the posteriors of a given size
 
         // threshold for greedy algorithm
         int    size_limit;
         double cluster_pip_thresh; 
         int    priority_msize;
-        double log10_bf_thresh;
+        double log10_snp_thresh;
         double ld_control_thresh;
 
 
@@ -164,7 +164,7 @@ class controller {
         }
 
         void set_snp_select_thresh (double thresh){
-            snp_select_thresh = thresh;
+            log10_snp_thresh = thresh;
         }
 
         void set_size_select_thresh (double thresh){

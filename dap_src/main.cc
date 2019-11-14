@@ -49,7 +49,7 @@ int main(int argc, char **argv){
     int sample_size = -1;
     double syy = -1;
 
-    double snp_select_thresh = -1;
+    //double snp_select_thresh = 2;
     double size_select_thresh = -1;
 
     // alternative non-fm running options
@@ -153,6 +153,12 @@ int main(int argc, char **argv){
             size_select_thresh = atof(argv[++i]);
             continue;
         }
+        /*
+        if(strcmp(argv[i], "-snp_thresh")==0){
+            snp_select_thresh = atof(argv[++i]);
+            continue;
+        }
+        */            
 
         if(strcmp(argv[i],"-size_limit")==0){
             size_limit = atoi(argv[++i]);
@@ -273,8 +279,10 @@ int main(int argc, char **argv){
     if(output_all == 1)
         con.set_output_all();
 
+    /*
     if(snp_select_thresh>=0)
         con.set_snp_select_thresh(snp_select_thresh);
+    */
 
     if(size_select_thresh >=0)
         con.set_size_select_thresh(size_select_thresh);
