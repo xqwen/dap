@@ -74,6 +74,7 @@ void controller::set_default_options(){
     // default thread 
     nthread = 1;
 
+    use_dap1 = 0;
     output_all = 0;
     size_select_thresh = 0.01;  // set to big positive numbers to enforce the adaptive stopping rule
     //snp_select_thresh = 0.01;
@@ -82,8 +83,9 @@ void controller::set_default_options(){
     cluster_pip_thresh = 0.25; // for output cluster purpose
     priority_msize = 100;
     log10_snp_thresh = 2;
-
+    
     ld_control_thresh = 0.25; // by default  ld control with r^2 = 0.25
+
 }
 
 
@@ -362,6 +364,7 @@ void controller::fine_map(){
         // if already at allowed max size, quit search
         if(bm.size() == max_size)
             break;
+    
 
         // attempt to add one more variable
         double log10_post = conditional_est(bm);
@@ -743,8 +746,9 @@ size_model controller::compute_post_model_single(vector<int>& bm){
         thresh= post_vec_sort[size_limit-1];
     }
 
+
     for(int i=0;i<p;i++){
-        if( max_log10_post - post_vec[i]  <= log10_snp_thresh && post_vec[i]>= thresh){
+        if( (max_log10_post - post_vec[i]  <= log10_snp_thresh && post_vec[i]>= thresh) || use_dap1 ) {
             if(compute_r2(max_id,i)< ld_control_thresh)
                 continue;
             vector<int> mv;
@@ -755,7 +759,7 @@ size_model controller::compute_post_model_single(vector<int>& bm){
             snp2cluster_map[i]=0;
         }
     }
-
+    
 
     smod.snp_cluster = cand_set;
     bm.push_back(max_id);
@@ -908,7 +912,7 @@ void controller::summarize_approx_posterior(){
     nmodel_vec.push_back(nm);
 
     for(int i=0;i<szm_vec.size();i++){
-
+        
         map<string, double>::iterator iter;
         for(iter = szm_vec[i].post_map.begin(); iter != szm_vec[i].post_map.end(); iter++){
             Nmodel nm;
@@ -993,11 +997,13 @@ void controller::summarize_approx_posterior(){
             int index = snp2index[sname];
             double prob = nsnp_vec_sort[index].incl_prob;  
             // we don't consider a SNP as a noteworthy cluster memeber if its pip < min_pip
-            if(prob > min_pip){
+            
+            if(prob > min_pip || use_dap1 ){
                 member_vec.push_back(snp);
                 cluster_prob += prob;
                 nsnp_vec_sort[index].cluster = cluster_index;
             }
+            
         }
         if(member_vec.size()>0){
             
@@ -1031,7 +1037,7 @@ void controller::summarize_approx_posterior(){
 
 
     for(int i=0;i<nsnp_vec_sort.size();i++){
-        if(nsnp_vec_sort[i].incl_prob < min_pip)
+        if(nsnp_vec_sort[i].incl_prob < min_pip && !use_dap1)
             nsnp_vec_sort[i].incl_prob = min_pip;
         if(nsnp_vec_sort[i].incl_prob<1e-3&&!output_all)
             break;

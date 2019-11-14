@@ -38,7 +38,7 @@ int main(int argc, char **argv){
     int msize =-1;
 
     int output_all = 1;
-
+    int use_dap1 = 0;
     double pes = 1.0;
     double pi1 = -1;
     double lambda = 0.5;
@@ -223,7 +223,10 @@ int main(int argc, char **argv){
             continue;
         }
 
-
+        if(strcmp(argv[i], "--use_dap1")==0 || strcmp(argv[i], "--dap1")==0 ){
+            use_dap1 = 1;
+            continue;
+        }
 
 
         fprintf(stderr, "Error: unknown option \"%s\"\n",argv[i]);
@@ -279,6 +282,8 @@ int main(int argc, char **argv){
     if(output_all == 1)
         con.set_output_all();
 
+    if(use_dap1 == 1)
+        con.set_use_dap1();
     /*
     if(snp_select_thresh>=0)
         con.set_snp_select_thresh(snp_select_thresh);

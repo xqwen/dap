@@ -70,7 +70,8 @@ class controller {
 
 
         int max_size; //user option, maximum model size
-
+        
+        int use_dap1; // use dap1 option, legacy option
 
         // collection of all sizes of size_model
         vector<size_model> szm_vec; // size_model collections
@@ -184,6 +185,11 @@ class controller {
 
         }
 
+        void set_use_dap1(){
+            use_dap1 = 1;
+            max_size = 1;
+            ld_control_thresh = 0;
+        }
 
         void set_thread(int thread){
             nthread = thread;
