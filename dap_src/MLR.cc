@@ -292,7 +292,6 @@ double MLR::compute_log10_ABF(){
 
 
 double MLR::compute_log10_ABF(vector<int> & indicator){
-
     if(!use_ss){
         if(sigma_option>=0 && sigma_option <=1)
             return compute_log10_ABF_FD(indicator);
@@ -309,7 +308,6 @@ double MLR::compute_log10_ABF(vector<int> & indicator){
 
 
 double MLR::compute_log10_BF_FD(vector<int> & indicator){
-
     vector<double> rstv;
     vector<double> wv;
 
@@ -726,6 +724,14 @@ void MLR::extract_summary(){
 
 
 void MLR::get_single_SNP_stats(){
+    if(use_ss==1){
+        for( int i=0;i<p;i++){
+            beta_vec.push_back(gsl_matrix_get(Z,i,0));
+            se_vec.push_back(1.0);
+        }
+        return;
+    }
+    //else
     double Syy = yty;
     for(int i=0;i<p;i++){
         double Sxx = gsl_matrix_get(GtG, i,i);

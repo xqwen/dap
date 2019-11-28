@@ -205,6 +205,7 @@ class controller {
         void load_grid(char *grid_file);
         void set_default_grid();
 
+
         void init();
 
         // computing engine

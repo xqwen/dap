@@ -39,6 +39,8 @@ int main(int argc, char **argv){
 
     int output_all = 1;
     int use_dap1 = 0;
+
+
     double pes = 1.0;
     double pi1 = -1;
     double lambda = 0.5;
@@ -228,7 +230,6 @@ int main(int argc, char **argv){
             continue;
         }
 
-
         fprintf(stderr, "Error: unknown option \"%s\"\n",argv[i]);
         exit(1);
 
@@ -291,7 +292,6 @@ int main(int argc, char **argv){
 
     if(size_select_thresh >=0)
         con.set_size_select_thresh(size_select_thresh);
-
 
     con.run_option = 0;
 

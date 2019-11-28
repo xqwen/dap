@@ -974,8 +974,14 @@ void controller::summarize_approx_posterior(){
         snp2index[nsnp_vec_sort[i].name] = i;
     }
     // estimate min_pip from BIC approximation
-    double min_pip = (1-null_prob)*prior_ratio/sqrt(N);
-    fprintf(outfd, "\nMinimum PIP is estimated at %7.3e (N = %d)\n", min_pip, N);
+    int NN = N;
+    if(N<0)
+        NN=1000;
+    double min_pip = (1-null_prob)*prior_ratio/sqrt(NN);
+    fprintf(outfd, "\nMinimum PIP is estimated at %7.3e (N = %d)", min_pip, NN);
+    if(N<0)
+        fprintf(outfd,"   *** assumed sample size");
+    fprintf(outfd, "\n");
 
     vector<double> cluster_pip;
     vector<double> cluster_r2;
