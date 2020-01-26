@@ -35,7 +35,7 @@ vector<double> z2_vec;
 
 string gene;
 string tissue;
-
+double weight_thresh;
 
 int main (int argc, char **argv){ 
 
@@ -45,14 +45,17 @@ int main (int argc, char **argv){
     char fm_file[LENGTH];
     char tissue_name[LENGTH];
     char gene_name[LENGTH];
+    char output_file[LENGTH];
 
     memset(data_file, 0, LENGTH);
     memset(fm_file,0,LENGTH);
     memset(tissue_name,0,LENGTH);
     memset(gene_name,0, LENGTH);
-
+    memset(output_file, 0, LENGTH);
 
     int er2_only = 0;
+    weight_thresh = 0;
+
     for(int i=1;i<argc;i++){
 
         if(strcmp(argv[i], "-d")==0 || strcmp(argv[i], "-data")==0){
@@ -82,9 +85,14 @@ int main (int argc, char **argv){
             strcpy(gene_name, argv[++i]);
             continue;
         }
-
-
         
+        if(strcmp(argv[i], "-thresh")==0 || strcmp(argv[i], "-wt")==0){
+            weight_thresh = fabs(atof(argv[++i]));
+        }
+
+        if(strcmp(argv[i], "-o")==0 ){
+            strcpy(output_file, argv[++i]);
+        }
 
     }
 
@@ -148,12 +156,16 @@ int main (int argc, char **argv){
         ER2  += run_regression(index, prob_vec[i]);
     }
 
-
+    FILE *out_fd = stdout;
+    if(strlen(output_file)>0){
+        out_fd = fopen(output_file, "w");
+    }
     if(!er2_only){
 
 
         for(int i=0;i<coef_vec.size();i++){
-            printf("%s\t%s\t%s\t%7.3e\t%9.3e\t%7.3e\n",tissue.c_str(), gene.c_str(), pars.geno_map[i].c_str(), coef_vec[i],z2_vec[i],2*gsl_cdf_ugaussian_P(-fabs(z2_vec[i])));
+            if(fabs(coef_vec[i]) >= weight_thresh)
+                fprintf(out_fd, "%s\t%s\t%s\t%7.3e\t%9.3e\t%7.3e\n",tissue.c_str(), gene.c_str(), pars.geno_map[i].c_str(), coef_vec[i],z2_vec[i],2*gsl_cdf_ugaussian_P(-fabs(z2_vec[i])));
         }
 
     }else{
