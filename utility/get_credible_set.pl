@@ -2,6 +2,7 @@
 
 $file = "";
 $prob = 0.95;
+$min_flag = 0;
 
 for $i  (0..$#ARGV){
     if ($ARGV[$i] eq "-d"){
@@ -17,6 +18,11 @@ for $i  (0..$#ARGV){
         $gene = $ARGV[++$i];
         next;
     }
+
+   if($ARGV[$i] eq "--min"){
+       $min_flag = 1;
+       next;
+   }
 }
 
 
@@ -51,9 +57,10 @@ while(<FILE>){
     my @data = split /\s+/, $_;
     shift @data until $data[0]=~/^\S/;
 
-    if(defined($sig{$data[-1]}) && $cum{$data[-1]}< $prob){
-        $sig{$data[-1]}->{$data[1]} = $data[2];
-        $cum{$data[-1]} += $data[2];
+    if(defined($sig{$data[4]}) ){
+        next if( $min_flag == 1 && $cum{$data[4]} > $prob) ;
+        $sig{$data[4]}->{$data[1]} = $data[2];
+        $cum{$data[4]} += $data[2];
     }
 
 }
