@@ -46,7 +46,7 @@ void MLR::init(vector<double> &Y_in, vector<vector<double> >  &G_in){
         yty += pow(val,2);
         gsl_matrix_set(Y,i,0,val);
     }
-
+    
     G = gsl_matrix_calloc(n,p);
 
     for(int j=0;j<p;j++){
@@ -55,13 +55,11 @@ void MLR::init(vector<double> &Y_in, vector<vector<double> >  &G_in){
         }   
     }
 
-    GtG = gsl_matrix_calloc(p,p);
-    Gty = gsl_matrix_calloc(p,1);
-
-    gsl_blas_dgemm(CblasTrans,CblasNoTrans,1,G,G,0,GtG);
-
-    gsl_blas_dgemm(CblasTrans,CblasNoTrans,1,G,Y,0,Gty);
-    use_ss = 0;
+    // On 2/21/2023, for computational efficiency, we no longer pre-compute G'G for individual-level data
+   
+   GtG =0;
+   Gty = 0;
+   use_ss = 0;
 }
 
 
@@ -312,34 +310,32 @@ double MLR::compute_log10_BF_FD(vector<int> & indicator){
     vector<double> wv;
 
 
-    int ep = 0;
-    int count = 0;
-    std::map<int,int> imap;
-
+    vector<int> index_vec;
 
     for(int i=0;i<indicator.size();i++){
         if(indicator[i]==1){
-            ep++;
-            imap[i] = count++;
+            index_vec.push_back(i);
         }
     }
 
+    int ep = index_vec.size();
+
+    gsl_matrix *X = gsl_matrix_calloc(n, ep);
     gsl_matrix *XtX = gsl_matrix_calloc(ep,ep);
     gsl_matrix *Xty = gsl_matrix_calloc(ep,1);
 
+    gsl_vector *nv = gsl_vector_alloc(n);
 
-    for(int i=0;i<p;i++){
-        if(indicator[i] == 0)
-            continue;
-        gsl_matrix_set(Xty, imap[i],0,gsl_matrix_get(Gty,i,0));
-        for(int j=0;j<p;j++){
-            if(indicator[j] == 1){
-
-                double val = gsl_matrix_get(GtG,i,j);
-                gsl_matrix_set(XtX,imap[i], imap[j],val);
-            }
-        }
+    for(int i=0;i<index_vec.size();i++){
+        int index = index_vec[i];
+        gsl_matrix_get_col(nv, G, index);
+        gsl_matrix_set_col(X, i, nv);
     }
+
+
+    gsl_blas_dgemm(CblasTrans,CblasNoTrans,1,X,X,0, XtX);
+    gsl_blas_dgemm(CblasTrans,CblasNoTrans,1,X,Y,0, Xty);
+
 
     // SV decomp of XtX
     gsl_matrix *V = gsl_matrix_calloc(ep,ep);
@@ -363,7 +359,6 @@ double MLR::compute_log10_BF_FD(vector<int> & indicator){
         }
 
 
-
         gsl_matrix *tt2 = gsl_matrix_calloc(ep,ep);
         gsl_blas_dgemm(CblasNoTrans,CblasNoTrans,1,V,tt1,0,tt2);
 
@@ -383,7 +378,7 @@ double MLR::compute_log10_BF_FD(vector<int> & indicator){
         rstv.push_back(log10BF);
         wv.push_back(1.0/phi2_vec.size());
 
-
+        
         gsl_matrix_free(tt1);
         gsl_matrix_free(tt2);
         gsl_matrix_free(IWV);
@@ -400,6 +395,8 @@ double MLR::compute_log10_BF_FD(vector<int> & indicator){
     gsl_matrix_free(XtX);
     gsl_matrix_free(Xty);
 
+    gsl_vector_free(nv);
+    gsl_matrix_free(X);
 
     double rst =  log10_weighted_sum(rstv,wv);
 
@@ -418,34 +415,32 @@ double MLR::compute_log10_ABF_FD(vector<int> & indicator){
     vector<double> wv;
 
 
-    int ep = 0;
-    int count = 0;
-    std::map<int,int> imap;
-
+    vector<int> index_vec;
 
     for(int i=0;i<indicator.size();i++){
         if(indicator[i]==1){
-            ep++;
-            imap[i] = count++;
+            index_vec.push_back(i);
         }
     }
 
+    int ep = index_vec.size();
+
+    gsl_matrix *X = gsl_matrix_calloc(n, ep);
     gsl_matrix *XtX = gsl_matrix_calloc(ep,ep);
     gsl_matrix *Xty = gsl_matrix_calloc(ep,1);
 
+    gsl_vector *nv = gsl_vector_alloc(n);
 
-    for(int i=0;i<p;i++){
-        if(indicator[i] == 0)
-            continue;
-        gsl_matrix_set(Xty, imap[i],0,gsl_matrix_get(Gty,i,0));
-        for(int j=0;j<p;j++){
-            if(indicator[j] == 1){
-
-                double val = gsl_matrix_get(GtG,i,j);
-                gsl_matrix_set(XtX,imap[i], imap[j],val);
-            }
-        }
+    for(int i=0;i<index_vec.size();i++){
+        int index = index_vec[i];
+        gsl_matrix_get_col(nv, G, index);
+        gsl_matrix_set_col(X, i, nv);
     }
+
+
+    gsl_blas_dgemm(CblasTrans,CblasNoTrans,1,X,X,0, XtX);
+    gsl_blas_dgemm(CblasTrans,CblasNoTrans,1,X,Y,0, Xty);
+
 
 
     // compute inverse of XtX (generalized inverse version)
@@ -546,6 +541,8 @@ double MLR::compute_log10_ABF_FD(vector<int> & indicator){
     gsl_matrix_free(XtX);
     gsl_matrix_free(Xty);
 
+    gsl_matrix_free(X);
+    gsl_vector_free(nv);
 
     double rst =  log10_weighted_sum(rstv,wv);
 
@@ -696,8 +693,13 @@ void MLR::extract_summary(){
         return;
 
     // output R matrix
-
+    GtG = gsl_matrix_calloc(p,p);
+    Gty = gsl_matrix_calloc(p,1);
     R = gsl_matrix_calloc(p,p);
+    
+    gsl_blas_dgemm(CblasTrans,CblasNoTrans,1,G,G,0,GtG);
+    gsl_blas_dgemm(CblasTrans, CblasNoTrans,1,G,Y,0,Gty);
+    
     for(int i=0;i<p;i++){
         for(int j = 0;j<p;j++){
             double val = gsl_matrix_get(GtG,i,j);
@@ -719,6 +721,11 @@ void MLR::extract_summary(){
         gsl_matrix_set(Z,i,0,beta/se);
     }
 
+    gsl_matrix_free(GtG);
+    gsl_matrix_free(R);
+    gsl_matrix_free(Gty);
+    GtG = R = Gty = 0;
+
 
 }
 
@@ -734,8 +741,13 @@ void MLR::get_single_SNP_stats(){
     //else
     double Syy = yty;
     for(int i=0;i<p;i++){
-        double Sxx = gsl_matrix_get(GtG, i,i);
-        double Sxy = gsl_matrix_get(Gty, i,0);
+        double Sxx = 0;
+        double Sxy = 0;
+        for(int j=0;j<n;j++){
+            double gv = gsl_matrix_get(G,j,i);
+            Sxx += gv*gv;
+            Sxy += gv*gsl_matrix_get(Y,j,0);
+        }
         double s2 = (Syy - Sxy*Sxy/Sxx)/(n-2);
         double beta = Sxy/Sxx;
         double se = sqrt(s2/Sxx);

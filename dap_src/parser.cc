@@ -257,31 +257,28 @@ void parser::process_line(string line){
             vecv.push_back(atof(val.c_str()));
     }
 
-    // impute missing data with mean
 
-    if(missing_flag == 1){
 
-        double nm_sum = 0;
-        int nm_count = 0;
-        vector<int> iv;
-        for (int i=0;i<vecv.size();i++){
-            if(vecv[i]==-1){
-                iv.push_back(i);
-            }else{
-                nm_sum += vecv[i];
-                nm_count++;
-            }
-        }
-
-        double imp_mean = 0;
-        if(nm_count!=0){
-            imp_mean = nm_sum/nm_count;
-        }
-
-        for(int i=0;i<iv.size();i++){
-            vecv[iv[i]] = imp_mean;
+    double nm_sum = 0;
+    int nm_count = 0;
+    for (int i=0;i<vecv.size();i++){
+        if(vecv[i]!=-1){
+            nm_sum += vecv[i];
+            nm_count++;
         }
     }
+
+    double gmean = nm_sum/nm_count;
+        
+
+    for(int i=0;i<vecv.size();i++){
+        // impute missing data with mean
+        if(vecv[i]==-1)
+            vecv[i] = 0;
+        else
+            vecv[i] -= gmean;
+    }
+    
 
 
 
@@ -357,6 +354,9 @@ void parser::regress_cov(vector<double> &phenov, vector<vector<double> > &cov, v
     int n = phenov.size();
     int p = cov.size();	 
 
+    if(p==0)
+        return;
+
     gsl_matrix *X = gsl_matrix_calloc(n, p+1);
     for(int i=0;i<n;i++){
         gsl_matrix_set(X,i,0,1.0);
@@ -413,55 +413,12 @@ void parser::regress_cov(vector<double> &phenov, vector<vector<double> > &cov, v
     gsl_vector_free(S);
     gsl_vector_free(work);
 
-
-    // do this for all predictors and y        
-    gsl_matrix *y = gsl_matrix_calloc(n,1);
-    for(int i=0;i<n;i++){
-        gsl_matrix_set(y,i,0, phenov[i]);
-    }
-
-
-    gsl_matrix *fy = gsl_matrix_calloc(n,1);
-    gsl_blas_dgemm(CblasNoTrans,CblasNoTrans,1,H,y,0,fy);
-
-    gsl_matrix *res= gsl_matrix_calloc(n,1);
-    gsl_matrix_memcpy(res,y);
-    gsl_matrix_sub(res,fy);
-
-    for(int i=0;i<n;i++){
-        phenov[i] = gsl_matrix_get(res,i,0);
-    }
-
-    gsl_matrix_free(y);
-    gsl_matrix_free(fy);
-    gsl_matrix_free(res);
-
-
-
-    for(int i=0; i<genov.size();i++){
-        gsl_matrix *g = gsl_matrix_calloc(n,1);
-        for(int j=0;j<n;j++){
-            gsl_matrix_set(g,j,0, genov[i][j]);
-        }
-
-        gsl_matrix *fg = gsl_matrix_calloc(n,1);
-        gsl_blas_dgemm(CblasNoTrans,CblasNoTrans,1,H,g,0,fg);
-
-        gsl_matrix *r= gsl_matrix_calloc(n,1);
-        gsl_matrix_memcpy(r,g);
-        gsl_matrix_sub(r,fg);
-
-        for(int j=0;j<n;j++){
-            genov[i][j] = gsl_matrix_get(r,j,0);
-        } 
-
-        gsl_matrix_free(g);
-        gsl_matrix_free(fg);
-        gsl_matrix_free(r);
-
-    }
-
     gsl_matrix_free(H);
+
+    // On 2/12/2023, unnecessary computation for regressing genotypes on covariates is taken out 
+    // Centering of genotype and phenotype data is now handled in process_line
+
+	
 
 
 }
