@@ -84,7 +84,8 @@ void controller::set_default_options(){
     priority_msize = 100;
     log10_snp_thresh = 2;
     
-    ld_control_thresh = 0.25; // by default  ld control with r^2 = 0.25
+    // 02/21/2023  set default ld control threshold to 0.5
+    ld_control_thresh = 0.5; // by default  ld control with r^2 = 0.5
 
 }
 
