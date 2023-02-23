@@ -96,6 +96,7 @@ class MLR {
         vector<double> se_vec;
         void print_matrix(gsl_matrix *M, int a, int b, FILE *outfd = 0);
         void get_single_SNP_stats();
+        vector<double> fit_LS(vector<int> &indicator);
 };
 
 

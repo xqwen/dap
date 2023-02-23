@@ -758,4 +758,77 @@ void MLR::get_single_SNP_stats(){
 }
 
 
+// compute TWAS weights based on fine-mapping results
 
+vector<double>  MLR::fit_LS(vector<int> &index_vec){
+
+
+    int ep = index_vec.size();
+
+    gsl_matrix *X = gsl_matrix_calloc(n, ep);
+    gsl_matrix *XtX = gsl_matrix_calloc(ep,ep);
+    gsl_matrix *Xty = gsl_matrix_calloc(ep,1);
+
+    gsl_vector *nv = gsl_vector_alloc(n);
+
+    for(int i=0;i<index_vec.size();i++){
+        int index = index_vec[i];
+        gsl_matrix_get_col(nv, G, index);
+        gsl_matrix_set_col(X, i, nv);
+    }
+
+
+    gsl_blas_dgemm(CblasTrans,CblasNoTrans,1,X,X,0, XtX);
+    gsl_blas_dgemm(CblasTrans,CblasNoTrans,1,X,Y,0, Xty);
+
+
+	gsl_blas_dgemm(CblasTrans,CblasNoTrans,1,X,X,0,XtX);
+
+	// compute inverse of XtX (generalized inverse version)
+	gsl_matrix *V = gsl_matrix_calloc(ep,ep);
+	gsl_vector *S = gsl_vector_calloc(ep);
+	gsl_vector *work = gsl_vector_calloc(ep);
+	gsl_linalg_SV_decomp (XtX, V, S,work);
+
+	gsl_matrix *t1 = gsl_matrix_calloc(ep,ep);
+	for(int i=0;i<ep;i++){
+		double v = gsl_vector_get(S,i);
+		if(v>1e-8){
+			gsl_matrix_set(t1,i,i,1/v);
+		}
+	}
+	gsl_matrix *t2 = gsl_matrix_calloc(ep,ep);
+	gsl_blas_dgemm(CblasNoTrans,CblasNoTrans,1,V,t1,0,t2);
+
+	gsl_matrix *XtX_inv = gsl_matrix_calloc(ep,ep);
+	gsl_blas_dgemm(CblasNoTrans,CblasTrans,1,t2,V,0,XtX_inv);
+
+	// (X'X)^{-1)X'
+	gsl_matrix *t3 = gsl_matrix_calloc(ep,n);
+	gsl_blas_dgemm(CblasNoTrans,CblasTrans,1,XtX_inv,X,0,t3);
+
+
+	gsl_matrix *bv = gsl_matrix_calloc(ep,1);
+	gsl_blas_dgemm(CblasNoTrans,CblasNoTrans,1,t3,Y,0,bv);
+	
+    vector<double> coef_vec;
+    for(int i=0;i<ep;i++){
+		coef_vec.push_back(gsl_matrix_get(bv,i,0));
+	}
+
+	
+	gsl_matrix_free(t1);
+	gsl_matrix_free(t2);
+	gsl_matrix_free(t3);
+
+	gsl_matrix_free(XtX);
+	gsl_matrix_free(XtX_inv);
+	gsl_matrix_free(X);
+
+	gsl_matrix_free(V);
+	gsl_vector_free(S);
+	gsl_vector_free(work);
+	gsl_matrix_free(bv);
+
+	return coef_vec;
+}

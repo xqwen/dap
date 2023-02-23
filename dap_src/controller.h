@@ -88,6 +88,8 @@ class controller {
         vector<NSNP> nsnp_vec;
         vector<Nmodel> nmodel_vec;
 
+        // for TWAS weights
+        vector<double> TWAS_wts;
 
         // output pip for all SNPs default only output those > 0.001
         int output_all;

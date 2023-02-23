@@ -64,6 +64,7 @@ void controller::initialize(char *data_file, char *grid_file){
 
     // default maximum model size
     set_default_options();
+    TWAS_wts = vector<double> (p,0);
 
 }
 
@@ -932,6 +933,7 @@ void controller::summarize_approx_posterior(){
     double msize_mean = 0;
     double msize_var = 0;
 
+     fprintf(outfd, "model_rank   posterior_prob   size   log10_posterior_score   model_composition\n");
 
     for(int i=0;i<nmodel_vec.size();i++){
 
@@ -1041,7 +1043,7 @@ void controller::summarize_approx_posterior(){
     }
 
     fprintf(outfd,"\nPosterior inclusion probability\n\n");
-
+    fprintf(outfd,"variant_rank\tvariant_id\tpip\tlog10_BF(multi_SNP)\tsignal_cluster_id\tTWAS_weight\n");
 
     for(int i=0;i<nsnp_vec_sort.size();i++){
         if(nsnp_vec_sort[i].incl_prob < min_pip && !use_dap1)
@@ -1050,7 +1052,17 @@ void controller::summarize_approx_posterior(){
             break;
         if(nsnp_vec_sort[i].cluster==-1&&!output_all)
             continue;
-        fprintf(outfd,"((%d))\t%15s\t%8.5e\t%7.3f\t%d\t%7.3e\t%7.3e\n",i+1, nsnp_vec_sort[i].name.c_str(), nsnp_vec_sort[i].incl_prob, single_log10_abfv[nsnp_vec_sort[i].name], nsnp_vec_sort[i].cluster, single_bhat[nsnp_vec_sort[i].name],single_se[nsnp_vec_sort[i].name]);
+        int index = pars.geno_rmap[nsnp_vec_sort[i].name];
+        double weight =TWAS_wts[index];
+        if(fabs(weight) < 1e-6)
+            weight = 0;
+        double pip =  nsnp_vec_sort[i].incl_prob;
+        if(pip>1-1e-8)
+            pip = 1 - 1e-8;
+        double log10_BF =  log10(pip) - log10(1-pip) - (log10(pi_vec[index]) -log10(1-pi_vec[index]) );
+        //double log10_BF = single_log10_abfv[nsnp_vec_sort[i].name];
+        //fprintf(outfd,"((%d))\t%15s\t%8.5e\t%7.3f\t\t%d\t\t%7.3e\n",i+1, nsnp_vec_sort[i].name.c_str(), pip, , nsnp_vec_sort[i].cluster, weight);
+        fprintf(outfd,"((%d))\t%15s\t\t%8.3e\t%7.3f\t\t%d\t\t%11.3e\n",i+1, nsnp_vec_sort[i].name.c_str(), pip, log10_BF, nsnp_vec_sort[i].cluster, weight);
     }
 
 
@@ -1094,6 +1106,7 @@ void controller::parse_nmodel(Nmodel nmod){
 
     istringstream iss(nmod.id);
     string token;
+    vector<int> index_vec;
     while (getline(iss, token, '&')){
         string snp_id = token;
         int index;
@@ -1107,9 +1120,15 @@ void controller::parse_nmodel(Nmodel nmod){
             index = nsnp_vec.size()-1;
             nsnp_map[snp_id] = index;
         }
+        index_vec.push_back(pars.geno_rmap[snp_id]);
         nsnp_vec[index].incl_prob += nmod.prob;
-
     }
+    vector<double> coef_vec = mlr.fit_LS(index_vec);
+    for(int i=0;i<index_vec.size();i++){
+        TWAS_wts[index_vec[i]] += nmod.prob*coef_vec[i];
+    }
+
+
 }
 
 
