@@ -14,7 +14,8 @@ int main(int argc, char **argv){
     char out_file[LENGTH];
     char log_file[LENGTH];
     char gene_name[LENGTH];
-
+    
+    char cs_file[LENGTH];
     char prior_file[LENGTH];
 
 
@@ -28,7 +29,7 @@ int main(int argc, char **argv){
     memset(est_file,0,LENGTH);
 
     memset(prior_file,0,LENGTH);
-
+    memset(cs_file, 0, LENGTH);
 
     int ld_format = 1; // for correlation matrix
 
@@ -59,6 +60,9 @@ int main(int argc, char **argv){
     int extract_ss = 0;
 
     int thread = 1;
+
+    // default coverage probability of credible sets
+    double cs_thresh = 0.95;
 
 
 
@@ -230,6 +234,22 @@ int main(int argc, char **argv){
             continue;
         }
 
+
+        if(strcmp(argv[i], "-dump_cs")==0 || strcmp(argv[i], "-cs")==0 ){
+            strcpy(cs_file, argv[++i]);
+            continue;
+        }
+
+        if(strcmp(argv[i], "-cs_thresh")==0 || strcmp(argv[i], "-coverage_prob")==0 ){
+            cs_thresh = atof(argv[++i]);
+            continue;
+        }
+
+
+
+
+
+
         fprintf(stderr, "Error: unknown option \"%s\"\n",argv[i]);
         exit(1);
 
@@ -263,7 +283,7 @@ int main(int argc, char **argv){
     if(msize>=1){
         con.set_max_size(msize);
     }
-
+    
 
     if(strlen(prior_file)==0){
         if(pi1 != -1){
@@ -282,6 +302,12 @@ int main(int argc, char **argv){
 
     if(output_all == 1)
         con.set_output_all();
+
+
+    if(strlen(cs_file)!=0){
+        con.set_cs(cs_file, cs_thresh);
+    }
+
 
     if(use_dap1 == 1)
         con.set_use_dap1();

@@ -51,6 +51,8 @@ class controller {
         FILE *outfd;
         FILE *logfd;
 
+        FILE *csfd;
+
         parser pars;
         string gene;
 
@@ -65,6 +67,9 @@ class controller {
 
         vector<int>  null_config;
 
+        double coverage_prob;
+
+
         vector<double>  pi_vec; //prior for configs
         double prior_ratio; // for estimate residual from the approximaiton
 
@@ -75,6 +80,8 @@ class controller {
 
         // collection of all sizes of size_model
         vector<size_model> szm_vec; // size_model collections
+
+
 
 
         //candidate set/map of SNPs
@@ -177,6 +184,8 @@ class controller {
 
         void set_outfile(char *outfile, char *logfile);
 
+        void set_cs(char *cs_file, double cs_thresh);
+        
         void set_gene(string gname){
             gene=gname;
         }

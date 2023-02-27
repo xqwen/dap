@@ -88,6 +88,10 @@ void controller::set_default_options(){
     // 02/21/2023  set default ld control threshold to 0.5
     ld_control_thresh = 0.5; // by default  ld control with r^2 = 0.5
 
+    //02/26/2023
+    csfd = 0;
+    coverage_prob = 1.0;
+
 }
 
 
@@ -181,6 +185,13 @@ void controller::set_outfile(char *outfile, char *logfile){
     else
         logfd = fopen(logfile,"w");
 }
+
+void controller::set_cs(char *cs_file, double cs_thresh){
+    if(strlen(cs_file)>0)
+        csfd = fopen(cs_file, "w");
+    coverage_prob = cs_thresh;
+}
+
 
 
 // exchangeable prior pes/p
@@ -868,6 +879,9 @@ size_model controller::compute_post_model(int size, int use_abs_cutoff){
 
 
 
+///////////////////////////// Summarizing and Reporting Results ///////////////////////////////////
+
+
 void controller::summarize_approx_posterior(){
 
     vector<double>  log10_pmass_vec;
@@ -876,12 +890,6 @@ void controller::summarize_approx_posterior(){
 
     for(int i=0;i<szm_vec.size();i++){
         log10_pmass_vec.push_back(szm_vec[i].log10_sum_post);
-        //printf("szm %d cluster: ", i); 
-        //for(int k=0;k<szm_vec[i].snp_cluster.size();k++){
-        //    printf("%d ", szm_vec[i].snp_cluster[k]);
-        //}
-        
-       //printf("\n");
     }
 
     vector<double> wv1(log10_pmass_vec.size(),1.0);
@@ -968,6 +976,8 @@ void controller::summarize_approx_posterior(){
 
     vector<NSNP> nsnp_vec_sort = nsnp_vec;
     std::sort(nsnp_vec_sort.begin(),nsnp_vec_sort.end(),sort_nsnp_dec_by_ip);
+    
+    
 
     map<string, int> snp2index;
     for(int i=0;i<nsnp_vec_sort.size();i++){
@@ -993,6 +1003,10 @@ void controller::summarize_approx_posterior(){
     vector<vector<int> > grp_vec;
     map<int,int> grpr2_map;
     int cluster_index = 1;
+
+    // organize SNPs by cluster id
+    map<int, vector<NSNP> > cluster_map;
+
     for(int i=0;i<szm_vec.size();i++){
 
         double cluster_prob = 0;
@@ -1048,21 +1062,39 @@ void controller::summarize_approx_posterior(){
     for(int i=0;i<nsnp_vec_sort.size();i++){
         if(nsnp_vec_sort[i].incl_prob < min_pip && !use_dap1)
             nsnp_vec_sort[i].incl_prob = min_pip;
-        if(nsnp_vec_sort[i].incl_prob<1e-3&&!output_all)
-            break;
-        if(nsnp_vec_sort[i].cluster==-1&&!output_all)
-            continue;
+
+        string snp_id = nsnp_vec_sort[i].name;
+        int cluster_id = nsnp_vec_sort[i].cluster;
+        double pip =  nsnp_vec_sort[i].incl_prob;
+        if(pip>1-1e-8)
+            pip = 1 - 1e-8;
         int index = pars.geno_rmap[nsnp_vec_sort[i].name];
         double weight =TWAS_wts[index];
         if(fabs(weight) < 1e-6)
             weight = 0;
-        double pip =  nsnp_vec_sort[i].incl_prob;
-        if(pip>1-1e-8)
-            pip = 1 - 1e-8;
+        
         double log10_BF =  log10(pip) - log10(1-pip) - (log10(pi_vec[index]) -log10(1-pi_vec[index]) );
-        //double log10_BF = single_log10_abfv[nsnp_vec_sort[i].name];
+        //double log10_BF = single_log10_abfv[nsnp_vec_sort[i].name]; // alternative to output single SNP BF
+
+        if(cluster_id != -1){
+            if(cluster_map.find(cluster_id) == cluster_map.end() ){
+                cluster_map[cluster_id] = vector<NSNP>();
+            }
+            NSNP nsnp;
+            nsnp.name = snp_id;
+            nsnp.incl_prob = pip;
+            cluster_map[cluster_id].push_back(nsnp);
+        } 
+
+        // since version 2, the default is output_all, the next two conditions are ineffective
+        if(nsnp_vec_sort[i].incl_prob<1e-3&&!output_all)
+            break;
+        if(nsnp_vec_sort[i].cluster==-1&&!output_all)
+            continue;
+        /////////////////////////////////////////////////////////////////////////////////////    
+
         //fprintf(outfd,"((%d))\t%15s\t%8.5e\t%7.3f\t\t%d\t\t%7.3e\n",i+1, nsnp_vec_sort[i].name.c_str(), pip, , nsnp_vec_sort[i].cluster, weight);
-        fprintf(outfd,"((%d))\t%15s\t\t%8.3e\t%7.3f\t\t%d\t\t%11.3e\n",i+1, nsnp_vec_sort[i].name.c_str(), pip, log10_BF, nsnp_vec_sort[i].cluster, weight);
+        fprintf(outfd,"((%d))\t%15s\t\t%8.3e\t%7.3f\t\t%d\t\t%11.3e\n",i+1, nsnp_vec_sort[i].name.c_str(), pip, log10_BF, cluster_id, weight);
     }
 
 
@@ -1097,6 +1129,36 @@ void controller::summarize_approx_posterior(){
             counti++;
         }
     }
+
+    if(csfd!=0){
+        
+        //fprintf(csfd, "\n\n\ncluster_id\t\tSNP\t\tPIP\n");
+        for (int i=0;i<cluster_count.size();i++){
+            if(cluster_pip[i] < coverage_prob )
+              continue;
+            
+            int cid = i+1;
+            double sum = 0;
+
+            std::sort(cluster_map[cid].begin(),cluster_map[cid].end(),sort_nsnp_dec_by_ip);
+            for(int k=0;k<cluster_map[cid].size();k++){
+                string snp_id = cluster_map[cid][k].name;
+                double pip = cluster_map[cid][k].incl_prob;
+                fprintf(csfd,"%2d\t\t%15s\t\t%8.3e\n",cid,snp_id.c_str(),pip);
+                sum += pip;
+                if(sum>coverage_prob)
+                    break;
+            }
+        }
+
+    
+        
+        //double log10_BF = single_log10_abfv[nsnp_vec_sort[i].name];
+    }
+
+
+
+
 
 }
 
