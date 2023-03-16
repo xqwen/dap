@@ -357,6 +357,8 @@ void parser::regress_cov(vector<double> &phenov, vector<vector<double> > &cov, v
     if(p==0)
         return;
 
+
+
     gsl_matrix *X = gsl_matrix_calloc(n, p+1);
     for(int i=0;i<n;i++){
         gsl_matrix_set(X,i,0,1.0);
@@ -413,12 +415,34 @@ void parser::regress_cov(vector<double> &phenov, vector<vector<double> > &cov, v
     gsl_vector_free(S);
     gsl_vector_free(work);
 
+
+    gsl_matrix *y = gsl_matrix_calloc(n,1);
+    for(int i=0;i<n;i++){
+        gsl_matrix_set(y,i,0, phenov[i]);
+    }
+
+
+    gsl_matrix *fy = gsl_matrix_calloc(n,1);
+    gsl_blas_dgemm(CblasNoTrans,CblasNoTrans,1,H,y,0,fy);
+
+    gsl_matrix *res= gsl_matrix_calloc(n,1);
+    gsl_matrix_memcpy(res,y);
+    gsl_matrix_sub(res,fy);
+
+    for(int i=0;i<n;i++){
+        phenov[i] = gsl_matrix_get(res,i,0);
+    }
+
+
     gsl_matrix_free(H);
+    gsl_matrix_free(y);
+    gsl_matrix_free(fy);
+    gsl_matrix_free(res);
+
 
     // On 2/12/2023, unnecessary computation for regressing genotypes on covariates is taken out 
     // Centering of genotype and phenotype data is now handled in process_line
 
-	
 
 
 }

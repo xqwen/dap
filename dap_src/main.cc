@@ -135,7 +135,7 @@ int main(int argc, char **argv){
 
         // prior options
 
-        if(strcmp(argv[i], "-ens")==0 ){
+        if(strcmp(argv[i], "-ens")==0 || strcmp(argv[i],"-pes")==0 ){
             pes = atof(argv[++i]);
             continue;
         }
