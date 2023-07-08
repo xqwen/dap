@@ -1225,6 +1225,7 @@ void controller::scan(){
 
     init();
     mlr.get_single_SNP_stats();
+    fprintf(outfd, "%25s\t\t%7s\t%7s\t\t%7s\t\t\t%7s\n","variant", "beta", "se_beta", "z_score", "log10_BF");
     for(int i=0;i<p;i++){
 
         vector<int>  mcfg = null_config;
@@ -1232,7 +1233,7 @@ void controller::scan(){
         double bhat = mlr.beta_vec[i];
         double se = mlr.se_vec[i];
         double zval = bhat/se;
-        fprintf(outfd,"%25s  %9.3f        %12.3e %12.3e   %12.3e\n" , pars.geno_map[i].c_str(),  mlr.compute_log10_ABF(mcfg),bhat, se, zval);
+        fprintf(outfd,"%25s \t\t%7.3e\t%7.3e\t\t%7.3e\t\t\t%7.3e\n" , pars.geno_map[i].c_str(), bhat, se, zval, mlr.compute_log10_ABF(mcfg));
 
     }  
 
